@@ -295,6 +295,42 @@ export const initialSocialPosts = [
     comments: 18,
     at: "Ayer",
   },
+  {
+    id: "post-4",
+    network: "Instagram",
+    author: "LitCafe",
+    text: "Tarde de lluvia perfecta para empezar con Silvina Ocampo. Recomendacion del dia.",
+    likes: 87,
+    comments: 23,
+    at: "Hace 1 dia",
+  },
+  {
+    id: "post-5",
+    network: "Instagram",
+    author: "LitCafe",
+    text: "Asi se vivio el taller de microrrelato del sabado. Gracias a todos los participantes.",
+    likes: 112,
+    comments: 31,
+    at: "Hace 2 dias",
+  },
+  {
+    id: "post-6",
+    network: "Instagram",
+    author: "LitCafe",
+    text: "Nueva coleccion de poesia en la biblioteca del cafe. Pasen a conocerla.",
+    likes: 74,
+    comments: 15,
+    at: "Hace 3 dias",
+  },
+  {
+    id: "post-7",
+    network: "Facebook",
+    author: "Comunidad LitCafe",
+    text: "Lectura en voz alta de poesia mapuche este viernes en la terraza.",
+    likes: 41,
+    comments: 9,
+    at: "Hace 3 dias",
+  },
 ];
 
 export const initialSiteNews = [

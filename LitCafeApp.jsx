@@ -768,14 +768,615 @@ function GlobalStyles() {
       .lc-marketplace-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
+        gap: 16px;
       }
 
       .lc-marketplace-item {
         border: 1px solid ${C.border};
-        border-radius: 8px;
+        border-radius: 12px;
+        background: ${C.bgCard};
+        padding: 20px;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .lc-marketplace-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      }
+
+      /* ── Landing page hero redesign ── */
+      .lc-landing-hero-new {
+        background: linear-gradient(135deg, ${C.bgCard} 0%, #f0e9db 100%);
+        border: 1px solid ${C.border};
+        border-radius: 16px;
+        padding: 48px 40px 44px;
+        margin-bottom: 28px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .lc-landing-hero-new::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: ${C.accent}10;
+      }
+
+      .lc-landing-hero-new::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: -40px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: ${C.ochre}10;
+      }
+
+      .lc-landing-hero-new h1 {
+        margin: 0 0 14px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 48px;
+        line-height: 1.15;
+        color: ${C.charcoal};
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-landing-hero-new .lc-hero-sub {
+        margin: 0 auto 24px;
+        max-width: 640px;
+        font-size: 17px;
+        line-height: 1.7;
+        color: ${C.textSec};
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-landing-hero-new .lc-hero-ctas {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-button-lg {
+        padding: 14px 28px;
+        font-size: 16px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        border: 2px solid ${C.accent};
+        transition: all 0.18s ease;
+      }
+
+      .lc-button-lg.is-primary {
+        background: ${C.accent};
+        color: #fff;
+      }
+
+      .lc-button-lg.is-primary:hover {
+        filter: brightness(1.06);
+        transform: translateY(-1px);
+      }
+
+      .lc-button-lg.is-outline {
+        background: transparent;
+        color: ${C.accent};
+      }
+
+      .lc-button-lg.is-outline:hover {
+        background: ${C.accent}0A;
+      }
+
+      /* ── Trust badges ── */
+      .lc-trust-row {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-top: 28px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-trust-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: ${C.textSec};
+      }
+
+      .lc-trust-icon {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: ${C.accent}15;
+        color: ${C.accent};
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      /* ── Section headings ── */
+      .lc-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .lc-section-header h2 {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 28px;
+        color: ${C.charcoal};
+      }
+
+      .lc-section-header .lc-see-all {
+        font-size: 14px;
+        font-weight: 700;
+        color: ${C.accent};
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+
+      .lc-section-header .lc-see-all:hover {
+        text-decoration: underline;
+      }
+
+      /* ── News carousel ── */
+      .lc-news-carousel-wrap {
+        position: relative;
+        margin-bottom: 36px;
+      }
+
+      .lc-news-carousel {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        padding: 4px 0 12px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .lc-news-carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .lc-news-card {
+        flex: 0 0 300px;
+        scroll-snap-align: start;
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 20px;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        cursor: pointer;
+      }
+
+      .lc-news-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+      }
+
+      .lc-news-card .lc-news-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: ${C.ochre};
+        background: ${C.ochre}12;
+        border-radius: 6px;
+        padding: 3px 8px;
+        margin-bottom: 10px;
+      }
+
+      .lc-news-card h3 {
+        margin: 0 0 8px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 18px;
+        line-height: 1.3;
+        color: ${C.charcoal};
+      }
+
+      .lc-news-card p {
+        margin: 0;
+        font-size: 13px;
+        color: ${C.textSec};
+        line-height: 1.5;
+      }
+
+      .lc-news-card .lc-news-meta {
+        margin-top: 10px;
+        font-size: 12px;
+        color: ${C.textMeta};
+      }
+
+      .lc-carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        color: ${C.charcoal};
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        z-index: 2;
+        transition: background 0.15s ease;
+      }
+
+      .lc-carousel-nav:hover {
+        background: ${C.bgWarm};
+      }
+
+      .lc-carousel-nav.is-left {
+        left: -12px;
+      }
+
+      .lc-carousel-nav.is-right {
+        right: -12px;
+      }
+
+      /* ── Course cards (landing) ── */
+      .lc-course-card {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .lc-course-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.09);
+      }
+
+      .lc-course-card-banner {
+        height: 8px;
+        background: linear-gradient(90deg, ${C.accent}, ${C.ochre});
+      }
+
+      .lc-course-card-body {
+        padding: 22px 20px 18px;
+      }
+
+      .lc-course-card-body .lc-course-level {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: ${C.accent};
+        margin-bottom: 8px;
+      }
+
+      .lc-course-card-body h3 {
+        margin: 0 0 8px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 22px;
+        line-height: 1.25;
+        color: ${C.charcoal};
+      }
+
+      .lc-course-card-body .lc-course-desc {
+        margin: 0 0 14px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: ${C.textSec};
+      }
+
+      .lc-course-card-details {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+        font-size: 12px;
+        color: ${C.textMeta};
+      }
+
+      .lc-course-card-details span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .lc-course-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid ${C.border};
+        padding: 14px 20px;
         background: ${C.bg};
-        padding: 10px;
+      }
+
+      .lc-course-price {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: ${C.charcoal};
+      }
+
+      /* ── Event cards (landing) ── */
+      .lc-event-card {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 18px;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        cursor: pointer;
+      }
+
+      .lc-event-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+      }
+
+      .lc-event-date-box {
+        flex: 0 0 56px;
+        text-align: center;
+        border: 1px solid ${C.border};
+        border-radius: 10px;
+        background: linear-gradient(180deg, ${C.accent}12 0%, ${C.bgCard} 100%);
+        padding: 8px 6px;
+      }
+
+      .lc-event-date-box .lc-event-day {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: ${C.accent};
+        line-height: 1;
+      }
+
+      .lc-event-date-box .lc-event-month {
+        margin: 2px 0 0;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: ${C.textMeta};
+      }
+
+      .lc-event-info h3 {
+        margin: 0 0 6px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 17px;
+        color: ${C.charcoal};
+        line-height: 1.3;
+      }
+
+      .lc-event-info .lc-event-meta-line {
+        margin: 0 0 3px;
+        font-size: 13px;
+        color: ${C.textSec};
+      }
+
+      .lc-event-type-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 6px;
+        padding: 2px 8px;
+        margin-top: 4px;
+      }
+
+      .lc-event-type-tag.is-presencial {
+        background: ${C.successBg};
+        color: ${C.successText};
+      }
+
+      .lc-event-type-tag.is-virtual {
+        background: #EAE8FF;
+        color: #5046A5;
+      }
+
+      .lc-event-type-tag.is-hibrido {
+        background: ${C.warningBg};
+        color: ${C.warningText};
+      }
+
+      /* ── Community/Silo cards ── */
+      .lc-community-card {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 22px 20px;
+        text-align: center;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .lc-community-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+      }
+
+      .lc-community-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, ${C.accent}20, ${C.ochre}20);
+        border: 2px solid ${C.accent}30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: ${C.accent};
+      }
+
+      .lc-community-card h3 {
+        margin: 0 0 4px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 17px;
+        color: ${C.charcoal};
+      }
+
+      .lc-community-card .lc-community-cat {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: ${C.ochre};
+        margin-bottom: 6px;
+      }
+
+      .lc-community-card .lc-community-desc {
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: ${C.textSec};
+      }
+
+      .lc-community-card .lc-community-members {
+        font-size: 12px;
+        font-weight: 600;
+        color: ${C.textMeta};
+      }
+
+      /* ── CTA banner ── */
+      .lc-cta-banner {
+        background: linear-gradient(135deg, ${C.accent} 0%, #9A4A33 100%);
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        margin-top: 12px;
+      }
+
+      .lc-cta-banner h2 {
+        margin: 0 0 10px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 32px;
+        color: #fff;
+      }
+
+      .lc-cta-banner p {
+        margin: 0 0 20px;
+        font-size: 16px;
+        color: rgba(255,255,255,0.85);
+      }
+
+      .lc-cta-banner .lc-button-cta {
+        background: #fff;
+        color: ${C.accent};
+        border: none;
+        border-radius: 10px;
+        padding: 14px 32px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+
+      .lc-cta-banner .lc-button-cta:hover {
+        transform: translateY(-1px);
+      }
+
+      /* ── Landing sections spacing ── */
+      .lc-landing-section {
+        margin-bottom: 36px;
+      }
+
+      .lc-events-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .lc-communities-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .lc-ig-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .lc-ig-post {
+        border: 1px solid ${C.border};
+        border-radius: 12px;
+        background: ${C.bgCard};
+        overflow: hidden;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+
+      .lc-ig-post:hover {
+        border-color: ${C.accent};
+        box-shadow: 0 2px 12px rgba(184, 101, 74, 0.08);
+      }
+
+      .lc-ig-post-placeholder {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, #f0ebe1 0%, #e8e2d6 50%, #ddd6c8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${C.textMeta};
+      }
+
+      .lc-social-footer {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 36px;
+      }
+
+      .lc-social-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        color: ${C.textSec};
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color 0.15s, border-color 0.15s;
+      }
+
+      .lc-social-badge:hover {
+        color: ${C.accent};
+        border-color: ${C.accent};
       }
 
       .lc-detail-main {
@@ -839,6 +1440,49 @@ function GlobalStyles() {
         .lc-marketplace-grid {
           grid-template-columns: 1fr;
         }
+
+        .lc-landing-hero-new h1 {
+          font-size: 32px;
+        }
+
+        .lc-landing-hero-new {
+          padding: 28px 20px;
+        }
+
+        .lc-trust-row {
+          flex-wrap: wrap;
+          gap: 16px;
+        }
+
+        .lc-events-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-communities-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-ig-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .lc-social-footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .lc-hero-ctas {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .lc-cta-banner {
+          padding: 28px 20px;
+        }
+
+        .lc-cta-banner h2 {
+          font-size: 24px;
+        }
       }
     `}</style>
   );
@@ -856,12 +1500,44 @@ function Card({ title, action, children }) {
   );
 }
 
+function SocialIcon({ network, size = 22 }) {
+  const icons = {
+    Instagram: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+    Facebook: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+    ),
+    X: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+    YouTube: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  };
+  return icons[network] || null;
+}
+
 function LandingScreen({
   literatureNews,
   siteNews,
   events,
   forums,
   courseCatalog,
+  communities,
+  socialAccounts,
+  socialPosts,
   cartItems,
   cartTotal,
   onAddCourseToCart,
@@ -871,181 +1547,206 @@ function LandingScreen({
   onOpenLogin,
   onOpenDetail,
 }) {
-  const topLiterature = literatureNews.slice(0, 4);
-  const topInternalNews = siteNews.slice(0, 4);
-  const topEvents = [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)).slice(0, 4);
-  const topForums = forums.slice(0, 4);
+  const allNews = [
+    ...literatureNews.slice(0, 4).map((n) => ({ ...n, kind: "Literatura" })),
+    ...siteNews.slice(0, 4).map((n) => ({ ...n, kind: "Novedad", source: n.author })),
+  ];
+  const sortedEvents = [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)).slice(0, 4);
+  const connectedAccounts = socialAccounts.filter((a) => a.connected);
+  const instagramConnected = socialAccounts.some((a) => a.network === "Instagram" && a.connected);
+  const instagramPosts = instagramConnected ? socialPosts.filter((p) => p.network === "Instagram").slice(0, 6) : [];
   const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const carouselRef = { current: null };
+
+  function scrollCarousel(direction) {
+    const el = carouselRef.current;
+    if (!el) return;
+    const scrollAmount = 320;
+    el.scrollBy({ left: direction === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
+  }
+
+  function getEventDateParts(dateStr) {
+    if (!dateStr) return { day: "--", month: "---" };
+    const d = new Date(dateStr + "T00:00:00");
+    return {
+      day: String(d.getDate()).padStart(2, "0"),
+      month: new Intl.DateTimeFormat("es-AR", { month: "short" }).format(d).toUpperCase(),
+    };
+  }
+
+  function eventTypeClass(type) {
+    if (type === "presencial") return "is-presencial";
+    if (type === "virtual") return "is-virtual";
+    return "is-hibrido";
+  }
 
   return (
     <div className="lc-landing-page">
       <header className="lc-landing-topbar">
         <div className="lc-brand-wrap">
-          <h1 className="lc-brand">LitCafe LMS</h1>
-          <span className="lc-pill">Comunidad, cursos y noticias</span>
+          <h1 className="lc-brand">Lead Cafe</h1>
+          <span className="lc-pill">Tu espacio de formacion literaria</span>
         </div>
-        <div className="lc-row" style={{ justifyContent: "flex-end" }}>
-          <button type="button" className="lc-button" onClick={() => onOpenDetail("cart", "landing-cart")}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {connectedAccounts.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {connectedAccounts.map((account) => (
+                <span
+                  key={account.id}
+                  title={`${account.network}: ${account.handle}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 36,
+                    height: 36,
+                    borderRadius: 8,
+                    border: `1px solid ${C.border}`,
+                    background: C.bg,
+                    color: C.textSec,
+                    cursor: "pointer",
+                    transition: "color 0.15s, border-color 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = C.accent;
+                    e.currentTarget.style.borderColor = C.accent;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = C.textSec;
+                    e.currentTarget.style.borderColor = C.border;
+                  }}
+                >
+                  <SocialIcon network={account.network} size={18} />
+                </span>
+              ))}
+            </div>
+          )}
+          <button
+            type="button"
+            className="lc-button-lg is-outline"
+            style={{ padding: "8px 16px", fontSize: 14 }}
+            onClick={() => onOpenDetail("cart", "landing-cart")}
+          >
             Carrito ({cartItemsCount})
           </button>
-          <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+          <button
+            type="button"
+            className="lc-button-lg is-outline"
+            style={{ padding: "8px 16px", fontSize: 14 }}
+            onClick={onOpenLogin}
+          >
             Iniciar sesion
+          </button>
+          <button
+            type="button"
+            className="lc-button-lg is-primary"
+            style={{ padding: "8px 16px", fontSize: 14 }}
+            onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
+            disabled={courseCatalog.length === 0}
+          >
+            Ver cursos
           </button>
         </div>
       </header>
 
       <main className="lc-landing-main">
         <div className="lc-main-shell">
-          <section className="lc-landing-hero">
-            <span className="lc-tag is-accent">Landing principal</span>
-            <h1>Aprende literatura, participa de la comunidad y compra tus cursos</h1>
-            <p>
-              Esta es la nueva homepage publica. Desde aca puedes recorrer noticias, novedades internas, foros y eventos,
-              ver detalle de cada contenido, y luego elegir iniciar sesion para gestionar tu formacion completa.
+
+          {/* ── Hero ── */}
+          <section className="lc-landing-hero-new">
+            <span
+              className="lc-tag is-accent"
+              style={{ marginBottom: 16, display: "inline-flex", position: "relative", zIndex: 1 }}
+            >
+              Inscripciones abiertas
+            </span>
+            <h1>Transforma tu pasion por la literatura en conocimiento real</h1>
+            <p className="lc-hero-sub">
+              Cursos con mentores especializados, talleres en vivo, comunidades activas y
+              herramientas para que tu formacion literaria no tenga limites.
             </p>
-            <div className="lc-row" style={{ marginTop: 12 }}>
-              <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
-                Ir a login
-              </button>
+            <div className="lc-hero-ctas">
               <button
                 type="button"
-                className="lc-button"
+                className="lc-button-lg is-primary"
                 onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
                 disabled={courseCatalog.length === 0}
               >
-                Comprar cursos
+                Explorar cursos
+              </button>
+              <button type="button" className="lc-button-lg is-outline" onClick={onOpenLogin}>
+                Comenzar gratis
               </button>
             </div>
-            <div className="lc-landing-kpis">
-              <div className="lc-landing-kpi">
-                <p className="lc-stat-label">Cursos disponibles</p>
-                <p className="lc-stat-value" style={{ fontSize: 24 }}>
-                  {courseCatalog.length}
-                </p>
-              </div>
-              <div className="lc-landing-kpi">
-                <p className="lc-stat-label">Eventos proximos</p>
-                <p className="lc-stat-value" style={{ fontSize: 24 }}>
-                  {events.length}
-                </p>
-              </div>
-              <div className="lc-landing-kpi">
-                <p className="lc-stat-label">Hilos activos</p>
-                <p className="lc-stat-value" style={{ fontSize: 24 }}>
-                  {forums.length}
-                </p>
-              </div>
+            <div className="lc-trust-row">
+              <span className="lc-trust-item">
+                <span className="lc-trust-icon">M</span> Mentores expertos
+              </span>
+              <span className="lc-trust-item">
+                <span className="lc-trust-icon">C</span> Certificacion incluida
+              </span>
+              <span className="lc-trust-item">
+                <span className="lc-trust-icon">V</span> Clases en vivo y grabadas
+              </span>
             </div>
           </section>
 
-          <div className="lc-grid lc-grid-2">
-            <Card title="Noticias de literatura">
-              <ul className="lc-list">
-                {topLiterature.map((newsItem) => (
-                  <li key={newsItem.id} className="lc-list-item">
-                    <button className="lc-link" type="button" onClick={() => onOpenDetail("literature-news", newsItem.id)}>
-                      {newsItem.title}
-                    </button>
-                    <p className="lc-meta">{newsItem.summary}</p>
-                    <p className="lc-meta">
-                      {newsItem.source} | {formatDate(newsItem.publishedAt)}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-
-            <Card title="Novedades internas de la comunidad">
-              <ul className="lc-list">
-                {topInternalNews.map((internalNews) => (
-                  <li key={internalNews.id} className="lc-list-item">
-                    <button className="lc-link" type="button" onClick={() => onOpenDetail("internal-news", internalNews.id)}>
-                      {internalNews.title}
-                    </button>
-                    <p className="lc-meta">{internalNews.summary}</p>
-                    <p className="lc-meta">{formatDate(internalNews.publishedAt)}</p>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </div>
-
-          <div className="lc-grid lc-grid-2">
-            <Card title="Proximos eventos">
-              <ul className="lc-list">
-                {topEvents.map((eventItem) => (
-                  <li key={eventItem.id} className="lc-list-item">
-                    <button className="lc-link" type="button" onClick={() => onOpenDetail("event", eventItem.id)}>
-                      {eventItem.title}
-                    </button>
-                    <p className="lc-meta">
-                      {formatDate(eventItem.date)} | {eventItem.time} | {eventItem.type}
-                    </p>
-                    <p className="lc-meta">{eventItem.location}</p>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-
-            <Card title="Foros activos">
-              <ul className="lc-list">
-                {topForums.map((forum) => (
-                  <li key={forum.id} className="lc-list-item">
-                    <button className="lc-link" type="button" onClick={() => onOpenDetail("forum", forum.id)}>
-                      {forum.title}
-                    </button>
-                    <p className="lc-meta">
-                      {forum.course} | {forum.comments.length} comentarios
-                    </p>
-                    <p className="lc-meta">Iniciado por {forum.author}</p>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </div>
-
-          <Card title="Cursos para comprar">
+          {/* ── Cursos ── */}
+          <section className="lc-landing-section">
+            <div className="lc-section-header">
+              <h2>Cursos disponibles</h2>
+              <button type="button" className="lc-see-all" onClick={onOpenLogin}>
+                Ver todos
+              </button>
+            </div>
             <div className="lc-marketplace-grid">
               {courseCatalog.map((course) => (
-                <article key={course.id} className="lc-marketplace-item">
-                  <p className="lc-stat-label" style={{ marginTop: 0 }}>
-                    {course.level} | {course.duration}
-                  </p>
-                  <h3 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 22 }}>
-                    {course.title}
-                  </h3>
-                  <p className="lc-muted" style={{ margin: "0 0 8px", fontSize: 14 }}>
-                    {course.description}
-                  </p>
-                  <p className="lc-meta" style={{ marginBottom: 8 }}>
-                    Modalidad: {course.format}
-                  </p>
-                  <p className="lc-meta" style={{ marginBottom: 10 }}>
-                    Precio: <strong>{formatCurrency(course.price)}</strong>
-                  </p>
-                  <div className="lc-row">
-                    <button type="button" className="lc-button" onClick={() => onOpenDetail("catalog-course", course.id)}>
-                      Ver detalle
+                <article key={course.id} className="lc-course-card">
+                  <div className="lc-course-card-banner" />
+                  <div className="lc-course-card-body">
+                    <span className="lc-course-level">{course.level}</span>
+                    <h3>{course.title}</h3>
+                    <p className="lc-course-desc">{course.description}</p>
+                    <div className="lc-course-card-details">
+                      <span>{course.duration}</span>
+                      <span>{course.format}</span>
+                    </div>
+                  </div>
+                  <div className="lc-course-card-footer">
+                    <span className="lc-course-price">{formatCurrency(course.price)}</span>
+                    <button
+                      type="button"
+                      className="lc-button is-primary"
+                      style={{ borderRadius: 8, padding: "10px 18px", fontWeight: 700 }}
+                      onClick={() => onOpenDetail("catalog-course", course.id)}
+                    >
+                      Ver curso
                     </button>
-                    <button type="button" className="lc-button is-primary" onClick={() => onAddCourseToCart(course.id)}>
-                      Agregar al carrito
+                    <button
+                      type="button"
+                      className="lc-button"
+                      style={{ borderRadius: 8, padding: "10px 14px", fontWeight: 700 }}
+                      onClick={() => onAddCourseToCart(course.id)}
+                    >
+                      Agregar
                     </button>
                   </div>
                 </article>
               ))}
             </div>
-          </Card>
+          </section>
 
-          <Card
-            title={`Carrito de compra (${cartItemsCount})`}
-            action={
-              cartItems.length > 0 ? (
-                <button type="button" className="lc-link" onClick={onClearCart}>
+          {/* ── Carrito ── */}
+          <section className="lc-landing-section">
+            <div className="lc-section-header">
+              <h2>Carrito de compra ({cartItemsCount})</h2>
+              {cartItems.length > 0 ? (
+                <button type="button" className="lc-see-all" onClick={onClearCart}>
                   Vaciar carrito
                 </button>
-              ) : null
-            }
-          >
+              ) : null}
+            </div>
             {cartItems.length === 0 ? (
               <p className="lc-meta">Tu carrito esta vacio. Agrega cursos desde el catalogo para empezar.</p>
             ) : (
@@ -1086,7 +1787,186 @@ function LandingScreen({
                 </button>
               </div>
             )}
-          </Card>
+          </section>
+
+          {/* ── Noticias carousel ── */}
+          <section className="lc-landing-section">
+            <div className="lc-section-header">
+              <h2>Noticias</h2>
+            </div>
+            <div className="lc-news-carousel-wrap">
+              <button
+                type="button"
+                className="lc-carousel-nav is-left"
+                onClick={() => scrollCarousel("left")}
+                aria-label="Anterior"
+              >
+                &#8249;
+              </button>
+              <div
+                className="lc-news-carousel"
+                ref={(el) => { carouselRef.current = el; }}
+              >
+                {allNews.map((item) => (
+                  <article
+                    key={item.id}
+                    className="lc-news-card"
+                    onClick={() =>
+                      onOpenDetail(
+                        item.kind === "Literatura" ? "literature-news" : "internal-news",
+                        item.id,
+                      )
+                    }
+                  >
+                    <span className="lc-news-tag">{item.kind}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.summary}</p>
+                    <p className="lc-news-meta">
+                      {item.source || "Lead Cafe"} &middot; {formatDate(item.publishedAt)}
+                    </p>
+                  </article>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="lc-carousel-nav is-right"
+                onClick={() => scrollCarousel("right")}
+                aria-label="Siguiente"
+              >
+                &#8250;
+              </button>
+            </div>
+          </section>
+
+          {/* ── Eventos ── */}
+          <section className="lc-landing-section">
+            <div className="lc-section-header">
+              <h2>Proximos eventos</h2>
+              <button type="button" className="lc-see-all" onClick={onOpenLogin}>
+                Ver calendario
+              </button>
+            </div>
+            <div className="lc-events-grid">
+              {sortedEvents.map((eventItem) => {
+                const dp = getEventDateParts(eventItem.date);
+                return (
+                  <article
+                    key={eventItem.id}
+                    className="lc-event-card"
+                    onClick={() => onOpenDetail("event", eventItem.id)}
+                  >
+                    <div className="lc-event-date-box">
+                      <p className="lc-event-day">{dp.day}</p>
+                      <p className="lc-event-month">{dp.month}</p>
+                    </div>
+                    <div className="lc-event-info">
+                      <h3>{eventItem.title}</h3>
+                      <p className="lc-event-meta-line">{eventItem.time} &middot; {eventItem.location}</p>
+                      <span className={`lc-event-type-tag ${eventTypeClass(eventItem.type)}`}>
+                        {eventItem.type}
+                      </span>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ── Comunidades / Silos ── */}
+          {communities && communities.length > 0 && (
+            <section className="lc-landing-section">
+              <div className="lc-section-header">
+                <h2>Nuestras comunidades</h2>
+                <button type="button" className="lc-see-all" onClick={onOpenLogin}>
+                  Unirme
+                </button>
+              </div>
+              <div className="lc-communities-grid">
+                {communities.map((community) => (
+                  <article key={community.id} className="lc-community-card">
+                    <div className="lc-community-avatar">
+                      {community.name.charAt(0)}
+                    </div>
+                    <span className="lc-community-cat">{community.category}</span>
+                    <h3>{community.name}</h3>
+                    <p className="lc-community-desc">{community.description}</p>
+                    <p className="lc-community-members">Comunidad activa</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Instagram feed ── */}
+          {instagramPosts.length > 0 && (
+            <section className="lc-landing-section">
+              <div className="lc-section-header">
+                <h2>Ultimas de Instagram</h2>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: C.textSec, fontSize: 13, fontWeight: 600 }}>
+                  <SocialIcon network="Instagram" size={16} />
+                  {socialAccounts.find((a) => a.network === "Instagram")?.handle}
+                </span>
+              </div>
+              <div className="lc-ig-grid">
+                {instagramPosts.map((post) => (
+                  <article key={post.id} className="lc-ig-post">
+                    <div className="lc-ig-post-placeholder">
+                      <SocialIcon network="Instagram" size={28} />
+                    </div>
+                    <div style={{ padding: "10px 12px" }}>
+                      <p style={{ margin: "0 0 8px", fontSize: 13, lineHeight: 1.55, color: C.charcoal }}>
+                        {post.text}
+                      </p>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <span className="lc-meta" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+                          {post.likes}
+                        </span>
+                        <span className="lc-meta" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                          {post.comments}
+                        </span>
+                        <span className="lc-meta">{post.at}</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Redes sociales footer ── */}
+          {connectedAccounts.length > 0 && (
+            <section className="lc-social-footer">
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 20, color: C.charcoal }}>
+                  Seguinos en redes
+                </h3>
+                <p className="lc-meta">Encontra mas contenido literario en nuestras redes sociales.</p>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                {connectedAccounts.map((account) => (
+                  <span
+                    key={account.id}
+                    title={`${account.network}: ${account.handle}`}
+                    className="lc-social-badge"
+                  >
+                    <SocialIcon network={account.network} size={16} />
+                    {account.handle}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── CTA final ── */}
+          <section className="lc-cta-banner">
+            <h2>Empieza hoy tu formacion literaria</h2>
+            <p>Unite a una comunidad de lectores apasionados y aprende con los mejores mentores.</p>
+            <button type="button" className="lc-button-cta" onClick={onOpenLogin}>
+              Crear cuenta gratis
+            </button>
+          </section>
         </div>
       </main>
     </div>
@@ -3522,6 +4402,9 @@ export default function LitCafeApp() {
             events={events}
             forums={forums}
             courseCatalog={courseCatalog}
+            communities={communities}
+            socialAccounts={socialAccounts}
+            socialPosts={socialPosts}
             cartItems={cartItemsDetailed}
             cartTotal={cartTotal}
             onAddCourseToCart={handleAddCourseToCart}
