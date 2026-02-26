@@ -179,11 +179,19 @@ export const initialMessageThreads = [
   {
     id: "thread-2",
     title: "Grupo Borges - cohorte 4",
-    participants: ["Sofia", "Bruno", "Luz", "Lector Demo"],
-    unread: 1,
+    participants: ["Prof. Laura Quiroga", "Sofia", "Bruno", "Luz", "Lector Demo"],
+    participantDetails: [
+      { id: "coh4-prof", name: "Prof. Laura Quiroga", role: "Profesor/a" },
+      { id: "coh4-s1", name: "Sofia", role: "Alumna" },
+      { id: "coh4-s2", name: "Bruno", role: "Alumno" },
+      { id: "coh4-s3", name: "Luz", role: "Alumna" },
+      { id: "coh4-s4", name: "Lector Demo", role: "Alumno" },
+    ],
+    unread: 3,
     messages: [
-      { id: "t2-m1", author: "Sofia", text: "Ya vieron la consigna del modulo 10?", at: "Ayer" },
+      { id: "t2-m1", author: "Prof. Laura Quiroga", text: "Subi la consigna final del modulo 10 para toda la cohorte 4.", at: "Ayer" },
       { id: "t2-m2", author: "Bruno", text: "Si, hago una plantilla compartida y la paso.", at: "Ayer" },
+      { id: "t2-m3", author: "Luz", text: "Genial, asi todos avanzamos con la misma estructura.", at: "Hoy" },
     ],
   },
   {
@@ -349,6 +357,8 @@ export const fallbackLiteratureNews = [
     id: "lit-news-mock-1",
     title: "Feria internacional del libro anuncia edicion 2026",
     summary: "La organizacion confirmo invitados de 12 paises y foco en narrativa latinoamericana.",
+    content:
+      "La organizacion de la feria internacional del libro confirmo la edicion 2026 con invitados de doce paises y un eje especial dedicado a la narrativa latinoamericana contemporanea. El cronograma incluye mesas de debate sobre nuevos formatos de lectura, talleres para mediadores culturales y una agenda federal con actividades en distintas provincias.\n\nTambien se anuncio un programa de formacion para docentes y bibliotecarios, orientado a estrategias de lectura en comunidad y acompanamiento de clubes de lectura escolares. Segun el comite curatorial, el objetivo es ampliar el acceso a novedades editoriales y fortalecer el vinculo entre autores, editoriales y lectores.",
     source: "Mock Literario",
     publishedAt: "2026-02-26",
     url: "#",
@@ -357,6 +367,8 @@ export const fallbackLiteratureNews = [
     id: "lit-news-mock-2",
     title: "Premio nacional de poesia abre convocatoria para obras ineditas",
     summary: "La convocatoria estara abierta hasta fines de abril y tendra categoria sub-30.",
+    content:
+      "El premio nacional de poesia abrio oficialmente su convocatoria para obras ineditas y sumo una categoria especifica para autores menores de 30 anos. La postulacion podra realizarse hasta fines de abril y se evaluaran manuscritos de todo el pais.\n\nEl jurado estara integrado por poetas, editores y docentes especializados en oralidad y escritura contemporanea. Ademas del reconocimiento economico, las obras ganadoras tendran acompanamiento editorial y una gira de lecturas en espacios culturales aliados.",
     source: "Mock Literario",
     publishedAt: "2026-02-24",
     url: "#",
@@ -365,6 +377,8 @@ export const fallbackLiteratureNews = [
     id: "lit-news-mock-3",
     title: "Editoriales independientes reportan suba en clubes de lectura",
     summary: "El crecimiento de comunidades locales impulsa nuevas colecciones de cuento breve.",
+    content:
+      "Diversas editoriales independientes reportaron un crecimiento sostenido de clubes de lectura y espacios de conversacion literaria en barrios y centros culturales. Este movimiento, segun referentes del sector, esta impulsando nuevas colecciones de cuento breve, poesia y ensayo para lectores que buscan encuentros periodicos y lectura guiada.\n\nLos sellos tambien destacaron que las comunidades lectoras mejoran la circulacion de catalogos de fondo y fomentan la recomendacion entre pares, un factor clave para sostener tiradas pequenas. Para 2026, varias editoriales anunciaron alianzas con bibliotecas populares para ampliar la distribucion.",
     source: "Mock Literario",
     publishedAt: "2026-02-21",
     url: "#",

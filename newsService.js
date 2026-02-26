@@ -32,10 +32,13 @@ function stripHtml(value) {
 }
 
 function normalizeGuardianResult(item) {
+  const summary = stripHtml(item.fields?.trailText) || "Sin resumen disponible.";
+  const fullBody = stripHtml(item.fields?.bodyText);
   return {
     id: item.id,
     title: item.webTitle,
-    summary: stripHtml(item.fields?.trailText) || "Sin resumen disponible.",
+    summary,
+    content: fullBody || summary,
     source: "The Guardian",
     publishedAt: item.webPublicationDate ? item.webPublicationDate.slice(0, 10) : "",
     url: item.webUrl || "#",
@@ -44,8 +47,39 @@ function normalizeGuardianResult(item) {
 }
 
 function isLiteratureNews(item) {
-  const haystack = `${item.title} ${item.summary} ${item.sectionName}`.toLowerCase();
+  const haystack = `${item.title} ${item.summary} ${item.content || ""} ${item.sectionName}`.toLowerCase();
   return LITERATURE_KEYWORDS.some((keyword) => haystack.includes(keyword));
+}
+
+async function fetchGuardianFullContent(articleId) {
+  const endpoint = new URL(`https://content.guardianapis.com/${articleId}`);
+  endpoint.searchParams.set("api-key", "test");
+  endpoint.searchParams.set("show-fields", "bodyText");
+
+  const response = await fetch(endpoint.toString());
+  if (!response.ok) {
+    throw new Error(`Guardian API detail status ${response.status}`);
+  }
+
+  const payload = await response.json();
+  return stripHtml(payload?.response?.content?.fields?.bodyText);
+}
+
+async function enrichWithFullContent(newsItem) {
+  if (!newsItem?.id || (newsItem.content && newsItem.content !== newsItem.summary)) {
+    return newsItem;
+  }
+
+  try {
+    const fullContent = await fetchGuardianFullContent(newsItem.id);
+    if (fullContent) {
+      return { ...newsItem, content: fullContent };
+    }
+  } catch (error) {
+    console.error(`No se pudo hidratar contenido completo para ${newsItem.id}:`, error);
+  }
+
+  return newsItem;
 }
 
 export async function fetchLiteratureNews() {
@@ -55,7 +89,7 @@ export async function fetchLiteratureNews() {
     "(literature OR books OR novels OR poetry OR literatura OR libros OR novela OR poesia)",
   );
   endpoint.searchParams.set("api-key", "test");
-  endpoint.searchParams.set("show-fields", "trailText");
+  endpoint.searchParams.set("show-fields", "trailText,bodyText");
   endpoint.searchParams.set("order-by", "newest");
   endpoint.searchParams.set("page-size", "12");
 
@@ -74,7 +108,8 @@ export async function fetchLiteratureNews() {
       .slice(0, 8);
 
     if (filteredItems.length > 0) {
-      return { source: "api", items: filteredItems };
+      const hydratedItems = await Promise.all(filteredItems.map(enrichWithFullContent));
+      return { source: "api", items: hydratedItems };
     }
   } catch (error) {
     console.error("No se pudo traer noticias desde la API:", error);
