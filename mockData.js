@@ -1,6 +1,7 @@
 export const appSections = [
   { id: "tablero", label: "Tablero", icon: "DB" },
   { id: "cursos", label: "Mis cursos", icon: "CR" },
+  { id: "tareas", label: "Tareas pendientes", icon: "TS" },
   { id: "calendario", label: "Calendario", icon: "CL" },
   { id: "foros", label: "Foros", icon: "FR" },
   { id: "mensajes", label: "Mensajes", icon: "MS" },
@@ -37,7 +38,34 @@ export const initialCourses = [
     totalModules: 12,
     pendingTasks: 2,
     nextClass: "2026-03-02",
+    price: 34900,
     description: "Analisis de cuentos, simbolos y estructuras circulares.",
+    activities: [
+      {
+        id: "c1-activity-1",
+        title: "Ensayo breve sobre El Aleph",
+        type: "Entrega escrita",
+        dueDate: "2026-03-01",
+        status: "pendiente",
+        description: "Subir un texto de 700 palabras sobre simultaneidad y punto de vista.",
+      },
+      {
+        id: "c1-activity-2",
+        title: "Foro guiado: El jardin de senderos",
+        type: "Foro",
+        dueDate: "2026-03-03",
+        status: "en progreso",
+        description: "Participar con dos intervenciones argumentadas y una replica.",
+      },
+      {
+        id: "c1-activity-3",
+        title: "Cuestionario modulo 8",
+        type: "Cuestionario",
+        dueDate: "2026-02-20",
+        status: "completada",
+        description: "Evaluacion automatica sobre recursos narrativos borgeanos.",
+      },
+    ],
     comments: [
       { id: "c1-comment-1", author: "Sofia", text: "Subi una guia de lectura para el modulo 9.", at: "Hace 1h" },
       { id: "c1-comment-2", author: "Bruno", text: "El foro del Aleph esta buenisimo.", at: "Hace 3h" },
@@ -52,7 +80,26 @@ export const initialCourses = [
     totalModules: 9,
     pendingTasks: 1,
     nextClass: "2026-03-03",
+    price: 29900,
     description: "Lectura de poesia del cono sur y discusion de recursos.",
+    activities: [
+      {
+        id: "c2-activity-1",
+        title: "Lectura comentada de antologia",
+        type: "Lectura",
+        dueDate: "2026-03-04",
+        status: "pendiente",
+        description: "Anotar 5 recursos poeticos y compartirlos en el aula.",
+      },
+      {
+        id: "c2-activity-2",
+        title: "Micro podcast de analisis",
+        type: "Audio",
+        dueDate: "2026-02-27",
+        status: "completada",
+        description: "Grabar una reflexion de 3 minutos sobre oralidad y ritmo.",
+      },
+    ],
     comments: [
       { id: "c2-comment-1", author: "Nico", text: "Comparti una antologia digital en recursos.", at: "Ayer" },
     ],
@@ -66,7 +113,26 @@ export const initialCourses = [
     totalModules: 6,
     pendingTasks: 1,
     nextClass: "2026-03-06",
+    price: 38900,
     description: "Ejercicios semanales de cuento breve y devoluciones.",
+    activities: [
+      {
+        id: "c3-activity-1",
+        title: "Entrega de microcuento",
+        type: "Entrega escrita",
+        dueDate: "2026-03-05",
+        status: "pendiente",
+        description: "Publicar version final de 1000 palabras para devolucion grupal.",
+      },
+      {
+        id: "c3-activity-2",
+        title: "Peer review en pareja",
+        type: "Revision",
+        dueDate: "2026-03-02",
+        status: "en progreso",
+        description: "Comentar estructura y tono del cuento asignado.",
+      },
+    ],
     comments: [
       { id: "c3-comment-1", author: "Luz", text: "Cerramos ronda de feedback para microcuentos.", at: "Hace 40m" },
     ],
@@ -266,5 +332,111 @@ export const fallbackLiteratureNews = [
     source: "Mock Literario",
     publishedAt: "2026-02-21",
     url: "#",
+  },
+];
+
+export const initialCourseCatalog = [
+  {
+    id: "catalog-1",
+    title: "Critica literaria para comunidades",
+    level: "Intermedio",
+    format: "Virtual en vivo",
+    duration: "8 semanas",
+    price: 42900,
+    description: "Aprende a leer, argumentar y moderar debates literarios en espacios colaborativos.",
+  },
+  {
+    id: "catalog-2",
+    title: "Introduccion a la poesia latinoamericana",
+    level: "Inicial",
+    format: "Aula asincronica + encuentros",
+    duration: "6 semanas",
+    price: 31900,
+    description: "Recorrido guiado por poeticas contemporaneas con actividades semanales.",
+  },
+  {
+    id: "catalog-3",
+    title: "Laboratorio de novela corta",
+    level: "Avanzado",
+    format: "Presencial + virtual",
+    duration: "10 semanas",
+    price: 51900,
+    description: "Del plan argumental al borrador final, con revision editorial y mentoria.",
+  },
+];
+
+export const initialTrainingPrograms = [
+  {
+    id: "training-1",
+    name: "Trayecto narrativo 2026",
+    coordinator: "Laura Quiroga",
+    students: 42,
+    status: "activo",
+  },
+  {
+    id: "training-2",
+    name: "Programa poesia viva",
+    coordinator: "Marta Elizondo",
+    students: 29,
+    status: "activo",
+  },
+  {
+    id: "training-3",
+    name: "Semillero de escritura",
+    coordinator: "Rocio Ferrer",
+    students: 18,
+    status: "planificacion",
+  },
+];
+
+export const initialEnrollments = [
+  {
+    id: "enroll-1",
+    studentName: "Lector Demo",
+    plan: "Trayecto narrativo 2026",
+    status: "activa",
+    startDate: "2026-01-10",
+    renewalDate: "2026-03-10",
+  },
+  {
+    id: "enroll-2",
+    studentName: "Admin LitCafe",
+    plan: "Programa institucional",
+    status: "activa",
+    startDate: "2025-11-01",
+    renewalDate: "2026-11-01",
+  },
+];
+
+export const initialPayments = [
+  {
+    id: "pay-1",
+    studentName: "Lector Demo",
+    concept: "Cuota febrero",
+    amount: 32000,
+    currency: "ARS",
+    dueDate: "2026-02-10",
+    status: "pagado",
+    method: "Transferencia",
+  },
+  {
+    id: "pay-2",
+    studentName: "Lector Demo",
+    concept: "Cuota marzo",
+    amount: 32000,
+    currency: "ARS",
+    dueDate: "2026-03-10",
+    status: "pendiente",
+    method: "Tarjeta",
+  },
+  {
+    id: "pay-3",
+    studentName: "Admin LitCafe",
+    concept: "Membresia anual",
+    amount: 0,
+    currency: "ARS",
+    dueDate: "2026-11-01",
+    status: "bonificado",
+    method: "Interno",
   },
 ];

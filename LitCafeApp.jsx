@@ -3,13 +3,17 @@ import {
   appSections,
   fallbackLiteratureNews,
   initialCommunities,
+  initialCourseCatalog,
   initialCourses,
+  initialEnrollments,
   initialEvents,
   initialForums,
   initialMessageThreads,
+  initialPayments,
   initialSiteNews,
   initialSocialAccounts,
   initialSocialPosts,
+  initialTrainingPrograms,
   mockUsers,
 } from "./mockData.js";
 import { fetchLiteratureNews } from "./newsService.js";
@@ -32,6 +36,8 @@ const C = {
   warningBg: "#FFF4DE",
   warningText: "#8D6122",
 };
+
+const WEEK_DAYS = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
 
 function createId(prefix) {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -72,6 +78,49 @@ function eventSortValue(event) {
   const safeDate = event.date || "2100-01-01";
   const safeTime = event.time || "23:59";
   return new Date(`${safeDate}T${safeTime}:00`).getTime();
+}
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 0,
+  }).format(value || 0);
+}
+
+function toIsoDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function shiftMonth(date, delta) {
+  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
+}
+
+function buildMonthGrid(monthAnchor, eventsByDate) {
+  const year = monthAnchor.getFullYear();
+  const month = monthAnchor.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const firstWeekday = (firstDay.getDay() + 6) % 7;
+  const cells = [];
+
+  for (let index = 0; index < 42; index += 1) {
+    const dayOffset = index - firstWeekday;
+    const cellDate = new Date(year, month, dayOffset + 1);
+    const isoDate = toIsoDate(cellDate);
+    cells.push({
+      key: `${isoDate}-${index}`,
+      date: cellDate,
+      isoDate,
+      day: cellDate.getDate(),
+      isCurrentMonth: cellDate.getMonth() === month,
+      events: eventsByDate.get(isoDate) || [],
+    });
+  }
+
+  return cells;
 }
 
 function GlobalStyles() {
@@ -526,6 +575,194 @@ function GlobalStyles() {
         border-color: #ead7cf;
       }
 
+      .lc-stat-card-button {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 10px;
+        padding: 12px;
+        text-align: left;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+      }
+
+      .lc-stat-card-button:hover {
+        border-color: ${C.accent};
+      }
+
+      .lc-stat-card-button .lc-stat-value {
+        margin-top: 2px;
+      }
+
+      .lc-stat-card-help {
+        margin: 6px 0 0;
+        color: ${C.accent};
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .lc-tab-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .lc-tab-button {
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        color: ${C.charcoal};
+        border-radius: 999px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .lc-tab-button.is-active {
+        background: ${C.accent};
+        border-color: ${C.accent};
+        color: #fff;
+      }
+
+      .lc-month-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .lc-month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .lc-month-weekday {
+        text-align: center;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: ${C.textSec};
+        font-weight: 700;
+      }
+
+      .lc-month-cell {
+        border: 1px solid ${C.border};
+        border-radius: 8px;
+        background: #fff;
+        min-height: 86px;
+        padding: 6px;
+      }
+
+      .lc-month-cell.is-outside {
+        background: ${C.bgWarm};
+        color: ${C.textMeta};
+      }
+
+      .lc-month-day {
+        margin: 0 0 6px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .lc-month-events {
+        display: grid;
+        gap: 4px;
+      }
+
+      .lc-month-event {
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        border-radius: 6px;
+        font-size: 11px;
+        padding: 2px 4px;
+      }
+
+      .lc-landing-page {
+        min-height: 100vh;
+        background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
+      }
+
+      .lc-landing-topbar {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 18px;
+        border-bottom: 1px solid ${C.border};
+        background: ${C.bgCard};
+      }
+
+      .lc-landing-main {
+        padding: 16px;
+      }
+
+      .lc-landing-hero {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 14px;
+      }
+
+      .lc-landing-hero h1 {
+        margin: 0 0 8px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 44px;
+      }
+
+      .lc-landing-hero p {
+        margin: 0;
+        color: ${C.textSec};
+        line-height: 1.6;
+      }
+
+      .lc-landing-kpis {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .lc-landing-kpi {
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        border-radius: 8px;
+        padding: 9px;
+      }
+
+      .lc-landing-kpi p {
+        margin: 0;
+      }
+
+      .lc-marketplace-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .lc-marketplace-item {
+        border: 1px solid ${C.border};
+        border-radius: 8px;
+        background: ${C.bg};
+        padding: 10px;
+      }
+
+      .lc-detail-main {
+        min-height: 100vh;
+        padding: 18px;
+      }
+
+      .lc-detail-shell {
+        max-width: 980px;
+        margin: 0 auto;
+        display: grid;
+        gap: 12px;
+      }
+
       @media (max-width: 980px) {
         .lc-body {
           grid-template-columns: 1fr;
@@ -567,6 +804,14 @@ function GlobalStyles() {
         .lc-login-card {
           grid-template-columns: 1fr;
         }
+
+        .lc-landing-kpis {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-marketplace-grid {
+          grid-template-columns: 1fr;
+        }
       }
     `}</style>
   );
@@ -584,6 +829,301 @@ function Card({ title, action, children }) {
   );
 }
 
+function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog, onOpenLogin, onOpenDetail }) {
+  const topLiterature = literatureNews.slice(0, 4);
+  const topInternalNews = siteNews.slice(0, 4);
+  const topEvents = [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)).slice(0, 4);
+  const topForums = forums.slice(0, 4);
+
+  return (
+    <div className="lc-landing-page">
+      <header className="lc-landing-topbar">
+        <div className="lc-brand-wrap">
+          <h1 className="lc-brand">LitCafe LMS</h1>
+          <span className="lc-pill">Comunidad, cursos y noticias</span>
+        </div>
+        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+          Iniciar sesion
+        </button>
+      </header>
+
+      <main className="lc-landing-main">
+        <div className="lc-main-shell">
+          <section className="lc-landing-hero">
+            <span className="lc-tag is-accent">Landing principal</span>
+            <h1>Aprende literatura, participa de la comunidad y compra tus cursos</h1>
+            <p>
+              Esta es la nueva homepage publica. Desde aca puedes recorrer noticias, novedades internas, foros y eventos,
+              ver detalle de cada contenido, y luego elegir iniciar sesion para gestionar tu formacion completa.
+            </p>
+            <div className="lc-row" style={{ marginTop: 12 }}>
+              <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+                Ir a login
+              </button>
+              <button
+                type="button"
+                className="lc-button"
+                onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
+                disabled={courseCatalog.length === 0}
+              >
+                Comprar cursos
+              </button>
+            </div>
+            <div className="lc-landing-kpis">
+              <div className="lc-landing-kpi">
+                <p className="lc-stat-label">Cursos disponibles</p>
+                <p className="lc-stat-value" style={{ fontSize: 24 }}>
+                  {courseCatalog.length}
+                </p>
+              </div>
+              <div className="lc-landing-kpi">
+                <p className="lc-stat-label">Eventos proximos</p>
+                <p className="lc-stat-value" style={{ fontSize: 24 }}>
+                  {events.length}
+                </p>
+              </div>
+              <div className="lc-landing-kpi">
+                <p className="lc-stat-label">Hilos activos</p>
+                <p className="lc-stat-value" style={{ fontSize: 24 }}>
+                  {forums.length}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <div className="lc-grid lc-grid-2">
+            <Card title="Noticias de literatura">
+              <ul className="lc-list">
+                {topLiterature.map((newsItem) => (
+                  <li key={newsItem.id} className="lc-list-item">
+                    <button className="lc-link" type="button" onClick={() => onOpenDetail("literature-news", newsItem.id)}>
+                      {newsItem.title}
+                    </button>
+                    <p className="lc-meta">{newsItem.summary}</p>
+                    <p className="lc-meta">
+                      {newsItem.source} | {formatDate(newsItem.publishedAt)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+
+            <Card title="Novedades internas de la comunidad">
+              <ul className="lc-list">
+                {topInternalNews.map((internalNews) => (
+                  <li key={internalNews.id} className="lc-list-item">
+                    <button className="lc-link" type="button" onClick={() => onOpenDetail("internal-news", internalNews.id)}>
+                      {internalNews.title}
+                    </button>
+                    <p className="lc-meta">{internalNews.summary}</p>
+                    <p className="lc-meta">{formatDate(internalNews.publishedAt)}</p>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
+
+          <div className="lc-grid lc-grid-2">
+            <Card title="Proximos eventos">
+              <ul className="lc-list">
+                {topEvents.map((eventItem) => (
+                  <li key={eventItem.id} className="lc-list-item">
+                    <button className="lc-link" type="button" onClick={() => onOpenDetail("event", eventItem.id)}>
+                      {eventItem.title}
+                    </button>
+                    <p className="lc-meta">
+                      {formatDate(eventItem.date)} | {eventItem.time} | {eventItem.type}
+                    </p>
+                    <p className="lc-meta">{eventItem.location}</p>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+
+            <Card title="Foros activos">
+              <ul className="lc-list">
+                {topForums.map((forum) => (
+                  <li key={forum.id} className="lc-list-item">
+                    <button className="lc-link" type="button" onClick={() => onOpenDetail("forum", forum.id)}>
+                      {forum.title}
+                    </button>
+                    <p className="lc-meta">
+                      {forum.course} | {forum.comments.length} comentarios
+                    </p>
+                    <p className="lc-meta">Iniciado por {forum.author}</p>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
+
+          <Card title="Cursos para comprar">
+            <div className="lc-marketplace-grid">
+              {courseCatalog.map((course) => (
+                <article key={course.id} className="lc-marketplace-item">
+                  <p className="lc-stat-label" style={{ marginTop: 0 }}>
+                    {course.level} | {course.duration}
+                  </p>
+                  <h3 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 22 }}>
+                    {course.title}
+                  </h3>
+                  <p className="lc-muted" style={{ margin: "0 0 8px", fontSize: 14 }}>
+                    {course.description}
+                  </p>
+                  <p className="lc-meta" style={{ marginBottom: 8 }}>
+                    Modalidad: {course.format}
+                  </p>
+                  <p className="lc-meta" style={{ marginBottom: 10 }}>
+                    Precio: <strong>{formatCurrency(course.price)}</strong>
+                  </p>
+                  <button type="button" className="lc-button is-primary" onClick={() => onOpenDetail("catalog-course", course.id)}>
+                    Ver curso y comprar
+                  </button>
+                </article>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function LandingDetailScreen({ view, literatureNews, siteNews, events, forums, courseCatalog, onBack, onOpenLogin }) {
+  let title = "Detalle";
+  let meta = "";
+  let body = null;
+  let cta = null;
+
+  if (view.kind === "literature-news") {
+    const item = literatureNews.find((news) => news.id === view.id);
+    if (item) {
+      title = item.title;
+      meta = `${item.source || "LitCafe"} | ${formatDate(item.publishedAt)}`;
+      body = <p className="lc-muted">{item.summary}</p>;
+      cta = (
+        <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
+          Abrir noticia completa
+        </a>
+      );
+    }
+  } else if (view.kind === "internal-news") {
+    const item = siteNews.find((news) => news.id === view.id);
+    if (item) {
+      title = item.title;
+      meta = `Novedad interna | ${formatDate(item.publishedAt)}`;
+      body = <p className="lc-muted">{item.summary}</p>;
+      cta = (
+        <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
+          Abrir publicacion
+        </a>
+      );
+    }
+  } else if (view.kind === "event") {
+    const eventItem = events.find((event) => event.id === view.id);
+    if (eventItem) {
+      title = eventItem.title;
+      meta = `${formatDate(eventItem.date)} | ${eventItem.time} | ${eventItem.type}`;
+      body = (
+        <div className="lc-grid" style={{ gap: 6 }}>
+          <p className="lc-muted" style={{ margin: 0 }}>
+            Ubicacion: {eventItem.location}
+          </p>
+          <p className="lc-muted" style={{ margin: 0 }}>
+            Cupos disponibles: {eventItem.seats}
+          </p>
+          <p className="lc-muted" style={{ margin: 0 }}>
+            Creado por: {eventItem.createdBy}
+          </p>
+        </div>
+      );
+      cta = (
+        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+          Iniciar sesion para reservar
+        </button>
+      );
+    }
+  } else if (view.kind === "forum") {
+    const forum = forums.find((item) => item.id === view.id);
+    if (forum) {
+      title = forum.title;
+      meta = `${forum.course} | ${forum.author} | ${formatDate(forum.createdAt)}`;
+      body = (
+        <div className="lc-grid" style={{ gap: 10 }}>
+          <p className="lc-muted" style={{ margin: 0 }}>
+            {forum.content}
+          </p>
+          <div>
+            <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>
+              Comentarios del foro
+            </p>
+            <ul className="lc-list">
+              {forum.comments.map((comment) => (
+                <li key={comment.id} className="lc-list-item">
+                  <p style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 13 }}>{comment.author}</p>
+                  <p className="lc-muted" style={{ margin: "0 0 3px", fontSize: 13 }}>
+                    {comment.text}
+                  </p>
+                  <p className="lc-meta">{comment.at}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+      cta = (
+        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+          Iniciar sesion para responder en el foro
+        </button>
+      );
+    }
+  } else if (view.kind === "catalog-course") {
+    const course = courseCatalog.find((item) => item.id === view.id);
+    if (course) {
+      title = course.title;
+      meta = `${course.level} | ${course.duration} | ${course.format}`;
+      body = (
+        <div className="lc-grid" style={{ gap: 8 }}>
+          <p className="lc-muted" style={{ margin: 0 }}>
+            {course.description}
+          </p>
+          <p className="lc-meta" style={{ margin: 0 }}>
+            Precio: <strong>{formatCurrency(course.price)}</strong>
+          </p>
+        </div>
+      );
+      cta = (
+        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+          Iniciar sesion para comprar
+        </button>
+      );
+    }
+  }
+
+  return (
+    <main className="lc-detail-main">
+      <div className="lc-detail-shell">
+        <div className="lc-row">
+          <button type="button" className="lc-button" onClick={onBack}>
+            Volver a la landing
+          </button>
+          <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+            Iniciar sesion
+          </button>
+        </div>
+        <Card title="Detalle de contenido">
+          <h2 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 32 }}>{title}</h2>
+          <p className="lc-meta" style={{ marginBottom: 12 }}>
+            {meta || "Contenido no encontrado."}
+          </p>
+          {body || <p className="lc-muted">No se encontro el detalle solicitado.</p>}
+          {cta ? <div style={{ marginTop: 12 }}>{cta}</div> : null}
+        </Card>
+      </div>
+    </main>
+  );
+}
+
 function DashboardSection({
   courses,
   events,
@@ -596,7 +1136,10 @@ function DashboardSection({
   newsLoading,
   onGoToSection,
 }) {
-  const totalPendingTasks = courses.reduce((acc, course) => acc + (course.pendingTasks || 0), 0);
+  const totalPendingTasks = courses.reduce(
+    (acc, course) => acc + (course.activities || []).filter((activity) => activity.status !== "completada").length,
+    0,
+  );
   const avgProgress = Math.round(courses.reduce((acc, course) => acc + (course.progress || 0), 0) / Math.max(courses.length, 1));
   const unreadMessages = messageThreads.reduce((acc, thread) => acc + (thread.unread || 0), 0);
 
@@ -607,37 +1150,33 @@ function DashboardSection({
   return (
     <div className="lc-grid">
       <div className="lc-grid lc-grid-4">
-        <article className="lc-card">
-          <div className="lc-card-body">
-            <p className="lc-stat-label">Cursos activos</p>
-            <p className="lc-stat-value">{courses.length}</p>
-            <p className="lc-meta">Con progreso promedio de {avgProgress}%</p>
-          </div>
-        </article>
+        <button type="button" className="lc-stat-card-button" onClick={() => onGoToSection("cursos")}>
+          <p className="lc-stat-label">Cursos activos</p>
+          <p className="lc-stat-value">{courses.length}</p>
+          <p className="lc-meta">Con progreso promedio de {avgProgress}%</p>
+          <p className="lc-stat-card-help">Abrir cursos activos</p>
+        </button>
 
-        <article className="lc-card">
-          <div className="lc-card-body">
-            <p className="lc-stat-label">Tareas pendientes</p>
-            <p className="lc-stat-value">{totalPendingTasks}</p>
-            <p className="lc-meta">Para completar esta semana</p>
-          </div>
-        </article>
+        <button type="button" className="lc-stat-card-button" onClick={() => onGoToSection("tareas")}>
+          <p className="lc-stat-label">Tareas pendientes</p>
+          <p className="lc-stat-value">{totalPendingTasks}</p>
+          <p className="lc-meta">Para completar esta semana</p>
+          <p className="lc-stat-card-help">Abrir tareas pendientes</p>
+        </button>
 
-        <article className="lc-card">
-          <div className="lc-card-body">
-            <p className="lc-stat-label">Eventos proximos</p>
-            <p className="lc-stat-value">{events.length}</p>
-            <p className="lc-meta">Con calendario compartido</p>
-          </div>
-        </article>
+        <button type="button" className="lc-stat-card-button" onClick={() => onGoToSection("calendario")}>
+          <p className="lc-stat-label">Eventos proximos</p>
+          <p className="lc-stat-value">{events.length}</p>
+          <p className="lc-meta">Con calendario academico y grilla mensual</p>
+          <p className="lc-stat-card-help">Abrir eventos proximos</p>
+        </button>
 
-        <article className="lc-card">
-          <div className="lc-card-body">
-            <p className="lc-stat-label">Mensajes sin leer</p>
-            <p className="lc-stat-value">{unreadMessages}</p>
-            <p className="lc-meta">En conversaciones y grupos</p>
-          </div>
-        </article>
+        <button type="button" className="lc-stat-card-button" onClick={() => onGoToSection("mensajes")}>
+          <p className="lc-stat-label">Mensajes sin leer</p>
+          <p className="lc-stat-value">{unreadMessages}</p>
+          <p className="lc-meta">En conversaciones y grupos</p>
+          <p className="lc-stat-card-help">Abrir mensajes</p>
+        </button>
       </div>
 
       <div className="lc-grid lc-grid-3">
@@ -669,7 +1208,9 @@ function DashboardSection({
           <ul className="lc-list">
             {upcomingEvents.map((eventItem) => (
               <li className="lc-list-item" key={eventItem.id}>
-                <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{eventItem.title}</p>
+                <button className="lc-link" type="button" onClick={() => onGoToSection("calendario")}>
+                  {eventItem.title}
+                </button>
                 <p className="lc-meta">
                   {formatDate(eventItem.date)} | {eventItem.time} | {eventItem.type}
                 </p>
@@ -685,7 +1226,9 @@ function DashboardSection({
           <ul className="lc-list">
             {topForums.map((forum) => (
               <li className="lc-list-item" key={forum.id}>
-                <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{forum.title}</p>
+                <button className="lc-link" type="button" onClick={() => onGoToSection("foros")}>
+                  {forum.title}
+                </button>
                 <p className="lc-meta">
                   {forum.course} | {forum.comments.length} comentarios
                 </p>
@@ -754,55 +1297,194 @@ function DashboardSection({
   );
 }
 
-function CoursesSection({ courses, currentUser, onAddCourseComment }) {
-  const [commentDrafts, setCommentDrafts] = useState({});
+function CoursesSection({ courses, currentUser, onAddCourseComment, externalSelection }) {
+  const [selectedCourseId, setSelectedCourseId] = useState(courses[0]?.id || "");
+  const [courseTab, setCourseTab] = useState("inicio");
+  const [commentDraft, setCommentDraft] = useState("");
 
-  function updateDraft(courseId, value) {
-    setCommentDrafts((prev) => ({ ...prev, [courseId]: value }));
+  useEffect(() => {
+    if (courses.length === 0) {
+      setSelectedCourseId("");
+      return;
+    }
+    if (!courses.some((course) => course.id === selectedCourseId)) {
+      setSelectedCourseId(courses[0].id);
+    }
+  }, [courses, selectedCourseId]);
+
+  useEffect(() => {
+    if (!externalSelection?.courseId) {
+      return;
+    }
+    if (!courses.some((course) => course.id === externalSelection.courseId)) {
+      return;
+    }
+    setSelectedCourseId(externalSelection.courseId);
+    if (externalSelection.tab) {
+      setCourseTab(externalSelection.tab);
+    }
+  }, [externalSelection, courses]);
+
+  const selectedCourse = courses.find((course) => course.id === selectedCourseId);
+
+  function openCourse(courseId) {
+    setSelectedCourseId(courseId);
+    setCourseTab("inicio");
+    setCommentDraft("");
   }
 
-  function submitComment(event, courseId) {
+  function submitComment(event) {
     event.preventDefault();
-    const text = (commentDrafts[courseId] || "").trim();
+    if (!selectedCourse) {
+      return;
+    }
+    const text = commentDraft.trim();
     if (!text) {
       return;
     }
-    onAddCourseComment(courseId, text, currentUser.name);
-    setCommentDrafts((prev) => ({ ...prev, [courseId]: "" }));
+    onAddCourseComment(selectedCourse.id, text, currentUser.name);
+    setCommentDraft("");
+  }
+
+  function statusTagClass(status) {
+    if (status === "completada") {
+      return "is-success";
+    }
+    if (status === "pendiente") {
+      return "is-warning";
+    }
+    return "is-accent";
   }
 
   return (
     <div className="lc-grid lc-grid-2">
-      {courses.map((course) => (
-        <article className="lc-card" key={course.id}>
-          <div className="lc-card-body">
-            <div className="lc-row" style={{ marginBottom: 8 }}>
-              <span className="lc-tag is-accent">{course.mentor}</span>
-              <span className="lc-meta">
-                {course.modulesCompleted}/{course.totalModules} modulos
-              </span>
-            </div>
-            <h3 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 24 }}>{course.title}</h3>
-            <p className="lc-muted" style={{ margin: "0 0 10px", fontSize: 14 }}>
-              {course.description}
-            </p>
-            <div className="lc-progress">
-              <span style={{ width: `${course.progress}%` }} />
-            </div>
-            <div className="lc-row" style={{ marginTop: 7 }}>
-              <p className="lc-meta">{course.progress}% completado</p>
-              <p className="lc-meta">Pendientes: {course.pendingTasks}</p>
-            </div>
-            <p className="lc-meta" style={{ marginTop: 6 }}>
-              Proxima clase: {formatDate(course.nextClass)}
-            </p>
+      <Card title={`Mis cursos (${courses.length})`}>
+        <ul className="lc-list">
+          {courses.map((course) => (
+            <li key={course.id} className="lc-list-item">
+              <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{course.title}</p>
+              <p className="lc-meta">
+                Mentor: {course.mentor} | {course.progress}% completado
+              </p>
+              <p className="lc-meta" style={{ marginBottom: 6 }}>
+                Pendientes: {(course.activities || []).filter((activity) => activity.status !== "completada").length}
+              </p>
+              <button type="button" className="lc-button" onClick={() => openCourse(course.id)}>
+                Entrar al curso
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Card>
 
-            <div style={{ marginTop: 12 }}>
+      <Card title={selectedCourse ? `Curso abierto: ${selectedCourse.title}` : "Curso"}>
+        {!selectedCourse ? (
+          <p className="lc-meta">Selecciona un curso para abrir su pantalla inicial.</p>
+        ) : (
+          <div className="lc-grid">
+            <div className="lc-tab-row">
+              <button
+                type="button"
+                className={`lc-tab-button ${courseTab === "inicio" ? "is-active" : ""}`}
+                onClick={() => setCourseTab("inicio")}
+              >
+                Pantalla inicial
+              </button>
+              <button
+                type="button"
+                className={`lc-tab-button ${courseTab === "actividades" ? "is-active" : ""}`}
+                onClick={() => setCourseTab("actividades")}
+              >
+                Actividades
+              </button>
+              <button
+                type="button"
+                className={`lc-tab-button ${courseTab === "todo" ? "is-active" : ""}`}
+                onClick={() => setCourseTab("todo")}
+              >
+                Ver todo
+              </button>
+            </div>
+
+            {courseTab === "inicio" ? (
+              <div className="lc-grid" style={{ gap: 8 }}>
+                <p className="lc-muted" style={{ margin: 0 }}>
+                  {selectedCourse.description}
+                </p>
+                <p className="lc-meta" style={{ margin: 0 }}>
+                  Mentor: {selectedCourse.mentor}
+                </p>
+                <p className="lc-meta" style={{ margin: 0 }}>
+                  Modulos: {selectedCourse.modulesCompleted}/{selectedCourse.totalModules}
+                </p>
+                <p className="lc-meta" style={{ margin: 0 }}>
+                  Proxima clase: {formatDate(selectedCourse.nextClass)}
+                </p>
+                <div className="lc-progress">
+                  <span style={{ width: `${selectedCourse.progress}%` }} />
+                </div>
+              </div>
+            ) : null}
+
+            {courseTab === "actividades" ? (
+              <ul className="lc-list">
+                {(selectedCourse.activities || []).map((activity) => (
+                  <li key={activity.id} className="lc-list-item">
+                    <div className="lc-row">
+                      <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{activity.title}</p>
+                      <span className={`lc-tag ${statusTagClass(activity.status)}`}>{activity.status}</span>
+                    </div>
+                    <p className="lc-meta">
+                      {activity.type} | Entrega: {formatDate(activity.dueDate)}
+                    </p>
+                    <p className="lc-muted" style={{ margin: "4px 0 0", fontSize: 13 }}>
+                      {activity.description}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {courseTab === "todo" ? (
+              <div className="lc-grid" style={{ gap: 10 }}>
+                <div>
+                  <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>
+                    Resumen general
+                  </p>
+                  <p className="lc-meta" style={{ margin: 0 }}>
+                    Curso: {selectedCourse.title}
+                  </p>
+                  <p className="lc-meta" style={{ margin: 0 }}>
+                    Mentor: {selectedCourse.mentor}
+                  </p>
+                  <p className="lc-meta" style={{ margin: 0 }}>
+                    Avance: {selectedCourse.progress}% | Modulos {selectedCourse.modulesCompleted}/{selectedCourse.totalModules}
+                  </p>
+                </div>
+                <div>
+                  <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>
+                    Actividades del curso
+                  </p>
+                  <ul className="lc-list">
+                    {(selectedCourse.activities || []).map((activity) => (
+                      <li key={activity.id} className="lc-list-item">
+                        <p style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 13 }}>{activity.title}</p>
+                        <p className="lc-meta">
+                          {activity.status} | {formatDate(activity.dueDate)}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : null}
+
+            <div>
               <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>
-                Comentarios mock del curso
+                Comentarios del curso
               </p>
               <ul className="lc-list">
-                {course.comments.map((comment) => (
+                {selectedCourse.comments.map((comment) => (
                   <li key={comment.id} className="lc-list-item">
                     <p style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 13 }}>{comment.author}</p>
                     <p className="lc-muted" style={{ margin: "0 0 3px", fontSize: 13 }}>
@@ -814,27 +1496,103 @@ function CoursesSection({ courses, currentUser, onAddCourseComment }) {
               </ul>
             </div>
 
-            <form className="lc-form-grid" style={{ marginTop: 10 }} onSubmit={(event) => submitComment(event, course.id)}>
+            <form className="lc-form-grid" onSubmit={submitComment}>
               <input
                 className="lc-input"
                 type="text"
-                value={commentDrafts[course.id] || ""}
-                onChange={(event) => updateDraft(course.id, event.target.value)}
-                placeholder="Agregar comentario al curso"
+                value={commentDraft}
+                onChange={(event) => setCommentDraft(event.target.value)}
+                placeholder="Agregar comentario al curso abierto"
               />
               <button type="submit" className="lc-button is-primary">
                 Publicar comentario
               </button>
             </form>
           </div>
-        </article>
-      ))}
+        )}
+      </Card>
+    </div>
+  );
+}
+
+function TasksSection({ courses, onOpenCourse }) {
+  const allActivities = useMemo(
+    () =>
+      courses.flatMap((course) =>
+        (course.activities || []).map((activity) => ({
+          ...activity,
+          courseId: course.id,
+          courseTitle: course.title,
+        })),
+      ),
+    [courses],
+  );
+
+  const pendingActivities = allActivities.filter((activity) => activity.status !== "completada");
+  const completedActivities = allActivities.filter((activity) => activity.status === "completada").slice(0, 6);
+
+  return (
+    <div className="lc-grid lc-grid-2">
+      <Card title={`Tareas pendientes (${pendingActivities.length})`}>
+        <ul className="lc-list">
+          {pendingActivities.map((activity) => (
+            <li key={activity.id} className="lc-list-item">
+              <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{activity.title}</p>
+              <p className="lc-meta">
+                {activity.courseTitle} | {activity.type}
+              </p>
+              <p className="lc-meta">Entrega: {formatDate(activity.dueDate)}</p>
+              <div className="lc-row" style={{ marginTop: 6 }}>
+                <span className={`lc-tag ${activity.status === "pendiente" ? "is-warning" : "is-accent"}`}>{activity.status}</span>
+                <button type="button" className="lc-link" onClick={() => onOpenCourse(activity.courseId, "actividades")}>
+                  Abrir curso
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Card>
+
+      <Card title="Ultimas tareas completadas">
+        {completedActivities.length === 0 ? (
+          <p className="lc-meta">Aun no hay tareas completadas.</p>
+        ) : (
+          <ul className="lc-list">
+            {completedActivities.map((activity) => (
+              <li key={activity.id} className="lc-list-item">
+                <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{activity.title}</p>
+                <p className="lc-meta">{activity.courseTitle}</p>
+                <p className="lc-meta">{formatDate(activity.dueDate)}</p>
+                <span className="lc-tag is-success">completada</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
     </div>
   );
 }
 
 function CalendarSection({ events }) {
   const sortedEvents = useMemo(() => [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)), [events]);
+  const [monthAnchor, setMonthAnchor] = useState(() => {
+    const firstDate = sortedEvents[0]?.date;
+    return firstDate ? new Date(`${firstDate}T00:00:00`) : new Date();
+  });
+
+  const eventsByDate = useMemo(() => {
+    const map = new Map();
+    sortedEvents.forEach((event) => {
+      const key = event.date;
+      const items = map.get(key) || [];
+      items.push(event);
+      map.set(key, items);
+    });
+    return map;
+  }, [sortedEvents]);
+
+  const monthCells = useMemo(() => buildMonthGrid(monthAnchor, eventsByDate), [monthAnchor, eventsByDate]);
+  const monthTitle = new Intl.DateTimeFormat("es-AR", { month: "long", year: "numeric" }).format(monthAnchor);
 
   return (
     <div className="lc-grid">
@@ -857,6 +1615,39 @@ function CalendarSection({ events }) {
             </li>
           ))}
         </ul>
+      </Card>
+
+      <Card title="Calendario mensual (grilla)">
+        <div className="lc-month-toolbar">
+          <button type="button" className="lc-button" onClick={() => setMonthAnchor((prev) => shiftMonth(prev, -1))}>
+            Mes anterior
+          </button>
+          <p style={{ margin: 0, fontWeight: 700, textTransform: "capitalize" }}>{monthTitle}</p>
+          <button type="button" className="lc-button" onClick={() => setMonthAnchor((prev) => shiftMonth(prev, 1))}>
+            Mes siguiente
+          </button>
+        </div>
+
+        <div className="lc-month-grid">
+          {WEEK_DAYS.map((day) => (
+            <div key={day} className="lc-month-weekday">
+              {day}
+            </div>
+          ))}
+          {monthCells.map((cell) => (
+            <div key={cell.key} className={`lc-month-cell ${cell.isCurrentMonth ? "" : "is-outside"}`}>
+              <p className="lc-month-day">{cell.day}</p>
+              <div className="lc-month-events">
+                {cell.events.slice(0, 2).map((event) => (
+                  <div key={event.id} className="lc-month-event">
+                    {event.time} {event.title}
+                  </div>
+                ))}
+                {cell.events.length > 2 ? <div className="lc-month-event">+{cell.events.length - 2} mas</div> : null}
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
     </div>
   );
@@ -1010,9 +1801,11 @@ function ForumsSection({ forums, currentUser, onCreateForumThread, onAddForumCom
   );
 }
 
-function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMessage }) {
+function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMessage, contacts, onStartDirectMessage }) {
   const [selectedThreadId, setSelectedThreadId] = useState(messageThreads[0]?.id || "");
   const [draftMessage, setDraftMessage] = useState("");
+  const [newContact, setNewContact] = useState(contacts[0] || "");
+  const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
     if (messageThreads.length === 0) {
@@ -1023,6 +1816,16 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
       setSelectedThreadId(messageThreads[0].id);
     }
   }, [messageThreads, selectedThreadId]);
+
+  useEffect(() => {
+    if (contacts.length === 0) {
+      setNewContact("");
+      return;
+    }
+    if (!newContact || !contacts.includes(newContact)) {
+      setNewContact(contacts[0]);
+    }
+  }, [contacts, newContact]);
 
   const selectedThread = messageThreads.find((thread) => thread.id === selectedThreadId);
 
@@ -1044,70 +1847,111 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
     setDraftMessage("");
   }
 
+  function submitNewChat(event) {
+    event.preventDefault();
+    const contact = newContact.trim();
+    const text = newMessage.trim();
+    if (!contact || !text) {
+      return;
+    }
+    const threadId = onStartDirectMessage({
+      contactName: contact,
+      text,
+      author: currentUser.name,
+    });
+    setSelectedThreadId(threadId);
+    onOpenThread(threadId);
+    setNewMessage("");
+  }
+
   return (
-    <div className="lc-message-layout">
-      <Card title={`Conversaciones (${messageThreads.length})`}>
-        <ul className="lc-list">
-          {messageThreads.map((thread) => {
-            const lastMessage = thread.messages[thread.messages.length - 1];
-            const isSelected = selectedThreadId === thread.id;
-            return (
-              <li key={thread.id} className="lc-list-item">
-                <button
-                  type="button"
-                  className="lc-link"
-                  style={{ textAlign: "left", display: "block", width: "100%", color: isSelected ? C.accent : C.charcoal }}
-                  onClick={() => selectThread(thread.id)}
-                >
-                  {thread.title}
-                </button>
-                <p className="lc-meta" style={{ marginTop: 4 }}>
-                  {lastMessage?.author}: {lastMessage?.text}
-                </p>
-                <div className="lc-row" style={{ marginTop: 5 }}>
-                  <p className="lc-meta">{thread.participants.length} participantes</p>
-                  {thread.unread > 0 ? <span className="lc-tag is-warning">{thread.unread} sin leer</span> : null}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+    <div className="lc-grid">
+      <Card title="Nuevo mensaje directo">
+        <form className="lc-form-grid" onSubmit={submitNewChat}>
+          <select className="lc-select" value={newContact} onChange={(event) => setNewContact(event.target.value)}>
+            {contacts.length === 0 ? <option value="">No hay contactos disponibles</option> : null}
+            {contacts.map((contact) => (
+              <option key={contact} value={contact}>
+                {contact}
+              </option>
+            ))}
+          </select>
+          <textarea
+            className="lc-textarea"
+            placeholder="Escribe el primer mensaje del chat"
+            value={newMessage}
+            onChange={(event) => setNewMessage(event.target.value)}
+          />
+          <button type="submit" className="lc-button is-primary" disabled={contacts.length === 0}>
+            Abrir chat con esta persona
+          </button>
+        </form>
       </Card>
 
-      <Card title={selectedThread ? selectedThread.title : "Mensajes"}>
-        {!selectedThread ? (
-          <p className="lc-meta">Selecciona una conversacion.</p>
-        ) : (
-          <div className="lc-grid">
-            <div className="lc-grid">
-              {selectedThread.messages.map((message) => {
-                const isMe = message.author === currentUser.name;
-                return (
-                  <div key={message.id} className={`lc-message-bubble ${isMe ? "is-me" : ""}`}>
-                    <p style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 13 }}>{message.author}</p>
-                    <p style={{ margin: "0 0 4px", fontSize: 14 }} className="lc-muted">
-                      {message.text}
-                    </p>
-                    <p className="lc-meta">{message.at}</p>
+      <div className="lc-message-layout">
+        <Card title={`Conversaciones (${messageThreads.length})`}>
+          <ul className="lc-list">
+            {messageThreads.map((thread) => {
+              const lastMessage = thread.messages[thread.messages.length - 1];
+              const isSelected = selectedThreadId === thread.id;
+              return (
+                <li key={thread.id} className="lc-list-item">
+                  <button
+                    type="button"
+                    className="lc-link"
+                    style={{ textAlign: "left", display: "block", width: "100%", color: isSelected ? C.accent : C.charcoal }}
+                    onClick={() => selectThread(thread.id)}
+                  >
+                    {thread.title}
+                  </button>
+                  <p className="lc-meta" style={{ marginTop: 4 }}>
+                    {lastMessage?.author}: {lastMessage?.text}
+                  </p>
+                  <div className="lc-row" style={{ marginTop: 5 }}>
+                    <p className="lc-meta">{thread.participants.length} participantes</p>
+                    {thread.unread > 0 ? <span className="lc-tag is-warning">{thread.unread} sin leer</span> : null}
                   </div>
-                );
-              })}
-            </div>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
 
-            <form className="lc-form-grid" onSubmit={submitMessage}>
-              <textarea
-                className="lc-textarea"
-                placeholder="Escribe un mensaje"
-                value={draftMessage}
-                onChange={(event) => setDraftMessage(event.target.value)}
-              />
-              <button type="submit" className="lc-button is-primary">
-                Enviar mensaje
-              </button>
-            </form>
-          </div>
-        )}
-      </Card>
+        <Card title={selectedThread ? selectedThread.title : "Mensajes"}>
+          {!selectedThread ? (
+            <p className="lc-meta">Selecciona una conversacion.</p>
+          ) : (
+            <div className="lc-grid">
+              <div className="lc-grid">
+                {selectedThread.messages.map((message) => {
+                  const isMe = message.author === currentUser.name;
+                  return (
+                    <div key={message.id} className={`lc-message-bubble ${isMe ? "is-me" : ""}`}>
+                      <p style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 13 }}>{message.author}</p>
+                      <p style={{ margin: "0 0 4px", fontSize: 14 }} className="lc-muted">
+                        {message.text}
+                      </p>
+                      <p className="lc-meta">{message.at}</p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <form className="lc-form-grid" onSubmit={submitMessage}>
+                <textarea
+                  className="lc-textarea"
+                  placeholder="Escribe un mensaje"
+                  value={draftMessage}
+                  onChange={(event) => setDraftMessage(event.target.value)}
+                />
+                <button type="submit" className="lc-button is-primary">
+                  Enviar mensaje
+                </button>
+              </form>
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 }
@@ -1257,12 +2101,19 @@ function AdministrationSection({
   events,
   communities,
   siteNews,
+  courses,
+  trainingPrograms,
+  enrollments,
+  payments,
   literatureSource,
   onRefreshNews,
   newsLoading,
   onAddEvent,
   onAddCommunity,
   onAddSiteNews,
+  onAddTrainingProgram,
+  onAddEnrollment,
+  onAddPayment,
 }) {
   const isAdmin = currentUser.role === "admin";
   const [eventForm, setEventForm] = useState({
@@ -1283,15 +2134,93 @@ function AdministrationSection({
     summary: "",
     url: "",
   });
+  const [trainingForm, setTrainingForm] = useState({
+    name: "",
+    coordinator: "",
+    status: "activo",
+  });
+  const [enrollmentForm, setEnrollmentForm] = useState({
+    studentName: "",
+    plan: "",
+    status: "activa",
+    startDate: "",
+    renewalDate: "",
+  });
+  const [paymentForm, setPaymentForm] = useState({
+    studentName: "",
+    concept: "",
+    amount: "",
+    dueDate: "",
+    status: "pendiente",
+    method: "Transferencia",
+  });
 
   if (!isAdmin) {
+    const myEnrollments = enrollments.filter((item) => item.studentName === currentUser.name);
+    const myPayments = payments.filter((item) => item.studentName === currentUser.name);
+
     return (
-      <Card title="Acceso restringido">
-        <p className="lc-muted" style={{ margin: 0 }}>
-          Esta seccion es solo para administradores. Inicia sesion con credenciales admin para crear eventos, noticias y
-          comunidades.
-        </p>
-      </Card>
+      <div className="lc-grid">
+        <Card title="Mi administracion (alumno)">
+          <p className="lc-muted" style={{ margin: 0 }}>
+            Esta version para alumno centraliza tu formacion, matricula y pagos para que puedas autogestionar todo desde
+            un solo lugar.
+          </p>
+        </Card>
+
+        <div className="lc-grid lc-grid-3">
+          <Card title="Mi formacion">
+            <ul className="lc-list">
+              {courses.map((course) => (
+                <li key={course.id} className="lc-list-item">
+                  <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{course.title}</p>
+                  <p className="lc-meta">
+                    {course.progress}% completado | mentor {course.mentor}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
+          <Card title="Mi matricula">
+            {myEnrollments.length === 0 ? (
+              <p className="lc-meta">No hay matriculas registradas para este usuario.</p>
+            ) : (
+              <ul className="lc-list">
+                {myEnrollments.map((enrollment) => (
+                  <li key={enrollment.id} className="lc-list-item">
+                    <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{enrollment.plan}</p>
+                    <p className="lc-meta">
+                      {enrollment.status} | alta: {formatDate(enrollment.startDate)}
+                    </p>
+                    <p className="lc-meta">Renovacion: {formatDate(enrollment.renewalDate)}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+
+          <Card title="Mi pago">
+            {myPayments.length === 0 ? (
+              <p className="lc-meta">No hay pagos registrados para este usuario.</p>
+            ) : (
+              <ul className="lc-list">
+                {myPayments.map((payment) => (
+                  <li key={payment.id} className="lc-list-item">
+                    <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{payment.concept}</p>
+                    <p className="lc-meta">
+                      {formatCurrency(payment.amount)} | {payment.status}
+                    </p>
+                    <p className="lc-meta">
+                      Vence: {formatDate(payment.dueDate)} | {payment.method}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+        </div>
+      </div>
     );
   }
 
@@ -1345,6 +2274,67 @@ function AdministrationSection({
     }
     onAddSiteNews(payload);
     setNewsForm({ title: "", summary: "", url: "" });
+  }
+
+  function submitTraining(event) {
+    event.preventDefault();
+    const payload = {
+      name: trainingForm.name.trim(),
+      coordinator: trainingForm.coordinator.trim(),
+      status: trainingForm.status,
+    };
+    if (!payload.name || !payload.coordinator) {
+      return;
+    }
+    onAddTrainingProgram(payload);
+    setTrainingForm({ name: "", coordinator: "", status: "activo" });
+  }
+
+  function submitEnrollment(event) {
+    event.preventDefault();
+    const payload = {
+      studentName: enrollmentForm.studentName.trim(),
+      plan: enrollmentForm.plan.trim(),
+      status: enrollmentForm.status,
+      startDate: enrollmentForm.startDate,
+      renewalDate: enrollmentForm.renewalDate,
+    };
+    if (!payload.studentName || !payload.plan || !payload.startDate || !payload.renewalDate) {
+      return;
+    }
+    onAddEnrollment(payload);
+    setEnrollmentForm({
+      studentName: "",
+      plan: "",
+      status: "activa",
+      startDate: "",
+      renewalDate: "",
+    });
+  }
+
+  function submitPayment(event) {
+    event.preventDefault();
+    const payload = {
+      studentName: paymentForm.studentName.trim(),
+      concept: paymentForm.concept.trim(),
+      amount: Number(paymentForm.amount) || 0,
+      currency: "ARS",
+      dueDate: paymentForm.dueDate,
+      status: paymentForm.status,
+      method: paymentForm.method,
+    };
+    if (!payload.studentName || !payload.concept || !payload.dueDate) {
+      return;
+    }
+    onAddPayment(payload);
+    setPaymentForm({
+      studentName: "",
+      concept: "",
+      amount: "",
+      dueDate: "",
+      status: "pendiente",
+      method: "Transferencia",
+    });
   }
 
   return (
@@ -1475,6 +2465,184 @@ function AdministrationSection({
       </div>
 
       <div className="lc-grid lc-grid-3">
+        <Card title="Agregar formacion">
+          <form className="lc-form-grid" onSubmit={submitTraining}>
+            <input
+              className="lc-input"
+              type="text"
+              placeholder="Nombre de la formacion"
+              value={trainingForm.name}
+              onChange={(event) => setTrainingForm((prev) => ({ ...prev, name: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="text"
+              placeholder="Coordinador"
+              value={trainingForm.coordinator}
+              onChange={(event) => setTrainingForm((prev) => ({ ...prev, coordinator: event.target.value }))}
+            />
+            <select
+              className="lc-select"
+              value={trainingForm.status}
+              onChange={(event) => setTrainingForm((prev) => ({ ...prev, status: event.target.value }))}
+            >
+              <option value="activo">Activo</option>
+              <option value="planificacion">Planificacion</option>
+              <option value="cerrado">Cerrado</option>
+            </select>
+            <button type="submit" className="lc-button is-primary">
+              Crear formacion
+            </button>
+          </form>
+        </Card>
+
+        <Card title="Registrar matricula">
+          <form className="lc-form-grid" onSubmit={submitEnrollment}>
+            <input
+              className="lc-input"
+              type="text"
+              placeholder="Nombre del alumno"
+              value={enrollmentForm.studentName}
+              onChange={(event) => setEnrollmentForm((prev) => ({ ...prev, studentName: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="text"
+              placeholder="Plan / trayecto"
+              value={enrollmentForm.plan}
+              onChange={(event) => setEnrollmentForm((prev) => ({ ...prev, plan: event.target.value }))}
+            />
+            <select
+              className="lc-select"
+              value={enrollmentForm.status}
+              onChange={(event) => setEnrollmentForm((prev) => ({ ...prev, status: event.target.value }))}
+            >
+              <option value="activa">Activa</option>
+              <option value="pausada">Pausada</option>
+              <option value="baja">Baja</option>
+            </select>
+            <input
+              className="lc-input"
+              type="date"
+              value={enrollmentForm.startDate}
+              onChange={(event) => setEnrollmentForm((prev) => ({ ...prev, startDate: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="date"
+              value={enrollmentForm.renewalDate}
+              onChange={(event) => setEnrollmentForm((prev) => ({ ...prev, renewalDate: event.target.value }))}
+            />
+            <button type="submit" className="lc-button is-primary">
+              Guardar matricula
+            </button>
+          </form>
+        </Card>
+
+        <Card title="Registrar pago">
+          <form className="lc-form-grid" onSubmit={submitPayment}>
+            <input
+              className="lc-input"
+              type="text"
+              placeholder="Nombre del alumno"
+              value={paymentForm.studentName}
+              onChange={(event) => setPaymentForm((prev) => ({ ...prev, studentName: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="text"
+              placeholder="Concepto"
+              value={paymentForm.concept}
+              onChange={(event) => setPaymentForm((prev) => ({ ...prev, concept: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="number"
+              min="0"
+              value={paymentForm.amount}
+              onChange={(event) => setPaymentForm((prev) => ({ ...prev, amount: event.target.value }))}
+              placeholder="Monto"
+            />
+            <input
+              className="lc-input"
+              type="date"
+              value={paymentForm.dueDate}
+              onChange={(event) => setPaymentForm((prev) => ({ ...prev, dueDate: event.target.value }))}
+            />
+            <select
+              className="lc-select"
+              value={paymentForm.status}
+              onChange={(event) => setPaymentForm((prev) => ({ ...prev, status: event.target.value }))}
+            >
+              <option value="pendiente">Pendiente</option>
+              <option value="pagado">Pagado</option>
+              <option value="vencido">Vencido</option>
+              <option value="bonificado">Bonificado</option>
+            </select>
+            <select
+              className="lc-select"
+              value={paymentForm.method}
+              onChange={(event) => setPaymentForm((prev) => ({ ...prev, method: event.target.value }))}
+            >
+              <option value="Transferencia">Transferencia</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Interno">Interno</option>
+            </select>
+            <button type="submit" className="lc-button is-primary">
+              Guardar pago
+            </button>
+          </form>
+        </Card>
+      </div>
+
+      <div className="lc-grid lc-grid-3">
+        <Card title="Formaciones">
+          <ul className="lc-list">
+            {trainingPrograms.slice(0, 8).map((program) => (
+              <li key={program.id} className="lc-list-item">
+                <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{program.name}</p>
+                <p className="lc-meta">
+                  {program.coordinator} | {program.students} alumnos
+                </p>
+                <span className="lc-tag">{program.status}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card title="Matriculas">
+          <ul className="lc-list">
+            {enrollments.slice(0, 8).map((enrollment) => (
+              <li key={enrollment.id} className="lc-list-item">
+                <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{enrollment.studentName}</p>
+                <p className="lc-meta">{enrollment.plan}</p>
+                <p className="lc-meta">
+                  {enrollment.status} | renovacion: {formatDate(enrollment.renewalDate)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card title="Pagos">
+          <ul className="lc-list">
+            {payments.slice(0, 8).map((payment) => (
+              <li key={payment.id} className="lc-list-item">
+                <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{payment.studentName}</p>
+                <p className="lc-meta">
+                  {payment.concept} | {formatCurrency(payment.amount)}
+                </p>
+                <p className="lc-meta">
+                  {payment.status} | {formatDate(payment.dueDate)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
+      <div className="lc-grid lc-grid-3">
         <Card title="Eventos cargados">
           <ul className="lc-list">
             {events.slice(0, 5).map((eventItem) => (
@@ -1517,17 +2685,20 @@ function AdministrationSection({
   );
 }
 
-function LoginScreen({ credentials, authError, onChange, onSubmit }) {
+function LoginScreen({ credentials, authError, onChange, onSubmit, onBack }) {
   return (
     <main className="lc-login-shell">
       <div className="lc-login-card">
         <section className="lc-login-main">
+          <button type="button" className="lc-button" style={{ marginBottom: 10 }} onClick={onBack}>
+            Volver a la landing
+          </button>
           <p className="lc-tag is-accent" style={{ marginBottom: 12 }}>
             Plataforma de aprendizaje y comunidad
           </p>
           <h1>LitCafe LMS</h1>
           <p>
-            Inicia sesion para usar el tablero, cursos, calendario, foros, mensajes, feed social y panel de
+            Inicia sesion desde la landing para usar tablero, cursos, calendario, foros, mensajes, feed social y panel de
             administracion.
           </p>
 
@@ -1585,10 +2756,13 @@ function LoginScreen({ credentials, authError, onChange, onSubmit }) {
 export default function LitCafeApp() {
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("tablero");
+  const [publicView, setPublicView] = useState({ screen: "landing", kind: "", id: "" });
+  const [courseSelection, setCourseSelection] = useState({ courseId: "", tab: "inicio" });
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [authError, setAuthError] = useState("");
   const [currentUser, setCurrentUser] = useState(readStoredSession);
 
+  const [courseCatalog] = useState(initialCourseCatalog);
   const [courses, setCourses] = useState(initialCourses);
   const [events, setEvents] = useState(initialEvents);
   const [forums, setForums] = useState(initialForums);
@@ -1597,6 +2771,9 @@ export default function LitCafeApp() {
   const [socialPosts, setSocialPosts] = useState(initialSocialPosts);
   const [communities, setCommunities] = useState(initialCommunities);
   const [siteNews, setSiteNews] = useState(initialSiteNews);
+  const [trainingPrograms, setTrainingPrograms] = useState(initialTrainingPrograms);
+  const [enrollments, setEnrollments] = useState(initialEnrollments);
+  const [payments, setPayments] = useState(initialPayments);
   const [literatureNews, setLiteratureNews] = useState(fallbackLiteratureNews);
   const [literatureSource, setLiteratureSource] = useState("mock");
   const [newsLoading, setNewsLoading] = useState(false);
@@ -1650,12 +2827,16 @@ export default function LitCafeApp() {
     setAuthError("");
     setActiveSection("tablero");
     setCredentials({ email: "", password: "" });
+    setPublicView({ screen: "landing", kind: "", id: "" });
   }
 
   function handleLogout() {
     setCurrentUser(null);
     setCredentials({ email: "", password: "" });
     setAuthError("");
+    setActiveSection("tablero");
+    setCourseSelection({ courseId: "", tab: "inicio" });
+    setPublicView({ screen: "landing", kind: "", id: "" });
   }
 
   const activeSectionInfo = appSections.find((section) => section.id === activeSection) || appSections[0];
@@ -1664,6 +2845,21 @@ export default function LitCafeApp() {
     () => messageThreads.reduce((acc, thread) => acc + (thread.unread || 0), 0),
     [messageThreads],
   );
+
+  const messageContacts = useMemo(() => {
+    const names = new Set();
+    mockUsers.forEach((user) => names.add(user.name));
+    messageThreads.forEach((thread) => thread.participants.forEach((name) => names.add(name)));
+    courses.forEach((course) => names.add(course.mentor));
+    forums.forEach((forum) => {
+      names.add(forum.author);
+      forum.comments.forEach((comment) => names.add(comment.author));
+    });
+    if (currentUser?.name) {
+      names.delete(currentUser.name);
+    }
+    return Array.from(names).filter(Boolean).sort((a, b) => a.localeCompare(b));
+  }, [currentUser, messageThreads, courses, forums]);
 
   const handleAddCourseComment = useCallback((courseId, text, author) => {
     const comment = {
@@ -1709,6 +2905,11 @@ export default function LitCafeApp() {
     );
   }, []);
 
+  const openCourseWorkspace = useCallback((courseId, tab = "inicio") => {
+    setCourseSelection({ courseId, tab });
+    setActiveSection("cursos");
+  }, []);
+
   const handleOpenThread = useCallback((threadId) => {
     setMessageThreads((prevThreads) =>
       prevThreads.map((thread) => (thread.id === threadId ? { ...thread, unread: 0 } : thread)),
@@ -1734,6 +2935,54 @@ export default function LitCafeApp() {
           : thread,
       ),
     );
+  }, []);
+
+  const handleStartDirectMessage = useCallback(({ contactName, text, author }) => {
+    const cleanContact = contactName.trim();
+    const cleanText = text.trim();
+    if (!cleanContact || !cleanText) {
+      return "";
+    }
+
+    const messagePayload = {
+      id: createId("thread-message"),
+      author,
+      text: cleanText,
+      at: new Intl.DateTimeFormat("es-AR", { hour: "2-digit", minute: "2-digit" }).format(new Date()),
+    };
+
+    let resolvedThreadId = "";
+
+    setMessageThreads((prevThreads) => {
+      const existingDirect = prevThreads.find(
+        (thread) =>
+          thread.participants.length === 2 &&
+          thread.participants.includes(author) &&
+          thread.participants.includes(cleanContact),
+      );
+
+      if (existingDirect) {
+        resolvedThreadId = existingDirect.id;
+        const updatedThread = {
+          ...existingDirect,
+          unread: 0,
+          messages: [...existingDirect.messages, messagePayload],
+        };
+        return [updatedThread, ...prevThreads.filter((thread) => thread.id !== existingDirect.id)];
+      }
+
+      resolvedThreadId = createId("thread");
+      const newThread = {
+        id: resolvedThreadId,
+        title: `Chat con ${cleanContact}`,
+        participants: [author, cleanContact],
+        unread: 0,
+        messages: [messagePayload],
+      };
+      return [newThread, ...prevThreads];
+    });
+
+    return resolvedThreadId;
   }, []);
 
   const handleToggleSocialAccount = useCallback((accountId) => {
@@ -1789,11 +3038,69 @@ export default function LitCafeApp() {
     [currentUser],
   );
 
+  const handleAddTrainingProgram = useCallback((payload) => {
+    const program = {
+      id: createId("training"),
+      ...payload,
+      students: 0,
+    };
+    setTrainingPrograms((prevPrograms) => [program, ...prevPrograms]);
+  }, []);
+
+  const handleAddEnrollment = useCallback((payload) => {
+    const enrollment = {
+      id: createId("enrollment"),
+      ...payload,
+    };
+    setEnrollments((prevEnrollments) => [enrollment, ...prevEnrollments]);
+  }, []);
+
+  const handleAddPayment = useCallback((payload) => {
+    const payment = {
+      id: createId("payment"),
+      ...payload,
+    };
+    setPayments((prevPayments) => [payment, ...prevPayments]);
+  }, []);
+
   if (!currentUser) {
     return (
       <>
         <GlobalStyles />
-        <LoginScreen credentials={credentials} authError={authError} onChange={updateCredentials} onSubmit={handleLogin} />
+        {publicView.screen === "landing" ? (
+          <LandingScreen
+            literatureNews={literatureNews}
+            siteNews={siteNews}
+            events={events}
+            forums={forums}
+            courseCatalog={courseCatalog}
+            onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
+            onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
+          />
+        ) : null}
+
+        {publicView.screen === "detail" ? (
+          <LandingDetailScreen
+            view={publicView}
+            literatureNews={literatureNews}
+            siteNews={siteNews}
+            events={events}
+            forums={forums}
+            courseCatalog={courseCatalog}
+            onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
+            onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
+          />
+        ) : null}
+
+        {publicView.screen === "login" ? (
+          <LoginScreen
+            credentials={credentials}
+            authError={authError}
+            onChange={updateCredentials}
+            onSubmit={handleLogin}
+            onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
+          />
+        ) : null}
       </>
     );
   }
@@ -1816,7 +3123,16 @@ export default function LitCafeApp() {
           />
         );
       case "cursos":
-        return <CoursesSection courses={courses} currentUser={currentUser} onAddCourseComment={handleAddCourseComment} />;
+        return (
+          <CoursesSection
+            courses={courses}
+            currentUser={currentUser}
+            onAddCourseComment={handleAddCourseComment}
+            externalSelection={courseSelection}
+          />
+        );
+      case "tareas":
+        return <TasksSection courses={courses} onOpenCourse={openCourseWorkspace} />;
       case "calendario":
         return <CalendarSection events={events} />;
       case "foros":
@@ -1835,6 +3151,8 @@ export default function LitCafeApp() {
             currentUser={currentUser}
             onOpenThread={handleOpenThread}
             onSendMessage={handleSendMessage}
+            contacts={messageContacts}
+            onStartDirectMessage={handleStartDirectMessage}
           />
         );
       case "feed":
@@ -1855,18 +3173,37 @@ export default function LitCafeApp() {
             events={events}
             communities={communities}
             siteNews={siteNews}
+            courses={courses}
+            trainingPrograms={trainingPrograms}
+            enrollments={enrollments}
+            payments={payments}
             literatureSource={literatureSource}
             onRefreshNews={refreshLiteratureNews}
             newsLoading={newsLoading}
             onAddEvent={handleAddEvent}
             onAddCommunity={handleAddCommunity}
             onAddSiteNews={handleAddSiteNews}
+            onAddTrainingProgram={handleAddTrainingProgram}
+            onAddEnrollment={handleAddEnrollment}
+            onAddPayment={handleAddPayment}
           />
         );
       default:
         return <p className="lc-meta">Seccion no disponible.</p>;
     }
   }
+
+  const sectionTitle = activeSection === "administracion" && currentUser.role !== "admin" ? "Mi administracion" : activeSectionInfo.label;
+  const sectionDescription =
+    activeSection === "tablero"
+      ? "Resumen de actividad en cursos, tareas, foros, mensajes y noticias."
+      : activeSection === "tareas"
+        ? "Listado de tareas pendientes con acceso directo al curso."
+        : activeSection === "administracion"
+          ? currentUser.role === "admin"
+            ? "Panel de gestion de formacion, matriculas, pagos, eventos y comunidades."
+            : "Panel del alumno para gestionar su formacion, matricula y pagos."
+          : "Modulo funcional con datos mock para iterar la plataforma completa.";
 
   return (
     <>
@@ -1887,7 +3224,7 @@ export default function LitCafeApp() {
 
           <div className="lc-topbar-meta">
             <span className="lc-pill">
-              {currentUser.name} ({currentUser.role === "admin" ? "admin" : "usuario"})
+              {currentUser.name} ({currentUser.role === "admin" ? "admin" : "alumno"})
             </span>
             <span className="lc-pill">Mensajes sin leer: {totalUnreadMessages}</span>
             <button type="button" className="lc-button" onClick={handleLogout}>
@@ -1917,14 +3254,8 @@ export default function LitCafeApp() {
           <main className="lc-main">
             <div className="lc-main-shell">
               <header className="lc-main-heading">
-                <h2>{activeSectionInfo.label}</h2>
-                <p>
-                  {activeSection === "tablero"
-                    ? "Resumen de actividad en cursos, foros, mensajes, comunidades y noticias de literatura."
-                    : activeSection === "administracion"
-                      ? "Panel de gestion para crear eventos, noticias del sitio y comunidades."
-                      : "Modulo funcional con datos mock para iterar la plataforma completa."}
-                </p>
+                <h2>{sectionTitle}</h2>
+                <p>{sectionDescription}</p>
               </header>
               {renderSection()}
             </div>
