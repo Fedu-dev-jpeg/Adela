@@ -1291,6 +1291,67 @@ function GlobalStyles() {
         gap: 14px;
       }
 
+      .lc-ig-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .lc-ig-post {
+        border: 1px solid ${C.border};
+        border-radius: 12px;
+        background: ${C.bgCard};
+        overflow: hidden;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+
+      .lc-ig-post:hover {
+        border-color: ${C.accent};
+        box-shadow: 0 2px 12px rgba(184, 101, 74, 0.08);
+      }
+
+      .lc-ig-post-placeholder {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, #f0ebe1 0%, #e8e2d6 50%, #ddd6c8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${C.textMeta};
+      }
+
+      .lc-social-footer {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 36px;
+      }
+
+      .lc-social-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        color: ${C.textSec};
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color 0.15s, border-color 0.15s;
+      }
+
+      .lc-social-badge:hover {
+        color: ${C.accent};
+        border-color: ${C.accent};
+      }
+
       .lc-detail-main {
         min-height: 100vh;
         padding: 18px;
@@ -1374,6 +1435,15 @@ function GlobalStyles() {
           grid-template-columns: 1fr;
         }
 
+        .lc-ig-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .lc-social-footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
         .lc-hero-ctas {
           flex-direction: column;
           align-items: stretch;
@@ -1403,12 +1473,44 @@ function Card({ title, action, children }) {
   );
 }
 
-function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog, communities, onOpenLogin, onOpenDetail }) {
+function SocialIcon({ network, size = 22 }) {
+  const icons = {
+    Instagram: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+    Facebook: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+    ),
+    X: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+    YouTube: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  };
+  return icons[network] || null;
+}
+
+function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog, communities, socialAccounts, socialPosts, onOpenLogin, onOpenDetail }) {
   const allNews = [
     ...literatureNews.slice(0, 4).map((n) => ({ ...n, kind: "Literatura" })),
     ...siteNews.slice(0, 4).map((n) => ({ ...n, kind: "Novedad", source: n.author })),
   ];
   const sortedEvents = [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)).slice(0, 4);
+  const connectedAccounts = socialAccounts.filter((a) => a.connected);
+  const instagramConnected = socialAccounts.some((a) => a.network === "Instagram" && a.connected);
+  const instagramPosts = instagramConnected ? socialPosts.filter((p) => p.network === "Instagram").slice(0, 6) : [];
 
   const carouselRef = { current: null };
 
@@ -1442,6 +1544,39 @@ function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog
           <span className="lc-pill">Tu espacio de formacion literaria</span>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {connectedAccounts.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {connectedAccounts.map((account) => (
+                <span
+                  key={account.id}
+                  title={`${account.network}: ${account.handle}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 36,
+                    height: 36,
+                    borderRadius: 8,
+                    border: `1px solid ${C.border}`,
+                    background: C.bg,
+                    color: C.textSec,
+                    cursor: "pointer",
+                    transition: "color 0.15s, border-color 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = C.accent;
+                    e.currentTarget.style.borderColor = C.accent;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = C.textSec;
+                    e.currentTarget.style.borderColor = C.border;
+                  }}
+                >
+                  <SocialIcon network={account.network} size={18} />
+                </span>
+              ))}
+            </div>
+          )}
           <button
             type="button"
             className="lc-button-lg is-outline"
@@ -1644,6 +1779,68 @@ function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog
                     <p className="lc-community-desc">{community.description}</p>
                     <p className="lc-community-members">Comunidad activa</p>
                   </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Instagram feed ── */}
+          {instagramPosts.length > 0 && (
+            <section className="lc-landing-section">
+              <div className="lc-section-header">
+                <h2>Ultimas de Instagram</h2>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: C.textSec, fontSize: 13, fontWeight: 600 }}>
+                  <SocialIcon network="Instagram" size={16} />
+                  {socialAccounts.find((a) => a.network === "Instagram")?.handle}
+                </span>
+              </div>
+              <div className="lc-ig-grid">
+                {instagramPosts.map((post) => (
+                  <article key={post.id} className="lc-ig-post">
+                    <div className="lc-ig-post-placeholder">
+                      <SocialIcon network="Instagram" size={28} />
+                    </div>
+                    <div style={{ padding: "10px 12px" }}>
+                      <p style={{ margin: "0 0 8px", fontSize: 13, lineHeight: 1.55, color: C.charcoal }}>
+                        {post.text}
+                      </p>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <span className="lc-meta" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+                          {post.likes}
+                        </span>
+                        <span className="lc-meta" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                          {post.comments}
+                        </span>
+                        <span className="lc-meta">{post.at}</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Redes sociales footer ── */}
+          {connectedAccounts.length > 0 && (
+            <section className="lc-social-footer">
+              <div>
+                <h3 style={{ margin: "0 0 4px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 20, color: C.charcoal }}>
+                  Seguinos en redes
+                </h3>
+                <p className="lc-meta">Encontra mas contenido literario en nuestras redes sociales.</p>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                {connectedAccounts.map((account) => (
+                  <span
+                    key={account.id}
+                    title={`${account.network}: ${account.handle}`}
+                    className="lc-social-badge"
+                  >
+                    <SocialIcon network={account.network} size={16} />
+                    {account.handle}
+                  </span>
                 ))}
               </div>
             </section>
@@ -3750,6 +3947,8 @@ export default function LitCafeApp() {
             forums={forums}
             courseCatalog={courseCatalog}
             communities={communities}
+            socialAccounts={socialAccounts}
+            socialPosts={socialPosts}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
             onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
           />
