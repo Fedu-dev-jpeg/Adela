@@ -88,7 +88,7 @@ function Topbar({ onToggleDrawer }) {
         top: 0,
         left: 0,
         right: 0,
-        height: 64,
+        height: 56,
         background: C.bgCard,
         borderBottom: `1px solid ${C.border}`,
         zIndex: 100,
@@ -97,7 +97,7 @@ function Topbar({ onToggleDrawer }) {
       <div
         style={{
           height: "100%",
-          padding: "0 20px",
+          padding: "0 16px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -109,8 +109,8 @@ function Topbar({ onToggleDrawer }) {
             type="button"
             onClick={onToggleDrawer}
             style={{
-              width: 36,
-              height: 36,
+              width: 34,
+              height: 34,
               borderRadius: 8,
               border: `1px solid ${C.border}`,
               background: C.bg,
@@ -143,7 +143,7 @@ function Topbar({ onToggleDrawer }) {
               placeholder="Buscar actividades o cursos"
               style={{
                 width: "100%",
-                height: 38,
+                height: 34,
                 borderRadius: 8,
                 border: `1px solid ${C.border}`,
                 background: C.bg,
@@ -161,8 +161,8 @@ function Topbar({ onToggleDrawer }) {
           <button
             type="button"
             style={{
-              width: 36,
-              height: 36,
+              width: 34,
+              height: 34,
               borderRadius: 8,
               border: `1px solid ${C.border}`,
               background: C.bg,
@@ -176,8 +176,8 @@ function Topbar({ onToggleDrawer }) {
           </button>
           <div
             style={{
-              minWidth: 36,
-              height: 36,
+              minWidth: 34,
+              height: 34,
               borderRadius: 8,
               border: `1px solid ${C.border}`,
               background: C.bgWarm,
@@ -208,8 +208,8 @@ function Breadcrumbs() {
         background: C.bgCard,
         border: `1px solid ${C.border}`,
         borderRadius: 8,
-        padding: "10px 14px",
-        marginBottom: 16,
+        padding: "8px 12px",
+        marginBottom: 12,
       }}
     >
       <ol
@@ -240,7 +240,7 @@ function Drawer({ open }) {
     <aside
       style={{
         position: "fixed",
-        top: 64,
+        top: 56,
         left: 0,
         bottom: 0,
         width: open ? 240 : 78,
@@ -251,7 +251,7 @@ function Drawer({ open }) {
         zIndex: 90,
       }}
     >
-      <div style={{ padding: open ? "14px 14px 10px" : "14px 8px 10px" }}>
+      <div style={{ padding: open ? "10px 12px 8px" : "10px 8px 8px" }}>
         <p
           style={{
             margin: 0,
@@ -266,7 +266,7 @@ function Drawer({ open }) {
         </p>
       </div>
 
-      <nav aria-label="Menu lateral" style={{ paddingBottom: 16 }}>
+      <nav aria-label="Menu lateral" style={{ paddingBottom: 12 }}>
         {drawerItems.map((item) => (
           <a
             key={item.label}
@@ -276,11 +276,12 @@ function Drawer({ open }) {
               display: "flex",
               alignItems: "center",
               gap: 10,
-              margin: "4px 8px",
-              padding: "10px 10px",
+              margin: "2px 8px 2px 0",
+              padding: "8px 10px 8px 8px",
               borderRadius: 8,
               textDecoration: "none",
               border: item.active ? `1px solid ${C.border}` : "1px solid transparent",
+              borderLeft: item.active ? `4px solid ${C.accent}` : "4px solid transparent",
               background: item.active ? C.bgCard : "transparent",
               color: item.active ? C.accent : C.charcoal,
               fontFamily: "'DM Sans', sans-serif",
@@ -309,7 +310,8 @@ function Block({ title, children, footer }) {
     >
       <div
         style={{
-          padding: "12px 14px",
+          padding: "9px 12px",
+          background: C.bgWarm,
           borderBottom: `1px solid ${C.border}`,
           fontFamily: "'DM Sans', sans-serif",
           fontSize: 12,
@@ -321,11 +323,11 @@ function Block({ title, children, footer }) {
       >
         {title}
       </div>
-      <div style={{ padding: "12px 14px" }}>{children}</div>
+      <div style={{ padding: "10px 12px" }}>{children}</div>
       {footer ? (
         <div
           style={{
-            padding: "10px 14px",
+            padding: "8px 12px",
             borderTop: `1px solid ${C.border}`,
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 12,
@@ -371,8 +373,8 @@ function WelcomeCard() {
         background: C.bgCard,
         border: `1px solid ${C.border}`,
         borderRadius: 10,
-        padding: "18px 20px",
-        marginBottom: 16,
+        padding: "14px 16px",
+        marginBottom: 12,
       }}
     >
       <p
@@ -392,7 +394,7 @@ function WelcomeCard() {
         style={{
           margin: "0 0 8px",
           fontFamily: "'Playfair Display', Georgia, serif",
-          fontSize: 34,
+          fontSize: 32,
           lineHeight: 1.2,
           color: C.charcoal,
         }}
@@ -421,12 +423,12 @@ function ActiveCourses() {
         background: C.bgCard,
         border: `1px solid ${C.border}`,
         borderRadius: 10,
-        marginBottom: 16,
+        marginBottom: 12,
       }}
     >
       <div
         style={{
-          padding: "14px 18px",
+          padding: "10px 14px",
           borderBottom: `1px solid ${C.border}`,
           display: "flex",
           justifyContent: "space-between",
@@ -461,10 +463,10 @@ function ActiveCourses() {
 
       <div
         style={{
-          padding: 16,
+          padding: 12,
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-          gap: 12,
+          gap: 10,
         }}
       >
         {courses.map((course) => (
@@ -474,7 +476,7 @@ function ActiveCourses() {
               border: `1px solid ${C.border}`,
               borderRadius: 8,
               background: C.bg,
-              padding: 12,
+              padding: 10,
             }}
           >
             <p
@@ -494,7 +496,7 @@ function ActiveCourses() {
               style={{
                 margin: "0 0 10px",
                 fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: 20,
+                fontSize: 18,
                 color: C.charcoal,
                 lineHeight: 1.25,
               }}
@@ -541,7 +543,7 @@ function ForumUpdates() {
     >
       <div
         style={{
-          padding: "14px 18px",
+          padding: "10px 14px",
           borderBottom: `1px solid ${C.border}`,
           fontFamily: "'Playfair Display', Georgia, serif",
           fontSize: 24,
@@ -550,12 +552,12 @@ function ForumUpdates() {
       >
         Debates Recientes
       </div>
-      <div style={{ padding: "8px 16px" }}>
+      <div style={{ padding: "6px 12px" }}>
         {discussions.map((discussion, index) => (
           <article
             key={discussion.topic}
             style={{
-              padding: "10px 4px",
+              padding: "8px 2px",
               borderBottom: index === discussions.length - 1 ? "none" : `1px solid ${C.border}`,
             }}
           >
@@ -590,16 +592,16 @@ function ForumUpdates() {
 function ReadingBlock() {
   return (
     <Block title="Progreso de lectura" footer="Abrir biblioteca">
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
         {readings.map((reading) => {
           const progress = Math.round((reading.pagesRead / reading.totalPages) * 100);
           return (
-            <li key={reading.title} style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 9 }}>
+            <li key={reading.title} style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 7 }}>
               <p
                 style={{
                   margin: "0 0 2px",
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 18,
+                  fontSize: 17,
                   color: C.charcoal,
                 }}
               >
@@ -607,7 +609,7 @@ function ReadingBlock() {
               </p>
               <p
                 style={{
-                  margin: "0 0 7px",
+                  margin: "0 0 6px",
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 12,
                   color: C.textMeta,
@@ -637,9 +639,9 @@ function ReadingBlock() {
 function EventsBlock() {
   return (
     <Block title="Eventos del cafe" footer="Ir al calendario">
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
         {events.map((event) => (
-          <li key={event.name} style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 8 }}>
+          <li key={event.name} style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 7 }}>
             <p
               style={{
                 margin: "0 0 3px",
@@ -684,9 +686,9 @@ function EventsBlock() {
 function SocialBlock() {
   return (
     <Block title="Feed social" footer="Ver mas actividad">
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
         {socialPosts.map((post) => (
-          <li key={`${post.source}-${post.time}`} style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 8 }}>
+          <li key={`${post.source}-${post.time}`} style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 7 }}>
             <p
               style={{
                 margin: "0 0 3px",
@@ -744,7 +746,7 @@ export default function Dashboard() {
         @media (max-width: 860px) {
           .lcf-dash-main {
             margin-left: 0 !important;
-            padding: 78px 12px 24px !important;
+            padding: 68px 12px 20px !important;
           }
           .lcf-dash-drawer {
             transform: translateX(-100%);
@@ -765,7 +767,7 @@ export default function Dashboard() {
         className="lcf-dash-main"
         style={{
           minHeight: "100vh",
-          padding: "80px 18px 28px",
+          padding: "70px 14px 22px",
           marginLeft: drawerWidth,
           transition: "margin-left 0.22s ease",
         }}
@@ -778,7 +780,7 @@ export default function Dashboard() {
             style={{
               display: "grid",
               gridTemplateColumns: "minmax(0, 2.25fr) minmax(260px, 1fr)",
-              gap: 16,
+              gap: 12,
               alignItems: "start",
             }}
           >
@@ -787,7 +789,7 @@ export default function Dashboard() {
               <ActiveCourses />
               <ForumUpdates />
             </section>
-            <aside style={{ display: "grid", gap: 14 }}>
+            <aside style={{ display: "grid", gap: 10 }}>
               <ReadingBlock />
               <EventsBlock />
               <SocialBlock />
