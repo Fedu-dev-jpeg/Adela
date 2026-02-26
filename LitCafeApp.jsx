@@ -123,6 +123,27 @@ function buildMonthGrid(monthAnchor, eventsByDate) {
   return cells;
 }
 
+function renderParagraphs(text) {
+  const chunks = String(text || "")
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (chunks.length === 0) {
+    return <p className="lc-muted">Sin contenido disponible.</p>;
+  }
+
+  return (
+    <div className="lc-grid" style={{ gap: 8 }}>
+      {chunks.map((chunk, index) => (
+        <p key={`paragraph-${index}`} className="lc-muted" style={{ margin: 0, lineHeight: 1.65 }}>
+          {chunk}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 function GlobalStyles() {
   return (
     <style>{`
@@ -204,6 +225,12 @@ function GlobalStyles() {
         padding: 4px 10px;
         font-size: 12px;
         font-weight: 600;
+      }
+
+      .lc-pill.is-unread {
+        border-color: #eed9af;
+        background: ${C.warningBg};
+        color: ${C.warningText};
       }
 
       .lc-body {
@@ -829,11 +856,26 @@ function Card({ title, action, children }) {
   );
 }
 
-function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog, onOpenLogin, onOpenDetail }) {
+function LandingScreen({
+  literatureNews,
+  siteNews,
+  events,
+  forums,
+  courseCatalog,
+  cartItems,
+  cartTotal,
+  onAddCourseToCart,
+  onDecreaseCourseFromCart,
+  onRemoveCourseFromCart,
+  onClearCart,
+  onOpenLogin,
+  onOpenDetail,
+}) {
   const topLiterature = literatureNews.slice(0, 4);
   const topInternalNews = siteNews.slice(0, 4);
   const topEvents = [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)).slice(0, 4);
   const topForums = forums.slice(0, 4);
+  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div className="lc-landing-page">
@@ -842,9 +884,14 @@ function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog
           <h1 className="lc-brand">LitCafe LMS</h1>
           <span className="lc-pill">Comunidad, cursos y noticias</span>
         </div>
-        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
-          Iniciar sesion
-        </button>
+        <div className="lc-row" style={{ justifyContent: "flex-end" }}>
+          <button type="button" className="lc-button" onClick={() => onOpenDetail("cart", "landing-cart")}>
+            Carrito ({cartItemsCount})
+          </button>
+          <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+            Iniciar sesion
+          </button>
+        </div>
       </header>
 
       <main className="lc-landing-main">
@@ -976,12 +1023,69 @@ function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog
                   <p className="lc-meta" style={{ marginBottom: 10 }}>
                     Precio: <strong>{formatCurrency(course.price)}</strong>
                   </p>
-                  <button type="button" className="lc-button is-primary" onClick={() => onOpenDetail("catalog-course", course.id)}>
-                    Ver curso y comprar
-                  </button>
+                  <div className="lc-row">
+                    <button type="button" className="lc-button" onClick={() => onOpenDetail("catalog-course", course.id)}>
+                      Ver detalle
+                    </button>
+                    <button type="button" className="lc-button is-primary" onClick={() => onAddCourseToCart(course.id)}>
+                      Agregar al carrito
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
+          </Card>
+
+          <Card
+            title={`Carrito de compra (${cartItemsCount})`}
+            action={
+              cartItems.length > 0 ? (
+                <button type="button" className="lc-link" onClick={onClearCart}>
+                  Vaciar carrito
+                </button>
+              ) : null
+            }
+          >
+            {cartItems.length === 0 ? (
+              <p className="lc-meta">Tu carrito esta vacio. Agrega cursos desde el catalogo para empezar.</p>
+            ) : (
+              <div className="lc-grid" style={{ gap: 10 }}>
+                <ul className="lc-list">
+                  {cartItems.map((item) => (
+                    <li key={item.course.id} className="lc-list-item">
+                      <div className="lc-row" style={{ alignItems: "flex-start" }}>
+                        <div>
+                          <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{item.course.title}</p>
+                          <p className="lc-meta">
+                            {item.quantity} x {formatCurrency(item.course.price)} = {formatCurrency(item.subtotal)}
+                          </p>
+                        </div>
+                        <div className="lc-row" style={{ gap: 6 }}>
+                          <button type="button" className="lc-button" onClick={() => onDecreaseCourseFromCart(item.course.id)}>
+                            -
+                          </button>
+                          <button type="button" className="lc-button" onClick={() => onAddCourseToCart(item.course.id)}>
+                            +
+                          </button>
+                          <button type="button" className="lc-link" onClick={() => onRemoveCourseFromCart(item.course.id)}>
+                            Quitar
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="lc-row">
+                  <p className="lc-stat-label" style={{ margin: 0 }}>
+                    Total
+                  </p>
+                  <p style={{ margin: 0, fontWeight: 700 }}>{formatCurrency(cartTotal)}</p>
+                </div>
+                <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+                  Iniciar sesion para finalizar compra
+                </button>
+              </div>
+            )}
           </Card>
         </div>
       </main>
@@ -989,18 +1093,34 @@ function LandingScreen({ literatureNews, siteNews, events, forums, courseCatalog
   );
 }
 
-function LandingDetailScreen({ view, literatureNews, siteNews, events, forums, courseCatalog, onBack, onOpenLogin }) {
+function LandingDetailScreen({
+  view,
+  literatureNews,
+  siteNews,
+  events,
+  forums,
+  courseCatalog,
+  cartItems,
+  cartTotal,
+  onAddCourseToCart,
+  onDecreaseCourseFromCart,
+  onRemoveCourseFromCart,
+  onClearCart,
+  onBack,
+  onOpenLogin,
+}) {
   let title = "Detalle";
   let meta = "";
   let body = null;
   let cta = null;
+  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   if (view.kind === "literature-news") {
     const item = literatureNews.find((news) => news.id === view.id);
     if (item) {
       title = item.title;
       meta = `${item.source || "LitCafe"} | ${formatDate(item.publishedAt)}`;
-      body = <p className="lc-muted">{item.summary}</p>;
+      body = renderParagraphs(item.content || item.summary);
       cta = (
         <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
           Abrir noticia completa
@@ -1093,11 +1213,69 @@ function LandingDetailScreen({ view, literatureNews, siteNews, events, forums, c
         </div>
       );
       cta = (
-        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
-          Iniciar sesion para comprar
-        </button>
+        <div className="lc-row" style={{ justifyContent: "flex-start", flexWrap: "wrap" }}>
+          <button type="button" className="lc-button is-primary" onClick={() => onAddCourseToCart(course.id)}>
+            Agregar al carrito
+          </button>
+          <button type="button" className="lc-button" onClick={onOpenLogin}>
+            Iniciar sesion para comprar
+          </button>
+        </div>
       );
     }
+  } else if (view.kind === "cart") {
+    title = "Carrito de compra";
+    meta = `${cartItemsCount} curso(s) agregados`;
+    body =
+      cartItems.length === 0 ? (
+        <p className="lc-muted">Tu carrito esta vacio. Vuelve al catalogo para sumar cursos.</p>
+      ) : (
+        <div className="lc-grid" style={{ gap: 10 }}>
+          <ul className="lc-list">
+            {cartItems.map((item) => (
+              <li key={item.course.id} className="lc-list-item">
+                <div className="lc-row" style={{ alignItems: "flex-start" }}>
+                  <div>
+                    <p style={{ margin: "0 0 4px", fontWeight: 700 }}>{item.course.title}</p>
+                    <p className="lc-meta">
+                      {item.quantity} x {formatCurrency(item.course.price)} = {formatCurrency(item.subtotal)}
+                    </p>
+                  </div>
+                  <div className="lc-row" style={{ gap: 6 }}>
+                    <button type="button" className="lc-button" onClick={() => onDecreaseCourseFromCart(item.course.id)}>
+                      -
+                    </button>
+                    <button type="button" className="lc-button" onClick={() => onAddCourseToCart(item.course.id)}>
+                      +
+                    </button>
+                    <button type="button" className="lc-link" onClick={() => onRemoveCourseFromCart(item.course.id)}>
+                      Quitar
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="lc-row">
+            <p className="lc-stat-label" style={{ margin: 0 }}>
+              Total
+            </p>
+            <p style={{ margin: 0, fontWeight: 700 }}>{formatCurrency(cartTotal)}</p>
+          </div>
+        </div>
+      );
+    cta = (
+      <div className="lc-row" style={{ justifyContent: "flex-start", flexWrap: "wrap" }}>
+        {cartItems.length > 0 ? (
+          <button type="button" className="lc-button" onClick={onClearCart}>
+            Vaciar carrito
+          </button>
+        ) : null}
+        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+          Iniciar sesion para finalizar compra
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -1135,6 +1313,7 @@ function DashboardSection({
   literatureSource,
   newsLoading,
   onGoToSection,
+  onOpenForumThread,
 }) {
   const totalPendingTasks = courses.reduce(
     (acc, course) => acc + (course.activities || []).filter((activity) => activity.status !== "completada").length,
@@ -1226,7 +1405,7 @@ function DashboardSection({
           <ul className="lc-list">
             {topForums.map((forum) => (
               <li className="lc-list-item" key={forum.id}>
-                <button className="lc-link" type="button" onClick={() => onGoToSection("foros")}>
+                <button className="lc-link" type="button" onClick={() => onOpenForumThread(forum.id)}>
                   {forum.title}
                 </button>
                 <p className="lc-meta">
@@ -1362,16 +1541,20 @@ function CoursesSection({ courses, currentUser, onAddCourseComment, externalSele
         <ul className="lc-list">
           {courses.map((course) => (
             <li key={course.id} className="lc-list-item">
-              <p style={{ margin: "0 0 3px", fontWeight: 700 }}>{course.title}</p>
+              <button
+                type="button"
+                className="lc-link"
+                style={{ textAlign: "left", display: "block", marginBottom: 3 }}
+                onClick={() => openCourse(course.id)}
+              >
+                {course.title}
+              </button>
               <p className="lc-meta">
                 Mentor: {course.mentor} | {course.progress}% completado
               </p>
-              <p className="lc-meta" style={{ marginBottom: 6 }}>
+              <p className="lc-meta">
                 Pendientes: {(course.activities || []).filter((activity) => activity.status !== "completada").length}
               </p>
-              <button type="button" className="lc-button" onClick={() => openCourse(course.id)}>
-                Entrar al curso
-              </button>
             </li>
           ))}
         </ul>
@@ -1653,7 +1836,7 @@ function CalendarSection({ events }) {
   );
 }
 
-function ForumsSection({ forums, currentUser, onCreateForumThread, onAddForumComment }) {
+function ForumsSection({ forums, currentUser, onCreateForumThread, onAddForumComment, externalSelectionId }) {
   const [selectedForumId, setSelectedForumId] = useState(forums[0]?.id || "");
   const [threadForm, setThreadForm] = useState({ title: "", course: "", content: "" });
   const [commentDraft, setCommentDraft] = useState("");
@@ -1668,6 +1851,15 @@ function ForumsSection({ forums, currentUser, onCreateForumThread, onAddForumCom
       setSelectedForumId(forums[0].id);
     }
   }, [forums, selectedForumId]);
+
+  useEffect(() => {
+    if (!externalSelectionId) {
+      return;
+    }
+    if (forums.some((forum) => forum.id === externalSelectionId)) {
+      setSelectedForumId(externalSelectionId);
+    }
+  }, [externalSelectionId, forums]);
 
   const selectedForum = forums.find((forum) => forum.id === selectedForumId);
 
@@ -1802,7 +1994,8 @@ function ForumsSection({ forums, currentUser, onCreateForumThread, onAddForumCom
 }
 
 function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMessage, contacts, onStartDirectMessage }) {
-  const [selectedThreadId, setSelectedThreadId] = useState(messageThreads[0]?.id || "");
+  const cohortFourThreadId = messageThreads.find((thread) => thread.title.toLowerCase().includes("cohorte 4"))?.id || "";
+  const [selectedThreadId, setSelectedThreadId] = useState(cohortFourThreadId || messageThreads[0]?.id || "");
   const [draftMessage, setDraftMessage] = useState("");
   const [newContact, setNewContact] = useState(contacts[0] || "");
   const [newMessage, setNewMessage] = useState("");
@@ -1813,9 +2006,9 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
       return;
     }
     if (!messageThreads.some((thread) => thread.id === selectedThreadId)) {
-      setSelectedThreadId(messageThreads[0].id);
+      setSelectedThreadId(cohortFourThreadId || messageThreads[0].id);
     }
-  }, [messageThreads, selectedThreadId]);
+  }, [messageThreads, selectedThreadId, cohortFourThreadId]);
 
   useEffect(() => {
     if (contacts.length === 0) {
@@ -1828,14 +2021,21 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
   }, [contacts, newContact]);
 
   const selectedThread = messageThreads.find((thread) => thread.id === selectedThreadId);
+  const participantDetails =
+    selectedThread?.participantDetails?.length > 0
+      ? selectedThread.participantDetails
+      : (selectedThread?.participants || []).map((name, index) => ({
+          id: `participant-${index}-${name}`,
+          name,
+          role: "Integrante",
+        }));
 
   function selectThread(threadId) {
     setSelectedThreadId(threadId);
     onOpenThread(threadId);
   }
 
-  function submitMessage(event) {
-    event.preventDefault();
+  function sendCurrentMessage() {
     if (!selectedThread) {
       return;
     }
@@ -1847,8 +2047,12 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
     setDraftMessage("");
   }
 
-  function submitNewChat(event) {
+  function submitMessage(event) {
     event.preventDefault();
+    sendCurrentMessage();
+  }
+
+  function startDirectMessage() {
     const contact = newContact.trim();
     const text = newMessage.trim();
     if (!contact || !text) {
@@ -1862,6 +2066,18 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
     setSelectedThreadId(threadId);
     onOpenThread(threadId);
     setNewMessage("");
+  }
+
+  function submitNewChat(event) {
+    event.preventDefault();
+    startDirectMessage();
+  }
+
+  function handleEnterToSend(event, sender) {
+    if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
+      event.preventDefault();
+      sender();
+    }
   }
 
   return (
@@ -1881,10 +2097,21 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
             placeholder="Escribe el primer mensaje del chat"
             value={newMessage}
             onChange={(event) => setNewMessage(event.target.value)}
+            onKeyDown={(event) => handleEnterToSend(event, startDirectMessage)}
           />
           <button type="submit" className="lc-button is-primary" disabled={contacts.length === 0}>
             Abrir chat con esta persona
           </button>
+          {cohortFourThreadId ? (
+            <div className="lc-row" style={{ justifyContent: "space-between", flexWrap: "wrap" }}>
+              <p className="lc-meta" style={{ margin: 0 }}>
+                Atajo: abrir solo el grupo de cohorte 4.
+              </p>
+              <button type="button" className="lc-link" onClick={() => selectThread(cohortFourThreadId)}>
+                Ir al grupo cohorte 4
+              </button>
+            </div>
+          ) : null}
         </form>
       </Card>
 
@@ -1922,6 +2149,19 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
             <p className="lc-meta">Selecciona una conversacion.</p>
           ) : (
             <div className="lc-grid">
+              <div>
+                <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>
+                  Integrantes del grupo
+                </p>
+                <div className="lc-row" style={{ justifyContent: "flex-start", flexWrap: "wrap", gap: 6 }}>
+                  {participantDetails.map((participant) => (
+                    <span key={participant.id} className="lc-tag">
+                      {participant.name} ({participant.role})
+                    </span>
+                  ))}
+                </div>
+              </div>
+
               <div className="lc-grid">
                 {selectedThread.messages.map((message) => {
                   const isMe = message.author === currentUser.name;
@@ -1940,9 +2180,10 @@ function MessagesSection({ messageThreads, currentUser, onOpenThread, onSendMess
               <form className="lc-form-grid" onSubmit={submitMessage}>
                 <textarea
                   className="lc-textarea"
-                  placeholder="Escribe un mensaje"
+                  placeholder="Escribe un mensaje (Enter para enviar, Shift+Enter para salto)"
                   value={draftMessage}
                   onChange={(event) => setDraftMessage(event.target.value)}
+                  onKeyDown={(event) => handleEnterToSend(event, sendCurrentMessage)}
                 />
                 <button type="submit" className="lc-button is-primary">
                   Enviar mensaje
@@ -2114,6 +2355,7 @@ function AdministrationSection({
   onAddTrainingProgram,
   onAddEnrollment,
   onAddPayment,
+  onAssignCourseTask,
 }) {
   const isAdmin = currentUser.role === "admin";
   const [eventForm, setEventForm] = useState({
@@ -2154,6 +2396,27 @@ function AdministrationSection({
     status: "pendiente",
     method: "Transferencia",
   });
+  const [assignmentForm, setAssignmentForm] = useState({
+    courseId: courses[0]?.id || "",
+    title: "",
+    type: "Entrega escrita",
+    dueDate: "",
+    target: "Toda la cohorte",
+    description: "",
+  });
+
+  useEffect(() => {
+    if (courses.length === 0) {
+      setAssignmentForm((prev) => ({ ...prev, courseId: "" }));
+      return;
+    }
+
+    if (!courses.some((course) => course.id === assignmentForm.courseId)) {
+      setAssignmentForm((prev) => ({ ...prev, courseId: courses[0].id }));
+    }
+  }, [courses, assignmentForm.courseId]);
+
+  const selectedAssignmentCourse = courses.find((course) => course.id === assignmentForm.courseId);
 
   if (!isAdmin) {
     const myEnrollments = enrollments.filter((item) => item.studentName === currentUser.name);
@@ -2337,6 +2600,31 @@ function AdministrationSection({
     });
   }
 
+  function submitAssignment(event) {
+    event.preventDefault();
+    const payload = {
+      courseId: assignmentForm.courseId,
+      title: assignmentForm.title.trim(),
+      type: assignmentForm.type,
+      dueDate: assignmentForm.dueDate,
+      target: assignmentForm.target.trim() || "Toda la cohorte",
+      description: assignmentForm.description.trim(),
+    };
+
+    if (!payload.courseId || !payload.title || !payload.dueDate || !payload.description) {
+      return;
+    }
+
+    onAssignCourseTask(payload);
+    setAssignmentForm((prev) => ({
+      ...prev,
+      title: "",
+      dueDate: "",
+      target: "Toda la cohorte",
+      description: "",
+    }));
+  }
+
   return (
     <div className="lc-grid">
       <Card
@@ -2352,6 +2640,69 @@ function AdministrationSection({
         </p>
         <p className="lc-meta" style={{ margin: 0 }}>
           La consulta aplica filtros por palabras clave para asegurar que ingresen solo noticias del mundo de la literatura.
+        </p>
+      </Card>
+
+      <Card title="Enviar tareas a alumnos de cursos">
+        <form className="lc-form-grid" onSubmit={submitAssignment}>
+          <select
+            className="lc-select"
+            value={assignmentForm.courseId}
+            onChange={(event) => setAssignmentForm((prev) => ({ ...prev, courseId: event.target.value }))}
+          >
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
+          <input
+            className="lc-input"
+            type="text"
+            placeholder="Titulo de la tarea"
+            value={assignmentForm.title}
+            onChange={(event) => setAssignmentForm((prev) => ({ ...prev, title: event.target.value }))}
+          />
+          <select
+            className="lc-select"
+            value={assignmentForm.type}
+            onChange={(event) => setAssignmentForm((prev) => ({ ...prev, type: event.target.value }))}
+          >
+            <option value="Entrega escrita">Entrega escrita</option>
+            <option value="Foro">Foro</option>
+            <option value="Cuestionario">Cuestionario</option>
+            <option value="Proyecto">Proyecto</option>
+          </select>
+          <input
+            className="lc-input"
+            type="date"
+            value={assignmentForm.dueDate}
+            onChange={(event) => setAssignmentForm((prev) => ({ ...prev, dueDate: event.target.value }))}
+          />
+          <input
+            className="lc-input"
+            type="text"
+            placeholder="Destinatarios (ej: cohorte 4)"
+            value={assignmentForm.target}
+            onChange={(event) => setAssignmentForm((prev) => ({ ...prev, target: event.target.value }))}
+          />
+          <textarea
+            className="lc-textarea"
+            placeholder="Descripcion y consigna de la tarea"
+            value={assignmentForm.description}
+            onChange={(event) => setAssignmentForm((prev) => ({ ...prev, description: event.target.value }))}
+          />
+          <button type="submit" className="lc-button is-primary">
+            Enviar tarea al curso
+          </button>
+        </form>
+        <p className="lc-meta" style={{ marginTop: 10 }}>
+          {selectedAssignmentCourse
+            ? `Curso seleccionado: ${selectedAssignmentCourse.title} (mentor: ${selectedAssignmentCourse.mentor}).`
+            : "Selecciona un curso para enviar la tarea."}
+        </p>
+        <p className="lc-meta" style={{ marginTop: 4 }}>
+          Al publicar, la tarea se agrega en "Mis cursos" y tambien en "Tareas pendientes".
         </p>
       </Card>
 
@@ -2758,11 +3109,13 @@ export default function LitCafeApp() {
   const [activeSection, setActiveSection] = useState("tablero");
   const [publicView, setPublicView] = useState({ screen: "landing", kind: "", id: "" });
   const [courseSelection, setCourseSelection] = useState({ courseId: "", tab: "inicio" });
+  const [forumSelectionId, setForumSelectionId] = useState("");
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [authError, setAuthError] = useState("");
   const [currentUser, setCurrentUser] = useState(readStoredSession);
 
   const [courseCatalog] = useState(initialCourseCatalog);
+  const [cartItems, setCartItems] = useState([]);
   const [courses, setCourses] = useState(initialCourses);
   const [events, setEvents] = useState(initialEvents);
   const [forums, setForums] = useState(initialForums);
@@ -2836,6 +3189,7 @@ export default function LitCafeApp() {
     setAuthError("");
     setActiveSection("tablero");
     setCourseSelection({ courseId: "", tab: "inicio" });
+    setForumSelectionId("");
     setPublicView({ screen: "landing", kind: "", id: "" });
   }
 
@@ -2860,6 +3214,61 @@ export default function LitCafeApp() {
     }
     return Array.from(names).filter(Boolean).sort((a, b) => a.localeCompare(b));
   }, [currentUser, messageThreads, courses, forums]);
+
+  const cartItemsDetailed = useMemo(
+    () =>
+      cartItems
+        .map((item) => {
+          const course = courseCatalog.find((catalogCourse) => catalogCourse.id === item.courseId);
+          if (!course) {
+            return null;
+          }
+          return {
+            ...item,
+            course,
+            subtotal: course.price * item.quantity,
+          };
+        })
+        .filter(Boolean),
+    [cartItems, courseCatalog],
+  );
+
+  const cartTotal = useMemo(
+    () => cartItemsDetailed.reduce((acc, item) => acc + item.subtotal, 0),
+    [cartItemsDetailed],
+  );
+
+  const handleAddCourseToCart = useCallback((courseId) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find((item) => item.courseId === courseId);
+      if (existingItem) {
+        return prevItems.map((item) => (item.courseId === courseId ? { ...item, quantity: item.quantity + 1 } : item));
+      }
+      return [...prevItems, { courseId, quantity: 1 }];
+    });
+  }, []);
+
+  const handleDecreaseCourseFromCart = useCallback((courseId) => {
+    setCartItems((prevItems) =>
+      prevItems.flatMap((item) => {
+        if (item.courseId !== courseId) {
+          return item;
+        }
+        if (item.quantity <= 1) {
+          return [];
+        }
+        return { ...item, quantity: item.quantity - 1 };
+      }),
+    );
+  }, []);
+
+  const handleRemoveCourseFromCart = useCallback((courseId) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.courseId !== courseId));
+  }, []);
+
+  const handleClearCart = useCallback(() => {
+    setCartItems([]);
+  }, []);
 
   const handleAddCourseComment = useCallback((courseId, text, author) => {
     const comment = {
@@ -2908,6 +3317,11 @@ export default function LitCafeApp() {
   const openCourseWorkspace = useCallback((courseId, tab = "inicio") => {
     setCourseSelection({ courseId, tab });
     setActiveSection("cursos");
+  }, []);
+
+  const openForumWorkspace = useCallback((forumId) => {
+    setForumSelectionId(forumId);
+    setActiveSection("foros");
   }, []);
 
   const handleOpenThread = useCallback((threadId) => {
@@ -3063,6 +3477,40 @@ export default function LitCafeApp() {
     setPayments((prevPayments) => [payment, ...prevPayments]);
   }, []);
 
+  const handleAssignCourseTask = useCallback(
+    ({ courseId, title, type, dueDate, target, description }) => {
+      const newActivity = {
+        id: createId("course-activity"),
+        title,
+        type,
+        dueDate,
+        status: "pendiente",
+        description: `${description} | Destinatarios: ${target}`,
+      };
+
+      const adminComment = {
+        id: createId("course-comment"),
+        author: currentUser?.name || "Admin LitCafe",
+        text: `Nueva tarea publicada: "${title}" para ${target}.`,
+        at: "Hace un momento",
+      };
+
+      setCourses((prevCourses) =>
+        prevCourses.map((course) =>
+          course.id === courseId
+            ? {
+                ...course,
+                pendingTasks: (course.pendingTasks || 0) + 1,
+                activities: [newActivity, ...(course.activities || [])],
+                comments: [...(course.comments || []), adminComment],
+              }
+            : course,
+        ),
+      );
+    },
+    [currentUser],
+  );
+
   if (!currentUser) {
     return (
       <>
@@ -3074,6 +3522,12 @@ export default function LitCafeApp() {
             events={events}
             forums={forums}
             courseCatalog={courseCatalog}
+            cartItems={cartItemsDetailed}
+            cartTotal={cartTotal}
+            onAddCourseToCart={handleAddCourseToCart}
+            onDecreaseCourseFromCart={handleDecreaseCourseFromCart}
+            onRemoveCourseFromCart={handleRemoveCourseFromCart}
+            onClearCart={handleClearCart}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
             onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
           />
@@ -3087,6 +3541,12 @@ export default function LitCafeApp() {
             events={events}
             forums={forums}
             courseCatalog={courseCatalog}
+            cartItems={cartItemsDetailed}
+            cartTotal={cartTotal}
+            onAddCourseToCart={handleAddCourseToCart}
+            onDecreaseCourseFromCart={handleDecreaseCourseFromCart}
+            onRemoveCourseFromCart={handleRemoveCourseFromCart}
+            onClearCart={handleClearCart}
             onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
           />
@@ -3120,6 +3580,7 @@ export default function LitCafeApp() {
             literatureSource={literatureSource}
             newsLoading={newsLoading}
             onGoToSection={setActiveSection}
+            onOpenForumThread={openForumWorkspace}
           />
         );
       case "cursos":
@@ -3142,6 +3603,7 @@ export default function LitCafeApp() {
             currentUser={currentUser}
             onCreateForumThread={handleCreateForumThread}
             onAddForumComment={handleAddForumComment}
+            externalSelectionId={forumSelectionId}
           />
         );
       case "mensajes":
@@ -3186,6 +3648,7 @@ export default function LitCafeApp() {
             onAddTrainingProgram={handleAddTrainingProgram}
             onAddEnrollment={handleAddEnrollment}
             onAddPayment={handleAddPayment}
+            onAssignCourseTask={handleAssignCourseTask}
           />
         );
       default:
@@ -3204,6 +3667,12 @@ export default function LitCafeApp() {
             ? "Panel de gestion de formacion, matriculas, pagos, eventos y comunidades."
             : "Panel del alumno para gestionar su formacion, matricula y pagos."
           : "Modulo funcional con datos mock para iterar la plataforma completa.";
+  const unreadIcon = currentUser.role === "admin" ? "🔔" : "✉️";
+  const unreadRoleLabel = currentUser.role === "admin" ? "Admin" : "Alumno";
+  const unreadPillText =
+    totalUnreadMessages > 0
+      ? `${unreadIcon} ${unreadRoleLabel}: ${totalUnreadMessages} sin leer`
+      : `${unreadIcon} ${unreadRoleLabel}: sin mensajes pendientes`;
 
   return (
     <>
@@ -3226,7 +3695,7 @@ export default function LitCafeApp() {
             <span className="lc-pill">
               {currentUser.name} ({currentUser.role === "admin" ? "admin" : "alumno"})
             </span>
-            <span className="lc-pill">Mensajes sin leer: {totalUnreadMessages}</span>
+            <span className={`lc-pill ${totalUnreadMessages > 0 ? "is-unread" : ""}`}>{unreadPillText}</span>
             <button type="button" className="lc-button" onClick={handleLogout}>
               Cerrar sesion
             </button>
