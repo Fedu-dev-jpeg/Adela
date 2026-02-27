@@ -88,6 +88,10 @@ function formatCurrency(value) {
   }).format(value || 0);
 }
 
+function buildCoverImage(seed, type = "cover") {
+  return `https://picsum.photos/seed/${encodeURIComponent(seed || type)}/1200/700`;
+}
+
 function toIsoDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -157,16 +161,21 @@ function GlobalStyles() {
         margin: 0;
         padding: 0;
         min-height: 100%;
+        width: 100%;
+        overflow-x: clip;
       }
 
       body {
         font-family: "DM Sans", sans-serif;
         background: ${C.bg};
         color: ${C.charcoal};
+        overflow-x: clip;
       }
 
       .lc-app {
         min-height: 100vh;
+        width: 100%;
+        overflow-x: clip;
       }
 
       .lc-topbar {
@@ -710,17 +719,33 @@ function GlobalStyles() {
       .lc-landing-page {
         min-height: 100vh;
         background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
+        width: 100%;
+        overflow-x: clip;
       }
 
       .lc-landing-topbar {
-        height: 68px;
+        min-height: 68px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        padding: 0 18px;
+        flex-wrap: wrap;
+        padding: 10px 18px;
         border-bottom: 1px solid ${C.border};
         background: ${C.bgCard};
+      }
+
+      .lc-landing-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .lc-landing-topbar .lc-brand-wrap {
+        flex: 1 1 280px;
+        flex-wrap: wrap;
       }
 
       .lc-landing-main {
@@ -936,36 +961,22 @@ function GlobalStyles() {
         text-decoration: underline;
       }
 
-      /* ── News carousel ── */
-      .lc-news-carousel-wrap {
-        position: relative;
-        margin-bottom: 36px;
-      }
-
-      .lc-news-carousel {
-        display: flex;
+      /* ── News cards (with API images) ── */
+      .lc-news-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 16px;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        padding: 4px 0 12px;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-
-      .lc-news-carousel::-webkit-scrollbar {
-        display: none;
       }
 
       .lc-news-card {
-        flex: 0 0 300px;
-        scroll-snap-align: start;
         border: 1px solid ${C.border};
         background: ${C.bgCard};
         border-radius: 12px;
-        padding: 20px;
+        overflow: hidden;
         transition: transform 0.18s ease, box-shadow 0.18s ease;
         cursor: pointer;
+        display: grid;
+        grid-template-rows: auto 1fr;
       }
 
       .lc-news-card:hover {
@@ -973,7 +984,22 @@ function GlobalStyles() {
         box-shadow: 0 6px 20px rgba(0,0,0,0.07);
       }
 
-      .lc-news-card .lc-news-tag {
+      .lc-news-media {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        border-bottom: 1px solid ${C.border};
+        background: ${C.bgWarm};
+      }
+
+      .lc-news-content {
+        padding: 16px;
+        display: grid;
+        gap: 10px;
+        align-content: start;
+      }
+
+      .lc-news-content .lc-news-tag {
         display: inline-block;
         font-size: 11px;
         font-weight: 700;
@@ -983,60 +1009,27 @@ function GlobalStyles() {
         background: ${C.ochre}12;
         border-radius: 6px;
         padding: 3px 8px;
-        margin-bottom: 10px;
+        width: fit-content;
       }
 
-      .lc-news-card h3 {
-        margin: 0 0 8px;
+      .lc-news-content h3 {
+        margin: 0;
         font-family: "Playfair Display", Georgia, serif;
         font-size: 18px;
         line-height: 1.3;
         color: ${C.charcoal};
       }
 
-      .lc-news-card p {
+      .lc-news-content p {
         margin: 0;
         font-size: 13px;
         color: ${C.textSec};
         line-height: 1.5;
       }
 
-      .lc-news-card .lc-news-meta {
-        margin-top: 10px;
+      .lc-news-content .lc-news-meta {
         font-size: 12px;
         color: ${C.textMeta};
-      }
-
-      .lc-carousel-nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border: 1px solid ${C.border};
-        background: ${C.bgCard};
-        color: ${C.charcoal};
-        font-size: 18px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        z-index: 2;
-        transition: background 0.15s ease;
-      }
-
-      .lc-carousel-nav:hover {
-        background: ${C.bgWarm};
-      }
-
-      .lc-carousel-nav.is-left {
-        left: -12px;
-      }
-
-      .lc-carousel-nav.is-right {
-        right: -12px;
       }
 
       /* ── Course cards (landing) ── */
@@ -1391,6 +1384,95 @@ function GlobalStyles() {
         gap: 12px;
       }
 
+      .lc-feature-detail {
+        display: grid;
+        gap: 16px;
+      }
+
+      .lc-feature-hero {
+        border: 1px solid ${C.border};
+        border-radius: 14px;
+        background: ${C.bgCard};
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(260px, 1fr) minmax(0, 1.1fr);
+      }
+
+      .lc-feature-hero-image {
+        width: 100%;
+        height: 100%;
+        min-height: 260px;
+        object-fit: cover;
+        background: ${C.bgWarm};
+      }
+
+      .lc-feature-hero-content {
+        padding: 22px;
+        display: grid;
+        align-content: start;
+        gap: 10px;
+      }
+
+      .lc-feature-hero-content h2 {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 34px;
+        line-height: 1.2;
+      }
+
+      .lc-feature-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .lc-feature-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .lc-feature-info-card {
+        border: 1px solid ${C.border};
+        border-radius: 10px;
+        padding: 10px;
+        background: ${C.bg};
+      }
+
+      .lc-feature-info-card p {
+        margin: 0;
+      }
+
+      .lc-admin-edit-card {
+        border: 1px solid ${C.border};
+        border-radius: 14px;
+        padding: 16px;
+        background: #fff;
+        display: grid;
+        gap: 10px;
+      }
+
+      .lc-admin-edit-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .lc-admin-edit-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .lc-admin-edit-grid .lc-textarea {
+        min-height: 110px;
+      }
+
+      .lc-admin-edit-grid .lc-full {
+        grid-column: 1 / -1;
+      }
+
       @media (max-width: 980px) {
         .lc-body {
           grid-template-columns: 1fr;
@@ -1441,6 +1523,15 @@ function GlobalStyles() {
           grid-template-columns: 1fr;
         }
 
+        .lc-news-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .lc-landing-actions {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
         .lc-landing-hero-new h1 {
           font-size: 32px;
         }
@@ -1471,6 +1562,22 @@ function GlobalStyles() {
           align-items: flex-start;
         }
 
+        .lc-feature-hero {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-feature-hero-image {
+          min-height: 220px;
+        }
+
+        .lc-feature-info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-admin-edit-grid {
+          grid-template-columns: 1fr;
+        }
+
         .lc-hero-ctas {
           flex-direction: column;
           align-items: stretch;
@@ -1482,6 +1589,16 @@ function GlobalStyles() {
 
         .lc-cta-banner h2 {
           font-size: 24px;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .lc-news-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-landing-topbar {
+          justify-content: center;
         }
       }
     `}</style>
@@ -1548,23 +1665,23 @@ function LandingScreen({
   onOpenDetail,
 }) {
   const allNews = [
-    ...literatureNews.slice(0, 4).map((n) => ({ ...n, kind: "Literatura" })),
-    ...siteNews.slice(0, 4).map((n) => ({ ...n, kind: "Novedad", source: n.author })),
+    ...literatureNews.slice(0, 4).map((n) => ({
+      ...n,
+      kind: "Literatura",
+      imageUrl: n.imageUrl || buildCoverImage(n.id || n.title, "literature-news"),
+    })),
+    ...siteNews.slice(0, 4).map((n) => ({
+      ...n,
+      kind: "Novedad",
+      source: n.author,
+      imageUrl: n.imageUrl || buildCoverImage(n.id || n.title, "site-news"),
+    })),
   ];
   const sortedEvents = [...events].sort((a, b) => eventSortValue(a) - eventSortValue(b)).slice(0, 4);
   const connectedAccounts = socialAccounts.filter((a) => a.connected);
   const instagramConnected = socialAccounts.some((a) => a.network === "Instagram" && a.connected);
   const instagramPosts = instagramConnected ? socialPosts.filter((p) => p.network === "Instagram").slice(0, 6) : [];
   const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  const carouselRef = { current: null };
-
-  function scrollCarousel(direction) {
-    const el = carouselRef.current;
-    if (!el) return;
-    const scrollAmount = 320;
-    el.scrollBy({ left: direction === "right" ? scrollAmount : -scrollAmount, behavior: "smooth" });
-  }
 
   function getEventDateParts(dateStr) {
     if (!dateStr) return { day: "--", month: "---" };
@@ -1588,7 +1705,7 @@ function LandingScreen({
           <h1 className="lc-brand">Lead Cafe</h1>
           <span className="lc-pill">Tu espacio de formacion literaria</span>
         </div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <div className="lc-landing-actions">
           {connectedAccounts.length > 0 && (
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {connectedAccounts.map((account) => (
@@ -1794,47 +1911,34 @@ function LandingScreen({
             <div className="lc-section-header">
               <h2>Noticias</h2>
             </div>
-            <div className="lc-news-carousel-wrap">
-              <button
-                type="button"
-                className="lc-carousel-nav is-left"
-                onClick={() => scrollCarousel("left")}
-                aria-label="Anterior"
-              >
-                &#8249;
-              </button>
-              <div
-                className="lc-news-carousel"
-                ref={(el) => { carouselRef.current = el; }}
-              >
-                {allNews.map((item) => (
-                  <article
-                    key={item.id}
-                    className="lc-news-card"
-                    onClick={() =>
-                      onOpenDetail(
-                        item.kind === "Literatura" ? "literature-news" : "internal-news",
-                        item.id,
-                      )
-                    }
-                  >
+            <div className="lc-news-grid">
+              {allNews.map((item) => (
+                <article
+                  key={item.id}
+                  className="lc-news-card"
+                  onClick={() =>
+                    onOpenDetail(
+                      item.kind === "Literatura" ? "literature-news" : "internal-news",
+                      item.id,
+                    )
+                  }
+                >
+                  <img
+                    className="lc-news-media"
+                    src={item.imageUrl || buildCoverImage(item.id || item.title, "news")}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                  <div className="lc-news-content">
                     <span className="lc-news-tag">{item.kind}</span>
                     <h3>{item.title}</h3>
                     <p>{item.summary}</p>
                     <p className="lc-news-meta">
                       {item.source || "Lead Cafe"} &middot; {formatDate(item.publishedAt)}
                     </p>
-                  </article>
-                ))}
-              </div>
-              <button
-                type="button"
-                className="lc-carousel-nav is-right"
-                onClick={() => scrollCarousel("right")}
-                aria-label="Siguiente"
-              >
-                &#8250;
-              </button>
+                  </div>
+                </article>
+              ))}
             </div>
           </section>
 
@@ -1988,19 +2092,134 @@ function LandingDetailScreen({
   onClearCart,
   onBack,
   onOpenLogin,
+  onUpdateCatalogCourse,
+  onUpdateEvent,
 }) {
+  const [courseForm, setCourseForm] = useState(null);
+  const [eventForm, setEventForm] = useState(null);
+  const [courseSaved, setCourseSaved] = useState(false);
+  const [eventSaved, setEventSaved] = useState(false);
+
+  const selectedCourse = view.kind === "catalog-course" ? courseCatalog.find((item) => item.id === view.id) : null;
+  const selectedEvent = view.kind === "event" ? events.find((eventItem) => eventItem.id === view.id) : null;
+
+  useEffect(() => {
+    setCourseSaved(false);
+    if (!selectedCourse) {
+      setCourseForm(null);
+      return;
+    }
+    setCourseForm({
+      title: selectedCourse.title || "",
+      level: selectedCourse.level || "",
+      duration: selectedCourse.duration || "",
+      format: selectedCourse.format || "",
+      price: String(selectedCourse.price ?? ""),
+      description: selectedCourse.description || "",
+      imageUrl: selectedCourse.imageUrl || buildCoverImage(selectedCourse.id || selectedCourse.title, "catalog-course"),
+    });
+  }, [selectedCourse]);
+
+  useEffect(() => {
+    setEventSaved(false);
+    if (!selectedEvent) {
+      setEventForm(null);
+      return;
+    }
+    setEventForm({
+      title: selectedEvent.title || "",
+      date: selectedEvent.date || "",
+      time: selectedEvent.time || "",
+      type: selectedEvent.type || "presencial",
+      location: selectedEvent.location || "",
+      seats: String(selectedEvent.seats ?? ""),
+      description: selectedEvent.description || "",
+      imageUrl: selectedEvent.imageUrl || buildCoverImage(selectedEvent.id || selectedEvent.title, "event"),
+    });
+  }, [selectedEvent]);
+
   let title = "Detalle";
   let meta = "";
   let body = null;
   let cta = null;
   const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const showDefaultHeader = view.kind !== "catalog-course" && view.kind !== "event";
+
+  function submitCourseEdit(event) {
+    event.preventDefault();
+    if (!selectedCourse || !courseForm || typeof onUpdateCatalogCourse !== "function") {
+      return;
+    }
+
+    const payload = {
+      title: courseForm.title.trim(),
+      level: courseForm.level.trim(),
+      duration: courseForm.duration.trim(),
+      format: courseForm.format.trim(),
+      price: Number(courseForm.price) || 0,
+      description: courseForm.description.trim(),
+      imageUrl: courseForm.imageUrl.trim() || buildCoverImage(selectedCourse.id || selectedCourse.title, "catalog-course"),
+    };
+
+    if (!payload.title || !payload.level || !payload.duration || !payload.format || !payload.description) {
+      return;
+    }
+
+    onUpdateCatalogCourse(selectedCourse.id, payload);
+    setCourseSaved(true);
+  }
+
+  function submitEventEdit(event) {
+    event.preventDefault();
+    if (!selectedEvent || !eventForm || typeof onUpdateEvent !== "function") {
+      return;
+    }
+
+    const payload = {
+      title: eventForm.title.trim(),
+      date: eventForm.date,
+      time: eventForm.time,
+      type: eventForm.type,
+      location: eventForm.location.trim(),
+      seats: Number(eventForm.seats) || 0,
+      description: eventForm.description.trim(),
+      imageUrl: eventForm.imageUrl.trim() || buildCoverImage(selectedEvent.id || selectedEvent.title, "event"),
+    };
+
+    if (!payload.title || !payload.date || !payload.time || !payload.location || !payload.description) {
+      return;
+    }
+
+    onUpdateEvent(selectedEvent.id, payload);
+    setEventSaved(true);
+  }
 
   if (view.kind === "literature-news") {
     const item = literatureNews.find((news) => news.id === view.id);
     if (item) {
       title = item.title;
       meta = `${item.source || "LitCafe"} | ${formatDate(item.publishedAt)}`;
-      body = renderParagraphs(item.content || item.summary);
+      body = (
+        <div className="lc-feature-detail">
+          <article className="lc-feature-hero">
+            <img
+              className="lc-feature-hero-image"
+              src={item.imageUrl || buildCoverImage(item.id || item.title, "literature-news")}
+              alt={item.title}
+            />
+            <div className="lc-feature-hero-content">
+              <span className="lc-tag is-accent">Noticia literaria</span>
+              <p className="lc-meta" style={{ margin: 0 }}>
+                {meta}
+              </p>
+              <p className="lc-muted" style={{ margin: 0 }}>
+                {item.summary}
+              </p>
+            </div>
+          </article>
+          {renderParagraphs(item.content || item.summary)}
+        </div>
+      );
       cta = (
         <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
           Abrir noticia completa
@@ -2012,7 +2231,26 @@ function LandingDetailScreen({
     if (item) {
       title = item.title;
       meta = `Novedad interna | ${formatDate(item.publishedAt)}`;
-      body = <p className="lc-muted">{item.summary}</p>;
+      body = (
+        <div className="lc-feature-detail">
+          <article className="lc-feature-hero">
+            <img
+              className="lc-feature-hero-image"
+              src={item.imageUrl || buildCoverImage(item.id || item.title, "site-news")}
+              alt={item.title}
+            />
+            <div className="lc-feature-hero-content">
+              <span className="lc-tag">Comunicado interno</span>
+              <p className="lc-meta" style={{ margin: 0 }}>
+                {meta}
+              </p>
+              <p className="lc-muted" style={{ margin: 0 }}>
+                {item.summary}
+              </p>
+            </div>
+          </article>
+        </div>
+      );
       cta = (
         <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
           Abrir publicacion
@@ -2020,21 +2258,157 @@ function LandingDetailScreen({
       );
     }
   } else if (view.kind === "event") {
-    const eventItem = events.find((event) => event.id === view.id);
+    const eventItem = selectedEvent;
     if (eventItem) {
       title = eventItem.title;
       meta = `${formatDate(eventItem.date)} | ${eventItem.time} | ${eventItem.type}`;
       body = (
-        <div className="lc-grid" style={{ gap: 6 }}>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            Ubicacion: {eventItem.location}
-          </p>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            Cupos disponibles: {eventItem.seats}
-          </p>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            Creado por: {eventItem.createdBy}
-          </p>
+        <div className="lc-feature-detail">
+          <article className="lc-feature-hero">
+            <img
+              className="lc-feature-hero-image"
+              src={eventForm?.imageUrl || eventItem.imageUrl || buildCoverImage(eventItem.id || eventItem.title, "event")}
+              alt={eventItem.title}
+            />
+            <div className="lc-feature-hero-content">
+              <span className="lc-tag is-accent">Evento destacado</span>
+              <h2>{eventItem.title}</h2>
+              <p className="lc-muted" style={{ margin: 0 }}>
+                {eventItem.description || "Evento abierto de la comunidad literaria."}
+              </p>
+              <div className="lc-feature-meta-row">
+                <span className="lc-tag">{formatDate(eventItem.date)}</span>
+                <span className="lc-tag">{eventItem.time}</span>
+                <span className="lc-tag">{eventItem.type}</span>
+                <span className="lc-tag">{eventItem.location}</span>
+              </div>
+            </div>
+          </article>
+
+          <div className="lc-feature-info-grid">
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Ubicacion
+              </p>
+              <p className="lc-muted">{eventItem.location}</p>
+            </div>
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Cupos
+              </p>
+              <p className="lc-muted">{eventItem.seats} disponibles</p>
+            </div>
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Organiza
+              </p>
+              <p className="lc-muted">{eventItem.createdBy}</p>
+            </div>
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Modalidad
+              </p>
+              <p className="lc-muted" style={{ textTransform: "capitalize" }}>
+                {eventItem.type}
+              </p>
+            </div>
+          </div>
+
+          {eventForm ? (
+            <form className="lc-admin-edit-card" onSubmit={submitEventEdit}>
+              <div className="lc-admin-edit-head">
+                <p className="lc-stat-label" style={{ margin: 0 }}>
+                  Edicion del evento (admin)
+                </p>
+                {eventSaved ? <span className="lc-tag is-success">Cambios guardados</span> : null}
+              </div>
+              <div className="lc-admin-edit-grid">
+                <input
+                  className="lc-input"
+                  type="text"
+                  value={eventForm.title}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, title: event.target.value }));
+                  }}
+                  placeholder="Titulo del evento"
+                />
+                <input
+                  className="lc-input"
+                  type="text"
+                  value={eventForm.location}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, location: event.target.value }));
+                  }}
+                  placeholder="Ubicacion"
+                />
+                <input
+                  className="lc-input"
+                  type="date"
+                  value={eventForm.date}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, date: event.target.value }));
+                  }}
+                />
+                <input
+                  className="lc-input"
+                  type="time"
+                  value={eventForm.time}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, time: event.target.value }));
+                  }}
+                />
+                <select
+                  className="lc-select"
+                  value={eventForm.type}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, type: event.target.value }));
+                  }}
+                >
+                  <option value="presencial">Presencial</option>
+                  <option value="virtual">Virtual</option>
+                  <option value="hibrido">Hibrido</option>
+                </select>
+                <input
+                  className="lc-input"
+                  type="number"
+                  min="1"
+                  value={eventForm.seats}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, seats: event.target.value }));
+                  }}
+                  placeholder="Cupos"
+                />
+                <input
+                  className="lc-input lc-full"
+                  type="url"
+                  value={eventForm.imageUrl}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, imageUrl: event.target.value }));
+                  }}
+                  placeholder="URL de imagen del evento"
+                />
+                <textarea
+                  className="lc-textarea lc-full"
+                  value={eventForm.description}
+                  onChange={(event) => {
+                    setEventSaved(false);
+                    setEventForm((prev) => ({ ...prev, description: event.target.value }));
+                  }}
+                  placeholder="Descripcion del evento"
+                />
+              </div>
+              <button type="submit" className="lc-button is-primary">
+                Guardar cambios del evento
+              </button>
+            </form>
+          ) : null}
         </div>
       );
       cta = (
@@ -2078,18 +2452,144 @@ function LandingDetailScreen({
       );
     }
   } else if (view.kind === "catalog-course") {
-    const course = courseCatalog.find((item) => item.id === view.id);
+    const course = selectedCourse;
     if (course) {
       title = course.title;
       meta = `${course.level} | ${course.duration} | ${course.format}`;
       body = (
-        <div className="lc-grid" style={{ gap: 8 }}>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            {course.description}
-          </p>
-          <p className="lc-meta" style={{ margin: 0 }}>
-            Precio: <strong>{formatCurrency(course.price)}</strong>
-          </p>
+        <div className="lc-feature-detail">
+          <article className="lc-feature-hero">
+            <img
+              className="lc-feature-hero-image"
+              src={courseForm?.imageUrl || course.imageUrl || buildCoverImage(course.id || course.title, "catalog-course")}
+              alt={course.title}
+            />
+            <div className="lc-feature-hero-content">
+              <span className="lc-tag is-accent">{course.level}</span>
+              <h2>{course.title}</h2>
+              <p className="lc-muted" style={{ margin: 0 }}>
+                {course.description}
+              </p>
+              <div className="lc-feature-meta-row">
+                <span className="lc-tag">{course.duration}</span>
+                <span className="lc-tag">{course.format}</span>
+                <span className="lc-tag">{formatCurrency(course.price)}</span>
+              </div>
+            </div>
+          </article>
+
+          <div className="lc-feature-info-grid">
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Nivel
+              </p>
+              <p className="lc-muted">{course.level}</p>
+            </div>
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Duracion
+              </p>
+              <p className="lc-muted">{course.duration}</p>
+            </div>
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Formato
+              </p>
+              <p className="lc-muted">{course.format}</p>
+            </div>
+            <div className="lc-feature-info-card">
+              <p className="lc-stat-label" style={{ marginBottom: 4 }}>
+                Precio
+              </p>
+              <p className="lc-muted">{formatCurrency(course.price)}</p>
+            </div>
+          </div>
+
+          {courseForm ? (
+            <form className="lc-admin-edit-card" onSubmit={submitCourseEdit}>
+              <div className="lc-admin-edit-head">
+                <p className="lc-stat-label" style={{ margin: 0 }}>
+                  Edicion del curso (admin)
+                </p>
+                {courseSaved ? <span className="lc-tag is-success">Cambios guardados</span> : null}
+              </div>
+              <div className="lc-admin-edit-grid">
+                <input
+                  className="lc-input"
+                  type="text"
+                  value={courseForm.title}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, title: event.target.value }));
+                  }}
+                  placeholder="Titulo del curso"
+                />
+                <input
+                  className="lc-input"
+                  type="text"
+                  value={courseForm.level}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, level: event.target.value }));
+                  }}
+                  placeholder="Nivel"
+                />
+                <input
+                  className="lc-input"
+                  type="text"
+                  value={courseForm.duration}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, duration: event.target.value }));
+                  }}
+                  placeholder="Duracion"
+                />
+                <input
+                  className="lc-input"
+                  type="text"
+                  value={courseForm.format}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, format: event.target.value }));
+                  }}
+                  placeholder="Formato"
+                />
+                <input
+                  className="lc-input"
+                  type="number"
+                  min="0"
+                  value={courseForm.price}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, price: event.target.value }));
+                  }}
+                  placeholder="Precio"
+                />
+                <input
+                  className="lc-input lc-full"
+                  type="url"
+                  value={courseForm.imageUrl}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, imageUrl: event.target.value }));
+                  }}
+                  placeholder="URL de imagen del curso"
+                />
+                <textarea
+                  className="lc-textarea lc-full"
+                  value={courseForm.description}
+                  onChange={(event) => {
+                    setCourseSaved(false);
+                    setCourseForm((prev) => ({ ...prev, description: event.target.value }));
+                  }}
+                  placeholder="Descripcion del curso"
+                />
+              </div>
+              <button type="submit" className="lc-button is-primary">
+                Guardar cambios del curso
+              </button>
+            </form>
+          ) : null}
         </div>
       );
       cta = (
@@ -2163,17 +2663,21 @@ function LandingDetailScreen({
       <div className="lc-detail-shell">
         <div className="lc-row">
           <button type="button" className="lc-button" onClick={onBack}>
-            Volver a la landing
+            Volver
           </button>
           <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
             Iniciar sesion
           </button>
         </div>
         <Card title="Detalle de contenido">
-          <h2 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 32 }}>{title}</h2>
-          <p className="lc-meta" style={{ marginBottom: 12 }}>
-            {meta || "Contenido no encontrado."}
-          </p>
+          {showDefaultHeader ? (
+            <>
+              <h2 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 32 }}>{title}</h2>
+              <p className="lc-meta" style={{ marginBottom: 12 }}>
+                {meta || "Contenido no encontrado."}
+              </p>
+            </>
+          ) : null}
           {body || <p className="lc-muted">No se encontro el detalle solicitado.</p>}
           {cta ? <div style={{ marginTop: 12 }}>{cta}</div> : null}
         </Card>
@@ -3245,6 +3749,8 @@ function AdministrationSection({
     type: "presencial",
     location: "",
     seats: "20",
+    description: "",
+    imageUrl: "",
   });
   const [communityForm, setCommunityForm] = useState({
     name: "",
@@ -3255,6 +3761,7 @@ function AdministrationSection({
     title: "",
     summary: "",
     url: "",
+    imageUrl: "",
   });
   const [trainingForm, setTrainingForm] = useState({
     name: "",
@@ -3369,13 +3876,16 @@ function AdministrationSection({
 
   function submitEvent(event) {
     event.preventDefault();
+    const safeTitle = eventForm.title.trim();
     const payload = {
-      title: eventForm.title.trim(),
+      title: safeTitle,
       date: eventForm.date,
       time: eventForm.time,
       type: eventForm.type,
       location: eventForm.location.trim(),
       seats: Number(eventForm.seats) || 0,
+      description: eventForm.description.trim() || "Evento abierto para la comunidad de LitCafe.",
+      imageUrl: eventForm.imageUrl.trim() || buildCoverImage(safeTitle || "litcafe-event", "event"),
     };
     if (!payload.title || !payload.date || !payload.time || !payload.location) {
       return;
@@ -3388,6 +3898,8 @@ function AdministrationSection({
       type: "presencial",
       location: "",
       seats: "20",
+      description: "",
+      imageUrl: "",
     });
   }
 
@@ -3407,16 +3919,18 @@ function AdministrationSection({
 
   function submitNews(event) {
     event.preventDefault();
+    const safeTitle = newsForm.title.trim();
     const payload = {
-      title: newsForm.title.trim(),
+      title: safeTitle,
       summary: newsForm.summary.trim(),
       url: newsForm.url.trim() || "#",
+      imageUrl: newsForm.imageUrl.trim() || buildCoverImage(safeTitle || "litcafe-site-news", "site-news"),
     };
     if (!payload.title || !payload.summary) {
       return;
     }
     onAddSiteNews(payload);
-    setNewsForm({ title: "", summary: "", url: "" });
+    setNewsForm({ title: "", summary: "", url: "", imageUrl: "" });
   }
 
   function submitTraining(event) {
@@ -3632,6 +4146,19 @@ function AdministrationSection({
               value={eventForm.seats}
               onChange={(event) => setEventForm((prev) => ({ ...prev, seats: event.target.value }))}
             />
+            <textarea
+              className="lc-textarea"
+              placeholder="Descripcion del evento"
+              value={eventForm.description}
+              onChange={(event) => setEventForm((prev) => ({ ...prev, description: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="url"
+              placeholder="URL de imagen (opcional)"
+              value={eventForm.imageUrl}
+              onChange={(event) => setEventForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
+            />
             <button type="submit" className="lc-button is-primary">
               Guardar evento
             </button>
@@ -3659,6 +4186,13 @@ function AdministrationSection({
               placeholder="URL (opcional)"
               value={newsForm.url}
               onChange={(event) => setNewsForm((prev) => ({ ...prev, url: event.target.value }))}
+            />
+            <input
+              className="lc-input"
+              type="url"
+              placeholder="URL de imagen (opcional)"
+              value={newsForm.imageUrl}
+              onChange={(event) => setNewsForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
             />
             <button type="submit" className="lc-button is-primary">
               Publicar noticia
@@ -3922,7 +4456,7 @@ function LoginScreen({ credentials, authError, onChange, onSubmit, onBack }) {
       <div className="lc-login-card">
         <section className="lc-login-main">
           <button type="button" className="lc-button" style={{ marginBottom: 10 }} onClick={onBack}>
-            Volver a la landing
+            Volver
           </button>
           <p className="lc-tag is-accent" style={{ marginBottom: 12 }}>
             Plataforma de aprendizaje y comunidad
@@ -3994,7 +4528,7 @@ export default function LitCafeApp() {
   const [authError, setAuthError] = useState("");
   const [currentUser, setCurrentUser] = useState(readStoredSession);
 
-  const [courseCatalog] = useState(initialCourseCatalog);
+  const [courseCatalog, setCourseCatalog] = useState(initialCourseCatalog);
   const [cartItems, setCartItems] = useState([]);
   const [courses, setCourses] = useState(initialCourses);
   const [events, setEvents] = useState(initialEvents);
@@ -4150,6 +4684,20 @@ export default function LitCafeApp() {
     setCartItems([]);
   }, []);
 
+  const handleUpdateCatalogCourse = useCallback((courseId, payload) => {
+    setCourseCatalog((prevCatalog) =>
+      prevCatalog.map((course) => (course.id === courseId ? { ...course, ...payload } : course)),
+    );
+  }, []);
+
+  const handleUpdateEvent = useCallback((eventId, payload) => {
+    setEvents((prevEvents) =>
+      prevEvents
+        .map((eventItem) => (eventItem.id === eventId ? { ...eventItem, ...payload } : eventItem))
+        .sort((a, b) => eventSortValue(a) - eventSortValue(b)),
+    );
+  }, []);
+
   const handleAddCourseComment = useCallback((courseId, text, author) => {
     const comment = {
       id: createId("course-comment"),
@@ -4300,9 +4848,12 @@ export default function LitCafeApp() {
 
   const handleAddEvent = useCallback(
     (payload) => {
+      const safeTitle = payload.title || "Evento LitCafe";
       const eventItem = {
         id: createId("event"),
         ...payload,
+        description: payload.description || "Evento abierto para la comunidad de LitCafe.",
+        imageUrl: payload.imageUrl || buildCoverImage(safeTitle, "event"),
         createdBy: currentUser?.name || "Admin LitCafe",
       };
       setEvents((prevEvents) => [...prevEvents, eventItem].sort((a, b) => eventSortValue(a) - eventSortValue(b)));
@@ -4321,9 +4872,11 @@ export default function LitCafeApp() {
 
   const handleAddSiteNews = useCallback(
     (payload) => {
+      const safeTitle = payload.title || "Novedad LitCafe";
       const newsItem = {
         id: createId("site-news"),
         ...payload,
+        imageUrl: payload.imageUrl || buildCoverImage(safeTitle, "site-news"),
         author: currentUser?.name || "Admin LitCafe",
         publishedAt: new Date().toISOString().slice(0, 10),
       };
@@ -4432,6 +4985,8 @@ export default function LitCafeApp() {
             onClearCart={handleClearCart}
             onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
+            onUpdateCatalogCourse={handleUpdateCatalogCourse}
+            onUpdateEvent={handleUpdateEvent}
           />
         ) : null}
 

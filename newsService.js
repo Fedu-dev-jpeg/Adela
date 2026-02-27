@@ -27,6 +27,10 @@ const LITERATURE_KEYWORDS = [
   "cuentos",
 ];
 
+function buildFallbackImage(seed) {
+  return `https://picsum.photos/seed/${encodeURIComponent(seed || "litcafe-news")}/960/540`;
+}
+
 function stripHtml(value) {
   return (value || "").replace(/<[^>]*>/g, "").trim();
 }
@@ -34,11 +38,13 @@ function stripHtml(value) {
 function normalizeGuardianResult(item) {
   const summary = stripHtml(item.fields?.trailText) || "Sin resumen disponible.";
   const fullBody = stripHtml(item.fields?.bodyText);
+  const imageUrl = item.fields?.thumbnail || buildFallbackImage(item.id || item.webTitle);
   return {
     id: item.id,
     title: item.webTitle,
     summary,
     content: fullBody || summary,
+    imageUrl,
     source: "The Guardian",
     publishedAt: item.webPublicationDate ? item.webPublicationDate.slice(0, 10) : "",
     url: item.webUrl || "#",
@@ -89,7 +95,7 @@ export async function fetchLiteratureNews() {
     "(literature OR books OR novels OR poetry OR literatura OR libros OR novela OR poesia)",
   );
   endpoint.searchParams.set("api-key", "test");
-  endpoint.searchParams.set("show-fields", "trailText,bodyText");
+  endpoint.searchParams.set("show-fields", "trailText,bodyText,thumbnail");
   endpoint.searchParams.set("order-by", "newest");
   endpoint.searchParams.set("page-size", "12");
 

@@ -213,6 +213,9 @@ export const initialEvents = [
     location: "Sede Centro",
     seats: 12,
     createdBy: "Admin LitCafe",
+    description:
+      "Encuentro de lectura comentada con dinamicas participativas, guia de analisis y cierre con recomendaciones.",
+    imageUrl: "https://picsum.photos/seed/litcafe-evento-borges/1200/700",
   },
   {
     id: "event-2",
@@ -223,6 +226,9 @@ export const initialEvents = [
     location: "Sala Norte + streaming",
     seats: 30,
     createdBy: "Admin LitCafe",
+    description:
+      "Mesa de debate sobre oralidad, militancia cultural y nuevas voces poeticas con moderacion academica.",
+    imageUrl: "https://picsum.photos/seed/litcafe-evento-poesia/1200/700",
   },
   {
     id: "event-3",
@@ -233,6 +239,9 @@ export const initialEvents = [
     location: "Aula virtual 3",
     seats: 40,
     createdBy: "Admin LitCafe",
+    description:
+      "Laboratorio intensivo para crear microficciones con devolucion personalizada y ejercicios guiados.",
+    imageUrl: "https://picsum.photos/seed/litcafe-evento-microrelato/1200/700",
   },
 ];
 
@@ -341,6 +350,7 @@ export const initialSiteNews = [
     author: "Admin LitCafe",
     publishedAt: "2026-02-25",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/litcafe-site-news-1/1200/700",
   },
   {
     id: "site-news-2",
@@ -349,6 +359,7 @@ export const initialSiteNews = [
     author: "Admin LitCafe",
     publishedAt: "2026-02-22",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/litcafe-site-news-2/1200/700",
   },
 ];
 
@@ -362,6 +373,7 @@ export const fallbackLiteratureNews = [
     source: "Mock Literario",
     publishedAt: "2026-02-26",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/lit-news-mock-1/1200/700",
   },
   {
     id: "lit-news-mock-2",
@@ -372,6 +384,7 @@ export const fallbackLiteratureNews = [
     source: "Mock Literario",
     publishedAt: "2026-02-24",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/lit-news-mock-2/1200/700",
   },
   {
     id: "lit-news-mock-3",
@@ -382,6 +395,7 @@ export const fallbackLiteratureNews = [
     source: "Mock Literario",
     publishedAt: "2026-02-21",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/lit-news-mock-3/1200/700",
   },
 ];
 
@@ -394,6 +408,7 @@ export const initialCourseCatalog = [
     duration: "8 semanas",
     price: 42900,
     description: "Aprende a leer, argumentar y moderar debates literarios en espacios colaborativos.",
+    imageUrl: "https://picsum.photos/seed/lit-course-critica/1200/700",
   },
   {
     id: "catalog-2",
@@ -403,6 +418,7 @@ export const initialCourseCatalog = [
     duration: "6 semanas",
     price: 31900,
     description: "Recorrido guiado por poeticas contemporaneas con actividades semanales.",
+    imageUrl: "https://picsum.photos/seed/lit-course-poesia/1200/700",
   },
   {
     id: "catalog-3",
@@ -412,6 +428,7 @@ export const initialCourseCatalog = [
     duration: "10 semanas",
     price: 51900,
     description: "Del plan argumental al borrador final, con revision editorial y mentoria.",
+    imageUrl: "https://picsum.photos/seed/lit-course-novela/1200/700",
   },
 ];
 
