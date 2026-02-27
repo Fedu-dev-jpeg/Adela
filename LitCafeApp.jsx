@@ -2711,7 +2711,16 @@ function LandingScreen({
             <div className="lc-marketplace-grid">
               {courseCatalog.map((course) => (
                 <article key={course.id} className="lc-course-card">
-                  <div className="lc-course-card-banner" />
+                  {(course.imageUrl || course.image) ? (
+                    <img
+                      src={course.imageUrl || course.image}
+                      alt={course.title}
+                      loading="lazy"
+                      style={{ width: "100%", height: 140, objectFit: "cover", display: "block" }}
+                    />
+                  ) : (
+                    <div className="lc-course-card-banner" />
+                  )}
                   <div className="lc-course-card-body">
                     <span className="lc-course-level">{course.level}</span>
                     <h3>{course.title}</h3>
@@ -2826,10 +2835,10 @@ function LandingScreen({
                       )
                     }
                   >
-                    {item.thumbnail ? (
+                    {(item.imageUrl || item.thumbnail) ? (
                       <img
                         className="lc-news-card-img"
-                        src={item.thumbnail}
+                        src={item.imageUrl || item.thumbnail}
                         alt={item.title}
                         loading="lazy"
                       />
@@ -3048,7 +3057,7 @@ function LandingDetailScreen({
       );
     }
 
-    const currentImage = course.image || "";
+    const currentImage = course.imageUrl || course.image || "";
 
     return (
       <main className="lc-detail-main">
@@ -3206,7 +3215,7 @@ function LandingDetailScreen({
     }
 
     const dp = getEventDateParts(eventItem.date);
-    const currentImage = eventItem.image || "";
+    const currentImage = eventItem.imageUrl || eventItem.image || "";
 
     return (
       <main className="lc-detail-main">
@@ -5892,7 +5901,7 @@ export default function LitCafeApp() {
             courseCatalog={courseCatalog}
             onAddCourseToCart={handleAddCourseToCart}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
-            onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
+            onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id, from: "courses" })}
             onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
           />
         ) : null}
@@ -5911,7 +5920,10 @@ export default function LitCafeApp() {
             onDecreaseCourseFromCart={handleDecreaseCourseFromCart}
             onRemoveCourseFromCart={handleRemoveCourseFromCart}
             onClearCart={handleClearCart}
-            onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
+            onBack={() => {
+              const backTo = publicView.from === "courses" ? "courses" : "landing";
+              setPublicView({ screen: backTo, kind: "", id: "" });
+            }}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
             onUpdateCourseCatalog={handleUpdateCourseCatalog}
             onUpdateEvent={handleUpdateEvent}
