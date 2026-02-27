@@ -43,6 +43,7 @@ function normalizeGuardianResult(item) {
     publishedAt: item.webPublicationDate ? item.webPublicationDate.slice(0, 10) : "",
     url: item.webUrl || "#",
     sectionName: item.sectionName || "",
+    thumbnail: item.fields?.thumbnail || "",
   };
 }
 
@@ -89,7 +90,7 @@ export async function fetchLiteratureNews() {
     "(literature OR books OR novels OR poetry OR literatura OR libros OR novela OR poesia)",
   );
   endpoint.searchParams.set("api-key", "test");
-  endpoint.searchParams.set("show-fields", "trailText,bodyText");
+  endpoint.searchParams.set("show-fields", "trailText,bodyText,thumbnail");
   endpoint.searchParams.set("order-by", "newest");
   endpoint.searchParams.set("page-size", "12");
 
