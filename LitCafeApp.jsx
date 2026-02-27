@@ -158,7 +158,6 @@ function GlobalStyles() {
         padding: 0;
         min-height: 100%;
         overflow-x: hidden;
-        max-width: 100vw;
       }
 
       body {
@@ -713,7 +712,6 @@ function GlobalStyles() {
         min-height: 100vh;
         background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
         overflow-x: hidden;
-        max-width: 100vw;
       }
 
       .lc-landing-topbar {
