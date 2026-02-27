@@ -1142,6 +1142,8 @@ function GlobalStyles() {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
         border-top: 1px solid ${C.border};
         padding: 14px 20px;
         background: ${C.bg};
@@ -1847,7 +1849,7 @@ function LandingScreen({
           <h1 className="lc-brand">Lead Cafe</h1>
           <span className="lc-pill">Tu espacio de formacion literaria</span>
         </div>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
           {connectedAccounts.length > 0 && (
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {connectedAccounts.map((account) => (
@@ -3777,6 +3779,7 @@ function AdministrationSection({
   communities,
   siteNews,
   courses,
+  courseCatalog,
   trainingPrograms,
   enrollments,
   payments,
@@ -3790,6 +3793,8 @@ function AdministrationSection({
   onAddEnrollment,
   onAddPayment,
   onAssignCourseTask,
+  onUpdateCourseCatalog,
+  onUpdateEvent,
 }) {
   const isAdmin = currentUser.role === "admin";
   const [eventForm, setEventForm] = useState({
@@ -3838,6 +3843,10 @@ function AdministrationSection({
     target: "Toda la cohorte",
     description: "",
   });
+  const [editingCourseImageId, setEditingCourseImageId] = useState("");
+  const [courseImageUrl, setCourseImageUrl] = useState("");
+  const [editingEventImageId, setEditingEventImageId] = useState("");
+  const [eventImageUrl, setEventImageUrl] = useState("");
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -4466,6 +4475,154 @@ function AdministrationSection({
           </ul>
         </Card>
       </div>
+
+      <Card title="Catalogo de cursos (imagenes y contenido)">
+        <div className="lc-grid" style={{ gap: 16 }}>
+          {courseCatalog.map((course) => (
+            <div key={course.id} style={{
+              border: `1px solid ${C.border}`, borderRadius: 12,
+              background: C.bg, overflow: "hidden",
+            }}>
+              <div style={{ display: "flex", gap: 16, padding: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ flex: "0 0 180px" }}>
+                  {course.image ? (
+                    <img
+                      src={course.image}
+                      alt={course.title}
+                      style={{ width: 180, height: 110, objectFit: "cover", borderRadius: 8, display: "block", border: `1px solid ${C.border}` }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: 180, height: 110, borderRadius: 8,
+                      background: `linear-gradient(135deg, ${C.bgWarm}, ${C.bgDrawer})`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: C.textMeta, fontSize: 28, border: `1px solid ${C.border}`,
+                    }}>&#128218;</div>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <div style={{ display: "flex", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+                    <span className="lc-tag is-accent">{course.level}</span>
+                    <span className="lc-tag">{course.duration}</span>
+                  </div>
+                  <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: 16 }}>{course.title}</p>
+                  <p className="lc-meta" style={{ margin: "0 0 4px" }}>{course.description}</p>
+                  <p className="lc-meta">Precio: {formatCurrency(course.price)} | Formato: {course.format}</p>
+                </div>
+              </div>
+              <div style={{ padding: "0 16px 16px", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                {editingCourseImageId === course.id ? (
+                  <>
+                    <input
+                      className="lc-input"
+                      type="url"
+                      placeholder="URL de la nueva imagen"
+                      value={courseImageUrl}
+                      onChange={(e) => setCourseImageUrl(e.target.value)}
+                      style={{ flex: 1, minWidth: 200 }}
+                    />
+                    <button
+                      type="button"
+                      className="lc-button is-primary"
+                      onClick={() => {
+                        if (courseImageUrl.trim()) {
+                          onUpdateCourseCatalog(course.id, { image: courseImageUrl.trim() });
+                        }
+                        setEditingCourseImageId("");
+                        setCourseImageUrl("");
+                      }}
+                    >Guardar</button>
+                    <button
+                      type="button"
+                      className="lc-button"
+                      onClick={() => { setEditingCourseImageId(""); setCourseImageUrl(""); }}
+                    >Cancelar</button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="lc-button"
+                    onClick={() => { setEditingCourseImageId(course.id); setCourseImageUrl(course.image || ""); }}
+                  >Cambiar imagen</button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card title="Imagenes de eventos">
+        <div className="lc-grid" style={{ gap: 16 }}>
+          {events.map((eventItem) => (
+            <div key={eventItem.id} style={{
+              border: `1px solid ${C.border}`, borderRadius: 12,
+              background: C.bg, overflow: "hidden",
+            }}>
+              <div style={{ display: "flex", gap: 16, padding: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ flex: "0 0 180px" }}>
+                  {eventItem.image ? (
+                    <img
+                      src={eventItem.image}
+                      alt={eventItem.title}
+                      style={{ width: 180, height: 110, objectFit: "cover", borderRadius: 8, display: "block", border: `1px solid ${C.border}` }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: 180, height: 110, borderRadius: 8,
+                      background: `linear-gradient(135deg, ${C.bgWarm}, ${C.bgDrawer})`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: C.textMeta, fontSize: 28, border: `1px solid ${C.border}`,
+                    }}>&#128197;</div>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: 16 }}>{eventItem.title}</p>
+                  <p className="lc-meta" style={{ margin: "0 0 4px" }}>
+                    {formatDate(eventItem.date)} | {eventItem.time} | {eventItem.type}
+                  </p>
+                  <p className="lc-meta">{eventItem.location}</p>
+                </div>
+              </div>
+              <div style={{ padding: "0 16px 16px", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                {editingEventImageId === eventItem.id ? (
+                  <>
+                    <input
+                      className="lc-input"
+                      type="url"
+                      placeholder="URL de la nueva imagen"
+                      value={eventImageUrl}
+                      onChange={(e) => setEventImageUrl(e.target.value)}
+                      style={{ flex: 1, minWidth: 200 }}
+                    />
+                    <button
+                      type="button"
+                      className="lc-button is-primary"
+                      onClick={() => {
+                        if (eventImageUrl.trim()) {
+                          onUpdateEvent(eventItem.id, { image: eventImageUrl.trim() });
+                        }
+                        setEditingEventImageId("");
+                        setEventImageUrl("");
+                      }}
+                    >Guardar</button>
+                    <button
+                      type="button"
+                      className="lc-button"
+                      onClick={() => { setEditingEventImageId(""); setEventImageUrl(""); }}
+                    >Cancelar</button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="lc-button"
+                    onClick={() => { setEditingEventImageId(eventItem.id); setEventImageUrl(eventItem.image || ""); }}
+                  >Cambiar imagen</button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 }
@@ -5088,6 +5245,7 @@ export default function LitCafeApp() {
             communities={communities}
             siteNews={siteNews}
             courses={courses}
+            courseCatalog={courseCatalog}
             trainingPrograms={trainingPrograms}
             enrollments={enrollments}
             payments={payments}
@@ -5101,6 +5259,8 @@ export default function LitCafeApp() {
             onAddEnrollment={handleAddEnrollment}
             onAddPayment={handleAddPayment}
             onAssignCourseTask={handleAssignCourseTask}
+            onUpdateCourseCatalog={handleUpdateCourseCatalog}
+            onUpdateEvent={handleUpdateEvent}
           />
         );
       default:
