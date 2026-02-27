@@ -1420,13 +1420,234 @@ function GlobalStyles() {
         min-height: 100vh;
         padding: 18px;
         overflow-x: hidden;
+        background: ${C.bg};
       }
 
       .lc-detail-shell {
         max-width: 980px;
         margin: 0 auto;
         display: grid;
+        gap: 16px;
+      }
+
+      .lc-detail-hero-img {
+        width: 100%;
+        height: 340px;
+        object-fit: cover;
+        border-radius: 14px;
+        display: block;
+        border: 1px solid ${C.border};
+      }
+
+      .lc-detail-hero-placeholder {
+        width: 100%;
+        height: 340px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, ${C.bgWarm} 0%, #ddd6c8 50%, ${C.bgDrawer} 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${C.textMeta};
+        font-size: 48px;
+        border: 1px solid ${C.border};
+      }
+
+      .lc-detail-header {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 14px;
+        padding: 28px 32px;
+      }
+
+      .lc-detail-header h1 {
+        margin: 0 0 12px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 36px;
+        line-height: 1.2;
+        color: ${C.charcoal};
+      }
+
+      .lc-detail-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .lc-detail-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 8px;
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        font-size: 13px;
+        font-weight: 600;
+        color: ${C.textSec};
+      }
+
+      .lc-detail-tag.is-accent {
+        border-color: ${C.accent}40;
+        background: ${C.accent}08;
+        color: ${C.accent};
+      }
+
+      .lc-detail-body {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 14px;
+        padding: 28px 32px;
+      }
+
+      .lc-detail-body h3 {
+        margin: 0 0 12px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 20px;
+        color: ${C.charcoal};
+      }
+
+      .lc-detail-sidebar {
+        display: grid;
+        gap: 16px;
+      }
+
+      .lc-detail-price-card {
+        border: 2px solid ${C.accent};
+        background: ${C.bgCard};
+        border-radius: 14px;
+        padding: 24px;
+        text-align: center;
+      }
+
+      .lc-detail-price {
+        margin: 0 0 4px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: ${C.accent};
+      }
+
+      .lc-detail-2col {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      .lc-detail-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 12px;
+      }
+
+      .lc-detail-info-item {
+        border: 1px solid ${C.border};
+        border-radius: 10px;
+        padding: 14px;
+        background: ${C.bg};
+      }
+
+      .lc-detail-info-item .lc-detail-info-label {
+        margin: 0 0 4px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        font-weight: 700;
+        color: ${C.textMeta};
+      }
+
+      .lc-detail-info-item .lc-detail-info-value {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: ${C.charcoal};
+      }
+
+      .lc-syllabus-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .lc-syllabus-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border: 1px solid ${C.border};
+        border-radius: 8px;
+        background: ${C.bg};
+        font-size: 14px;
+        color: ${C.charcoal};
+      }
+
+      .lc-syllabus-num {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: ${C.accent}15;
+        color: ${C.accent};
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .lc-detail-img-edit {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .lc-detail-img-edit input {
+        flex: 1;
+      }
+
+      .lc-event-detail-map {
+        width: 100%;
+        height: 180px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #e8e2d6 0%, #ddd6c8 50%, #d4cfc4 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid ${C.border};
+        color: ${C.textMeta};
+        font-size: 14px;
+        gap: 8px;
+      }
+
+      @media (max-width: 980px) {
+        .lc-detail-2col {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-detail-hero-img,
+        .lc-detail-hero-placeholder {
+          height: 200px;
+        }
+
+        .lc-detail-header {
+          padding: 20px;
+        }
+
+        .lc-detail-header h1 {
+          font-size: 26px;
+        }
+
+        .lc-detail-body {
+          padding: 20px;
+        }
+
+        .lc-detail-info-grid {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (max-width: 980px) {
@@ -2038,22 +2259,369 @@ function LandingDetailScreen({
   onClearCart,
   onBack,
   onOpenLogin,
+  onUpdateCourseCatalog,
+  onUpdateEvent,
+  isAdmin,
 }) {
+  const [editingImage, setEditingImage] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  function getEventDateParts(dateStr) {
+    if (!dateStr) return { day: "--", month: "---", weekday: "---" };
+    const d = new Date(dateStr + "T00:00:00");
+    return {
+      day: String(d.getDate()).padStart(2, "0"),
+      month: new Intl.DateTimeFormat("es-AR", { month: "long" }).format(d),
+      weekday: new Intl.DateTimeFormat("es-AR", { weekday: "long" }).format(d),
+    };
+  }
+
+  function eventTypeLabel(type) {
+    if (type === "presencial") return "Presencial";
+    if (type === "virtual") return "Virtual";
+    return "Hibrido";
+  }
+
+  if (view.kind === "catalog-course") {
+    const course = courseCatalog.find((item) => item.id === view.id);
+    if (!course) {
+      return (
+        <main className="lc-detail-main">
+          <div className="lc-detail-shell">
+            <button type="button" className="lc-button" onClick={onBack}>&#8592; Volver</button>
+            <div className="lc-detail-header">
+              <h1>Curso no encontrado</h1>
+              <p className="lc-muted">El curso solicitado no esta disponible.</p>
+            </div>
+          </div>
+        </main>
+      );
+    }
+
+    const currentImage = course.image || "";
+
+    return (
+      <main className="lc-detail-main">
+        <div className="lc-detail-shell">
+          <div className="lc-row">
+            <button type="button" className="lc-button" onClick={onBack}>&#8592; Volver</button>
+            <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>Iniciar sesion</button>
+          </div>
+
+          {currentImage ? (
+            <img className="lc-detail-hero-img" src={currentImage} alt={course.title} />
+          ) : (
+            <div className="lc-detail-hero-placeholder">&#128218;</div>
+          )}
+
+          {isAdmin && (
+            <div className="lc-detail-body" style={{ padding: "14px 20px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span className="lc-tag is-accent">Admin</span>
+                <span style={{ fontSize: 13, color: C.textSec }}>Editar imagen del curso:</span>
+                {editingImage ? (
+                  <>
+                    <input
+                      className="lc-input"
+                      type="url"
+                      placeholder="URL de la imagen"
+                      value={imageUrl}
+                      onChange={(e) => setImageUrl(e.target.value)}
+                      style={{ flex: 1, minWidth: 200 }}
+                    />
+                    <button
+                      type="button"
+                      className="lc-button is-primary"
+                      onClick={() => {
+                        if (onUpdateCourseCatalog && imageUrl.trim()) {
+                          onUpdateCourseCatalog(course.id, { image: imageUrl.trim() });
+                        }
+                        setEditingImage(false);
+                        setImageUrl("");
+                      }}
+                    >
+                      Guardar
+                    </button>
+                    <button type="button" className="lc-button" onClick={() => { setEditingImage(false); setImageUrl(""); }}>
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <button type="button" className="lc-button" onClick={() => { setEditingImage(true); setImageUrl(currentImage); }}>
+                    Cambiar imagen
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="lc-detail-2col">
+            <div style={{ display: "grid", gap: 16 }}>
+              <div className="lc-detail-header">
+                <div className="lc-detail-tags">
+                  <span className="lc-detail-tag is-accent">{course.level}</span>
+                  <span className="lc-detail-tag">{course.duration}</span>
+                  <span className="lc-detail-tag">{course.format}</span>
+                </div>
+                <h1>{course.title}</h1>
+                {course.mentor && (
+                  <p style={{ margin: "0 0 12px", fontSize: 15, color: C.textSec }}>
+                    Mentor: <strong style={{ color: C.charcoal }}>{course.mentor}</strong>
+                  </p>
+                )}
+                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: C.textSec }}>
+                  {course.longDescription || course.description}
+                </p>
+              </div>
+
+              {course.syllabus && course.syllabus.length > 0 && (
+                <div className="lc-detail-body">
+                  <h3>Programa del curso</h3>
+                  <ul className="lc-syllabus-list">
+                    {course.syllabus.map((item, idx) => (
+                      <li key={idx} className="lc-syllabus-item">
+                        <span className="lc-syllabus-num">{idx + 1}</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="lc-detail-sidebar">
+              <div className="lc-detail-price-card">
+                <p className="lc-detail-price">{formatCurrency(course.price)}</p>
+                <p className="lc-meta" style={{ marginBottom: 16 }}>Precio total del curso</p>
+                <button
+                  type="button"
+                  className="lc-button-lg is-primary"
+                  style={{ width: "100%", marginBottom: 10 }}
+                  onClick={() => onAddCourseToCart(course.id)}
+                >
+                  Agregar al carrito
+                </button>
+                <button
+                  type="button"
+                  className="lc-button-lg is-outline"
+                  style={{ width: "100%" }}
+                  onClick={onOpenLogin}
+                >
+                  Inscribirme ahora
+                </button>
+              </div>
+
+              <div className="lc-detail-body">
+                <h3>Detalles</h3>
+                <div className="lc-detail-info-grid">
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Nivel</p>
+                    <p className="lc-detail-info-value">{course.level}</p>
+                  </div>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Duracion</p>
+                    <p className="lc-detail-info-value">{course.duration}</p>
+                  </div>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Formato</p>
+                    <p className="lc-detail-info-value">{course.format}</p>
+                  </div>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Mentor</p>
+                    <p className="lc-detail-info-value">{course.mentor || "Por confirmar"}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (view.kind === "event") {
+    const eventItem = events.find((event) => event.id === view.id);
+    if (!eventItem) {
+      return (
+        <main className="lc-detail-main">
+          <div className="lc-detail-shell">
+            <button type="button" className="lc-button" onClick={onBack}>&#8592; Volver</button>
+            <div className="lc-detail-header">
+              <h1>Evento no encontrado</h1>
+              <p className="lc-muted">El evento solicitado no esta disponible.</p>
+            </div>
+          </div>
+        </main>
+      );
+    }
+
+    const dp = getEventDateParts(eventItem.date);
+    const currentImage = eventItem.image || "";
+
+    return (
+      <main className="lc-detail-main">
+        <div className="lc-detail-shell">
+          <div className="lc-row">
+            <button type="button" className="lc-button" onClick={onBack}>&#8592; Volver</button>
+            <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>Iniciar sesion</button>
+          </div>
+
+          {currentImage ? (
+            <img className="lc-detail-hero-img" src={currentImage} alt={eventItem.title} />
+          ) : (
+            <div className="lc-detail-hero-placeholder">&#128197;</div>
+          )}
+
+          {isAdmin && (
+            <div className="lc-detail-body" style={{ padding: "14px 20px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span className="lc-tag is-accent">Admin</span>
+                <span style={{ fontSize: 13, color: C.textSec }}>Editar imagen del evento:</span>
+                {editingImage ? (
+                  <>
+                    <input
+                      className="lc-input"
+                      type="url"
+                      placeholder="URL de la imagen"
+                      value={imageUrl}
+                      onChange={(e) => setImageUrl(e.target.value)}
+                      style={{ flex: 1, minWidth: 200 }}
+                    />
+                    <button
+                      type="button"
+                      className="lc-button is-primary"
+                      onClick={() => {
+                        if (onUpdateEvent && imageUrl.trim()) {
+                          onUpdateEvent(eventItem.id, { image: imageUrl.trim() });
+                        }
+                        setEditingImage(false);
+                        setImageUrl("");
+                      }}
+                    >
+                      Guardar
+                    </button>
+                    <button type="button" className="lc-button" onClick={() => { setEditingImage(false); setImageUrl(""); }}>
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <button type="button" className="lc-button" onClick={() => { setEditingImage(true); setImageUrl(currentImage); }}>
+                    Cambiar imagen
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="lc-detail-2col">
+            <div style={{ display: "grid", gap: 16 }}>
+              <div className="lc-detail-header">
+                <div className="lc-detail-tags">
+                  <span className={`lc-detail-tag is-accent`}>{eventTypeLabel(eventItem.type)}</span>
+                  <span className="lc-detail-tag">{dp.weekday}, {dp.day} de {dp.month}</span>
+                  <span className="lc-detail-tag">{eventItem.time} hs</span>
+                </div>
+                <h1>{eventItem.title}</h1>
+                {eventItem.description && (
+                  <p style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: C.textSec }}>
+                    {eventItem.description}
+                  </p>
+                )}
+              </div>
+
+              <div className="lc-detail-body">
+                <h3>Ubicacion</h3>
+                <div className="lc-detail-info-grid" style={{ marginBottom: 16 }}>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Lugar</p>
+                    <p className="lc-detail-info-value">{eventItem.location}</p>
+                  </div>
+                  {eventItem.address && (
+                    <div className="lc-detail-info-item">
+                      <p className="lc-detail-info-label">Direccion</p>
+                      <p className="lc-detail-info-value">{eventItem.address}</p>
+                    </div>
+                  )}
+                </div>
+                <div className="lc-event-detail-map">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  {eventItem.address || eventItem.location}
+                </div>
+              </div>
+            </div>
+
+            <div className="lc-detail-sidebar">
+              <div className="lc-detail-price-card" style={{ borderColor: C.ochre }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: "50%",
+                  background: `${C.accent}15`, display: "flex",
+                  alignItems: "center", justifyContent: "center",
+                  margin: "0 auto 12px", fontSize: 28, color: C.accent,
+                }}>
+                  &#128197;
+                </div>
+                <p style={{ margin: "0 0 2px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 24, fontWeight: 700, color: C.charcoal }}>
+                  {dp.day} de {dp.month}
+                </p>
+                <p className="lc-meta" style={{ marginBottom: 16 }}>{eventItem.time} hs &middot; {eventTypeLabel(eventItem.type)}</p>
+                <button
+                  type="button"
+                  className="lc-button-lg is-primary"
+                  style={{ width: "100%" }}
+                  onClick={onOpenLogin}
+                >
+                  Reservar lugar
+                </button>
+              </div>
+
+              <div className="lc-detail-body">
+                <h3>Informacion</h3>
+                <div className="lc-detail-info-grid">
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Tipo</p>
+                    <p className="lc-detail-info-value">{eventTypeLabel(eventItem.type)}</p>
+                  </div>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Cupos</p>
+                    <p className="lc-detail-info-value">{eventItem.seats} lugares</p>
+                  </div>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Fecha</p>
+                    <p className="lc-detail-info-value">{formatDate(eventItem.date)}</p>
+                  </div>
+                  <div className="lc-detail-info-item">
+                    <p className="lc-detail-info-label">Organiza</p>
+                    <p className="lc-detail-info-value">{eventItem.createdBy}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   let title = "Detalle";
   let meta = "";
   let body = null;
   let cta = null;
-  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  let heroImage = null;
 
   if (view.kind === "literature-news") {
     const item = literatureNews.find((news) => news.id === view.id);
     if (item) {
       title = item.title;
       meta = `${item.source || "LitCafe"} | ${formatDate(item.publishedAt)}`;
+      heroImage = item.thumbnail || "";
       body = renderParagraphs(item.content || item.summary);
       cta = (
         <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
-          Abrir noticia completa
+          Abrir noticia completa &#8594;
         </a>
       );
     }
@@ -2065,32 +2633,8 @@ function LandingDetailScreen({
       body = <p className="lc-muted">{item.summary}</p>;
       cta = (
         <a className="lc-link" href={item.url || "#"} target="_blank" rel="noreferrer">
-          Abrir publicacion
+          Abrir publicacion &#8594;
         </a>
-      );
-    }
-  } else if (view.kind === "event") {
-    const eventItem = events.find((event) => event.id === view.id);
-    if (eventItem) {
-      title = eventItem.title;
-      meta = `${formatDate(eventItem.date)} | ${eventItem.time} | ${eventItem.type}`;
-      body = (
-        <div className="lc-grid" style={{ gap: 6 }}>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            Ubicacion: {eventItem.location}
-          </p>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            Cupos disponibles: {eventItem.seats}
-          </p>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            Creado por: {eventItem.createdBy}
-          </p>
-        </div>
-      );
-      cta = (
-        <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
-          Iniciar sesion para reservar
-        </button>
       );
     }
   } else if (view.kind === "forum") {
@@ -2100,20 +2644,14 @@ function LandingDetailScreen({
       meta = `${forum.course} | ${forum.author} | ${formatDate(forum.createdAt)}`;
       body = (
         <div className="lc-grid" style={{ gap: 10 }}>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            {forum.content}
-          </p>
+          <p className="lc-muted" style={{ margin: 0 }}>{forum.content}</p>
           <div>
-            <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>
-              Comentarios del foro
-            </p>
+            <p className="lc-stat-label" style={{ margin: "0 0 8px" }}>Comentarios del foro</p>
             <ul className="lc-list">
               {forum.comments.map((comment) => (
                 <li key={comment.id} className="lc-list-item">
                   <p style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 13 }}>{comment.author}</p>
-                  <p className="lc-muted" style={{ margin: "0 0 3px", fontSize: 13 }}>
-                    {comment.text}
-                  </p>
+                  <p className="lc-muted" style={{ margin: "0 0 3px", fontSize: 13 }}>{comment.text}</p>
                   <p className="lc-meta">{comment.at}</p>
                 </li>
               ))}
@@ -2125,32 +2663,6 @@ function LandingDetailScreen({
         <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
           Iniciar sesion para responder en el foro
         </button>
-      );
-    }
-  } else if (view.kind === "catalog-course") {
-    const course = courseCatalog.find((item) => item.id === view.id);
-    if (course) {
-      title = course.title;
-      meta = `${course.level} | ${course.duration} | ${course.format}`;
-      body = (
-        <div className="lc-grid" style={{ gap: 8 }}>
-          <p className="lc-muted" style={{ margin: 0 }}>
-            {course.description}
-          </p>
-          <p className="lc-meta" style={{ margin: 0 }}>
-            Precio: <strong>{formatCurrency(course.price)}</strong>
-          </p>
-        </div>
-      );
-      cta = (
-        <div className="lc-row" style={{ justifyContent: "flex-start", flexWrap: "wrap" }}>
-          <button type="button" className="lc-button is-primary" onClick={() => onAddCourseToCart(course.id)}>
-            Agregar al carrito
-          </button>
-          <button type="button" className="lc-button" onClick={onOpenLogin}>
-            Iniciar sesion para comprar
-          </button>
-        </div>
       );
     }
   } else if (view.kind === "cart") {
@@ -2172,24 +2684,16 @@ function LandingDetailScreen({
                     </p>
                   </div>
                   <div className="lc-row" style={{ gap: 6 }}>
-                    <button type="button" className="lc-button" onClick={() => onDecreaseCourseFromCart(item.course.id)}>
-                      -
-                    </button>
-                    <button type="button" className="lc-button" onClick={() => onAddCourseToCart(item.course.id)}>
-                      +
-                    </button>
-                    <button type="button" className="lc-link" onClick={() => onRemoveCourseFromCart(item.course.id)}>
-                      Quitar
-                    </button>
+                    <button type="button" className="lc-button" onClick={() => onDecreaseCourseFromCart(item.course.id)}>-</button>
+                    <button type="button" className="lc-button" onClick={() => onAddCourseToCart(item.course.id)}>+</button>
+                    <button type="button" className="lc-link" onClick={() => onRemoveCourseFromCart(item.course.id)}>Quitar</button>
                   </div>
                 </div>
               </li>
             ))}
           </ul>
           <div className="lc-row">
-            <p className="lc-stat-label" style={{ margin: 0 }}>
-              Total
-            </p>
+            <p className="lc-stat-label" style={{ margin: 0 }}>Total</p>
             <p style={{ margin: 0, fontWeight: 700 }}>{formatCurrency(cartTotal)}</p>
           </div>
         </div>
@@ -2197,9 +2701,7 @@ function LandingDetailScreen({
     cta = (
       <div className="lc-row" style={{ justifyContent: "flex-start", flexWrap: "wrap" }}>
         {cartItems.length > 0 ? (
-          <button type="button" className="lc-button" onClick={onClearCart}>
-            Vaciar carrito
-          </button>
+          <button type="button" className="lc-button" onClick={onClearCart}>Vaciar carrito</button>
         ) : null}
         <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
           Iniciar sesion para finalizar compra
@@ -2212,21 +2714,23 @@ function LandingDetailScreen({
     <main className="lc-detail-main">
       <div className="lc-detail-shell">
         <div className="lc-row">
-          <button type="button" className="lc-button" onClick={onBack}>
-            Volver a la landing
-          </button>
-          <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
-            Iniciar sesion
-          </button>
+          <button type="button" className="lc-button" onClick={onBack}>&#8592; Volver</button>
+          <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>Iniciar sesion</button>
         </div>
-        <Card title="Detalle de contenido">
-          <h2 style={{ margin: "0 0 6px", fontFamily: "'Playfair Display', Georgia, serif", fontSize: 32 }}>{title}</h2>
-          <p className="lc-meta" style={{ marginBottom: 12 }}>
-            {meta || "Contenido no encontrado."}
-          </p>
+
+        {heroImage && (
+          <img className="lc-detail-hero-img" src={heroImage} alt={title} />
+        )}
+
+        <div className="lc-detail-header">
+          <h1>{title}</h1>
+          <p className="lc-meta" style={{ marginBottom: 0 }}>{meta || "Contenido no encontrado."}</p>
+        </div>
+
+        <div className="lc-detail-body">
           {body || <p className="lc-muted">No se encontro el detalle solicitado.</p>}
-          {cta ? <div style={{ marginTop: 12 }}>{cta}</div> : null}
-        </Card>
+          {cta ? <div style={{ marginTop: 16 }}>{cta}</div> : null}
+        </div>
       </div>
     </main>
   );
@@ -3972,7 +4476,7 @@ function LoginScreen({ credentials, authError, onChange, onSubmit, onBack }) {
       <div className="lc-login-card">
         <section className="lc-login-main">
           <button type="button" className="lc-button" style={{ marginBottom: 10 }} onClick={onBack}>
-            Volver a la landing
+            Volver
           </button>
           <p className="lc-tag is-accent" style={{ marginBottom: 12 }}>
             Plataforma de aprendizaje y comunidad
@@ -4044,7 +4548,7 @@ export default function LitCafeApp() {
   const [authError, setAuthError] = useState("");
   const [currentUser, setCurrentUser] = useState(readStoredSession);
 
-  const [courseCatalog] = useState(initialCourseCatalog);
+  const [courseCatalog, setCourseCatalog] = useState(initialCourseCatalog);
   const [cartItems, setCartItems] = useState([]);
   const [courses, setCourses] = useState(initialCourses);
   const [events, setEvents] = useState(initialEvents);
@@ -4441,6 +4945,18 @@ export default function LitCafeApp() {
     [currentUser],
   );
 
+  const handleUpdateCourseCatalog = useCallback((courseId, updates) => {
+    setCourseCatalog((prev) =>
+      prev.map((course) => (course.id === courseId ? { ...course, ...updates } : course)),
+    );
+  }, []);
+
+  const handleUpdateEvent = useCallback((eventId, updates) => {
+    setEvents((prev) =>
+      prev.map((event) => (event.id === eventId ? { ...event, ...updates } : event)),
+    );
+  }, []);
+
   if (!currentUser) {
     return (
       <>
@@ -4482,6 +4998,9 @@ export default function LitCafeApp() {
             onClearCart={handleClearCart}
             onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
+            onUpdateCourseCatalog={handleUpdateCourseCatalog}
+            onUpdateEvent={handleUpdateEvent}
+            isAdmin={false}
           />
         ) : null}
 
