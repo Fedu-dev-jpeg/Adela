@@ -157,18 +157,21 @@ function GlobalStyles() {
         margin: 0;
         padding: 0;
         min-height: 100%;
-        overflow-x: hidden;
-        max-width: 100vw;
+        width: 100%;
+        overflow-x: clip;
       }
 
       body {
         font-family: "DM Sans", sans-serif;
         background: ${C.bg};
         color: ${C.charcoal};
+        overflow-x: clip;
       }
 
       .lc-app {
         min-height: 100vh;
+        width: 100%;
+        overflow-x: clip;
       }
 
       .lc-topbar {
@@ -303,6 +306,7 @@ function GlobalStyles() {
 
       .lc-main-shell {
         max-width: 1260px;
+        width: 100%;
         margin: 0 auto;
         display: grid;
         gap: 12px;
@@ -711,9 +715,9 @@ function GlobalStyles() {
 
       .lc-landing-page {
         min-height: 100vh;
+        width: 100%;
         background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
-        overflow-x: hidden;
-        max-width: 100vw;
+        overflow-x: clip;
       }
 
       .lc-landing-topbar {
@@ -722,16 +726,17 @@ function GlobalStyles() {
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        padding: 0 18px;
+        padding: 0 clamp(16px, 3vw, 40px);
         border-bottom: 1px solid ${C.border};
         background: ${C.bgCard};
-        overflow: hidden;
         max-width: 100%;
+        margin: 0 auto;
       }
 
       .lc-landing-main {
-        padding: 16px;
-        overflow-x: hidden;
+        width: 100%;
+        padding: 24px clamp(16px, 3vw, 40px);
+        overflow-x: clip;
       }
 
       .lc-landing-hero {
@@ -1340,6 +1345,488 @@ function GlobalStyles() {
         transform: translateY(-1px);
       }
 
+      /* ── 3D Courses Explore Page ── */
+      .lc-courses-explore {
+        min-height: 100vh;
+        width: 100%;
+        background: linear-gradient(180deg, #1a1520 0%, #2a1f2e 40%, #1e1828 100%);
+        overflow-x: clip;
+        color: #f0ebe1;
+      }
+
+      .lc-courses-topbar {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 clamp(16px, 3vw, 40px);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: rgba(26,21,32,0.85);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .lc-courses-topbar .lc-brand {
+        color: #f0ebe1;
+      }
+
+      .lc-courses-topbar .lc-pill {
+        color: rgba(240,235,225,0.6);
+        border-color: rgba(255,255,255,0.1);
+      }
+
+      .lc-courses-hero-3d {
+        text-align: center;
+        padding: 80px clamp(16px, 4vw, 60px) 60px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .lc-courses-hero-3d::before {
+        content: "";
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, ${C.accent}25 0%, transparent 70%);
+        pointer-events: none;
+      }
+
+      .lc-courses-hero-3d h1 {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(36px, 5vw, 56px);
+        margin: 0 0 16px;
+        color: #fff;
+        position: relative;
+        z-index: 1;
+        line-height: 1.15;
+      }
+
+      .lc-courses-hero-3d .lc-courses-subtitle {
+        font-size: 18px;
+        color: rgba(240,235,225,0.65);
+        max-width: 600px;
+        margin: 0 auto 32px;
+        line-height: 1.7;
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-courses-filter-bar {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-courses-filter-btn {
+        padding: 10px 22px;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.05);
+        color: rgba(240,235,225,0.7);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        font-family: inherit;
+      }
+
+      .lc-courses-filter-btn:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.2);
+        color: #fff;
+      }
+
+      .lc-courses-filter-btn.is-active {
+        background: ${C.accent};
+        border-color: ${C.accent};
+        color: #fff;
+      }
+
+      .lc-courses-3d-grid {
+        max-width: 1260px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px clamp(16px, 3vw, 40px) 80px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 32px;
+        perspective: 1200px;
+      }
+
+      .lc-3d-card-wrapper {
+        perspective: 1000px;
+        cursor: pointer;
+      }
+
+      .lc-3d-card {
+        position: relative;
+        width: 100%;
+        min-height: 440px;
+        transform-style: preserve-3d;
+        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 20px;
+      }
+
+      .lc-3d-card.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .lc-3d-card-front,
+      .lc-3d-card-back {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .lc-3d-card-front {
+        background: linear-gradient(165deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(184,101,74,0.08);
+        transition: box-shadow 0.3s ease;
+      }
+
+      .lc-3d-card-wrapper:hover .lc-3d-card-front {
+        box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 60px rgba(184,101,74,0.15);
+      }
+
+      .lc-3d-card-back {
+        transform: rotateY(180deg);
+        background: linear-gradient(165deg, rgba(40,32,50,0.98) 0%, rgba(30,24,40,0.98) 100%);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        padding: 28px;
+        justify-content: space-between;
+      }
+
+      .lc-3d-card-img-area {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .lc-3d-card-img-area img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .lc-3d-card-img-gradient {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 40%, rgba(26,21,32,0.9) 100%);
+      }
+
+      .lc-3d-card-img-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, ${C.accent}30 0%, ${C.ochre}20 50%, rgba(42,42,42,0.3) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lc-3d-card-level {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        backdrop-filter: blur(8px);
+        z-index: 2;
+      }
+
+      .lc-3d-card-level.is-inicial {
+        background: rgba(42,109,70,0.75);
+        color: #b8f0cf;
+      }
+
+      .lc-3d-card-level.is-intermedio {
+        background: rgba(184,101,74,0.75);
+        color: #ffd7c8;
+      }
+
+      .lc-3d-card-level.is-avanzado {
+        background: rgba(141,97,34,0.75);
+        color: #ffe4aa;
+      }
+
+      .lc-3d-card-content {
+        padding: 20px 24px 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .lc-3d-card-content h3 {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 22px;
+        line-height: 1.25;
+        color: #fff;
+      }
+
+      .lc-3d-card-content .lc-3d-card-desc {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(240,235,225,0.6);
+        flex: 1;
+      }
+
+      .lc-3d-card-meta-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .lc-3d-card-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: rgba(240,235,225,0.45);
+      }
+
+      .lc-3d-card-meta-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        background: rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+      }
+
+      .lc-3d-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        background: rgba(0,0,0,0.12);
+      }
+
+      .lc-3d-card-price {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .lc-3d-card-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .lc-3d-btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        font-family: inherit;
+      }
+
+      .lc-3d-btn.is-primary {
+        background: ${C.accent};
+        color: #fff;
+      }
+
+      .lc-3d-btn.is-primary:hover {
+        filter: brightness(1.15);
+        transform: translateY(-1px);
+      }
+
+      .lc-3d-btn.is-ghost {
+        background: rgba(255,255,255,0.08);
+        color: rgba(240,235,225,0.8);
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .lc-3d-btn.is-ghost:hover {
+        background: rgba(255,255,255,0.14);
+        color: #fff;
+      }
+
+      .lc-3d-back-title {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 24px;
+        color: #fff;
+        margin: 0 0 12px;
+      }
+
+      .lc-3d-back-desc {
+        font-size: 14px;
+        line-height: 1.7;
+        color: rgba(240,235,225,0.65);
+        margin: 0 0 20px;
+      }
+
+      .lc-3d-syllabus-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: ${C.accent};
+        margin: 0 0 10px;
+      }
+
+      .lc-3d-syllabus-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .lc-3d-syllabus-list li {
+        font-size: 13px;
+        color: rgba(240,235,225,0.55);
+        padding-left: 16px;
+        position: relative;
+      }
+
+      .lc-3d-syllabus-list li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: ${C.accent};
+      }
+
+      .lc-3d-mentor-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-top: auto;
+      }
+
+      .lc-3d-mentor-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, ${C.accent}40, ${C.ochre}40);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .lc-3d-mentor-info {
+        font-size: 13px;
+      }
+
+      .lc-3d-mentor-info .name {
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .lc-3d-mentor-info .role {
+        color: rgba(240,235,225,0.45);
+      }
+
+      .lc-3d-back-actions {
+        display: flex;
+        gap: 10px;
+        padding-top: 16px;
+      }
+
+      .lc-3d-back-actions .lc-3d-btn {
+        flex: 1;
+        text-align: center;
+      }
+
+      .lc-floating-orb {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(80px);
+        opacity: 0.4;
+        animation: orbFloat 8s ease-in-out infinite alternate;
+      }
+
+      @keyframes orbFloat {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(30px, -20px) scale(1.15); }
+      }
+
+      @keyframes cardEntrance {
+        from {
+          opacity: 0;
+          transform: translateY(40px) rotateX(8deg);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) rotateX(0);
+        }
+      }
+
+      .lc-3d-card-wrapper {
+        animation: cardEntrance 0.6s ease-out backwards;
+      }
+
+      .lc-3d-card-wrapper:nth-child(1) { animation-delay: 0.1s; }
+      .lc-3d-card-wrapper:nth-child(2) { animation-delay: 0.2s; }
+      .lc-3d-card-wrapper:nth-child(3) { animation-delay: 0.3s; }
+      .lc-3d-card-wrapper:nth-child(4) { animation-delay: 0.4s; }
+      .lc-3d-card-wrapper:nth-child(5) { animation-delay: 0.5s; }
+      .lc-3d-card-wrapper:nth-child(6) { animation-delay: 0.6s; }
+
+      .lc-courses-stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: clamp(20px, 4vw, 60px);
+        padding: 28px 0 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .lc-courses-stat {
+        text-align: center;
+      }
+
+      .lc-courses-stat .number {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 32px;
+        font-weight: 700;
+        color: ${C.accent};
+        display: block;
+      }
+
+      .lc-courses-stat .label {
+        font-size: 13px;
+        color: rgba(240,235,225,0.5);
+        margin-top: 2px;
+        display: block;
+      }
+
       /* ── Landing sections spacing ── */
       .lc-landing-section {
         margin-bottom: 36px;
@@ -1744,6 +2231,27 @@ function GlobalStyles() {
         .lc-cta-banner h2 {
           font-size: 24px;
         }
+
+        .lc-courses-3d-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
+        .lc-3d-card {
+          min-height: 400px;
+        }
+
+        .lc-courses-hero-3d {
+          padding: 50px 20px 40px;
+        }
+
+        .lc-courses-stats-bar {
+          gap: 20px;
+        }
+
+        .lc-courses-stat .number {
+          font-size: 24px;
+        }
       }
     `}</style>
   );
@@ -1790,6 +2298,244 @@ function SocialIcon({ network, size = 22 }) {
   return icons[network] || null;
 }
 
+function CoursesExploreScreen({
+  courseCatalog,
+  onAddCourseToCart,
+  onOpenLogin,
+  onOpenDetail,
+  onBack,
+}) {
+  const [filter, setFilter] = useState("Todos");
+  const [flippedCards, setFlippedCards] = useState({});
+  const [tiltStyles, setTiltStyles] = useState({});
+
+  const levels = ["Todos", ...new Set(courseCatalog.map((c) => c.level))];
+  const filtered = filter === "Todos" ? courseCatalog : courseCatalog.filter((c) => c.level === filter);
+
+  function toggleFlip(id) {
+    setFlippedCards((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  function handleMouseMove(e, id) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const rotateY = (x - 0.5) * 16;
+    const rotateX = (0.5 - y) * 12;
+    setTiltStyles((prev) => ({
+      ...prev,
+      [id]: {
+        transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transition: "transform 0.1s ease-out",
+      },
+    }));
+  }
+
+  function handleMouseLeave(id) {
+    setTiltStyles((prev) => ({
+      ...prev,
+      [id]: {
+        transform: "rotateX(0) rotateY(0)",
+        transition: "transform 0.4s ease-out",
+      },
+    }));
+  }
+
+  function levelClass(level) {
+    const l = level.toLowerCase();
+    if (l === "inicial") return "is-inicial";
+    if (l === "intermedio") return "is-intermedio";
+    if (l === "avanzado") return "is-avanzado";
+    return "is-intermedio";
+  }
+
+  return (
+    <div className="lc-courses-explore">
+      <header className="lc-courses-topbar">
+        <div className="lc-brand-wrap">
+          <h1 className="lc-brand">Lead Cafe</h1>
+          <span className="lc-pill">Catalogo de cursos</span>
+        </div>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <button
+            type="button"
+            className="lc-3d-btn is-ghost"
+            onClick={onBack}
+          >
+            Volver al inicio
+          </button>
+          <button
+            type="button"
+            className="lc-3d-btn is-primary"
+            onClick={onOpenLogin}
+          >
+            Iniciar sesion
+          </button>
+        </div>
+      </header>
+
+      <section className="lc-courses-hero-3d">
+        <div className="lc-floating-orb" style={{ width: 300, height: 300, background: `${C.accent}30`, top: -80, left: "10%" }} />
+        <div className="lc-floating-orb" style={{ width: 200, height: 200, background: `${C.ochre}25`, bottom: -40, right: "15%", animationDelay: "3s" }} />
+        <div className="lc-floating-orb" style={{ width: 150, height: 150, background: "rgba(80,70,165,0.2)", top: "30%", right: "5%", animationDelay: "5s" }} />
+
+        <h1>Explora nuestros cursos</h1>
+        <p className="lc-courses-subtitle">
+          Formacion literaria con mentores expertos. Pasa el mouse sobre cada curso para
+          ver mas detalles o hace click para descubrir el programa completo.
+        </p>
+
+        <div className="lc-courses-filter-bar">
+          {levels.map((level) => (
+            <button
+              key={level}
+              type="button"
+              className={`lc-courses-filter-btn ${filter === level ? "is-active" : ""}`}
+              onClick={() => setFilter(level)}
+            >
+              {level}
+            </button>
+          ))}
+        </div>
+
+        <div className="lc-courses-stats-bar">
+          <div className="lc-courses-stat">
+            <span className="number">{courseCatalog.length}</span>
+            <span className="label">Cursos disponibles</span>
+          </div>
+          <div className="lc-courses-stat">
+            <span className="number">3</span>
+            <span className="label">Niveles</span>
+          </div>
+          <div className="lc-courses-stat">
+            <span className="number">100%</span>
+            <span className="label">Con mentoria</span>
+          </div>
+        </div>
+      </section>
+
+      <div className="lc-courses-3d-grid">
+        {filtered.map((course) => (
+          <div
+            key={course.id}
+            className="lc-3d-card-wrapper"
+            onMouseMove={(e) => !flippedCards[course.id] && handleMouseMove(e, course.id)}
+            onMouseLeave={() => handleMouseLeave(course.id)}
+          >
+            <div
+              className={`lc-3d-card ${flippedCards[course.id] ? "is-flipped" : ""}`}
+              style={!flippedCards[course.id] ? tiltStyles[course.id] || {} : {}}
+            >
+              <div className="lc-3d-card-front">
+                <div className="lc-3d-card-img-area">
+                  {(course.imageUrl || course.image) ? (
+                    <img
+                      src={course.imageUrl || course.image}
+                      alt={course.title}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="lc-3d-card-img-placeholder">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="lc-3d-card-img-gradient" />
+                  <span className={`lc-3d-card-level ${levelClass(course.level)}`}>
+                    {course.level}
+                  </span>
+                </div>
+                <div className="lc-3d-card-content">
+                  <h3>{course.title}</h3>
+                  <p className="lc-3d-card-desc">{course.description}</p>
+                  <div className="lc-3d-card-meta-row">
+                    <span className="lc-3d-card-meta-item">
+                      <span className="lc-3d-card-meta-icon">⏱</span>
+                      {course.duration}
+                    </span>
+                    <span className="lc-3d-card-meta-item">
+                      <span className="lc-3d-card-meta-icon">📍</span>
+                      {course.format}
+                    </span>
+                  </div>
+                </div>
+                <div className="lc-3d-card-footer">
+                  <span className="lc-3d-card-price">{formatCurrency(course.price)}</span>
+                  <div className="lc-3d-card-actions">
+                    <button
+                      type="button"
+                      className="lc-3d-btn is-primary"
+                      onClick={(e) => { e.stopPropagation(); toggleFlip(course.id); }}
+                    >
+                      Descubrir
+                    </button>
+                    <button
+                      type="button"
+                      className="lc-3d-btn is-ghost"
+                      onClick={(e) => { e.stopPropagation(); onAddCourseToCart(course.id); }}
+                    >
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lc-3d-card-back" onClick={() => toggleFlip(course.id)}>
+                <div>
+                  <h3 className="lc-3d-back-title">{course.title}</h3>
+                  <p className="lc-3d-back-desc">
+                    {course.longDescription || course.description}
+                  </p>
+                  {course.syllabus && course.syllabus.length > 0 && (
+                    <>
+                      <p className="lc-3d-syllabus-title">Programa</p>
+                      <ul className="lc-3d-syllabus-list">
+                        {course.syllabus.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                  {course.mentor && (
+                    <div className="lc-3d-mentor-row">
+                      <div className="lc-3d-mentor-avatar">
+                        {course.mentor.charAt(0)}
+                      </div>
+                      <div className="lc-3d-mentor-info">
+                        <span className="name">{course.mentor}</span>
+                        <br />
+                        <span className="role">Mentor del curso</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="lc-3d-back-actions">
+                  <button
+                    type="button"
+                    className="lc-3d-btn is-primary"
+                    onClick={(e) => { e.stopPropagation(); onOpenDetail("catalog-course", course.id); }}
+                  >
+                    Ver detalle completo
+                  </button>
+                  <button
+                    type="button"
+                    className="lc-3d-btn is-ghost"
+                    onClick={(e) => { e.stopPropagation(); onAddCourseToCart(course.id); }}
+                  >
+                    Agregar al carrito
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function LandingScreen({
   literatureNews,
   siteNews,
@@ -1807,6 +2553,7 @@ function LandingScreen({
   onClearCart,
   onOpenLogin,
   onOpenDetail,
+  onOpenCourses,
 }) {
   const allNews = [
     ...literatureNews.slice(0, 4).map((n) => ({ ...n, kind: "Literatura" })),
@@ -1903,7 +2650,7 @@ function LandingScreen({
             type="button"
             className="lc-button-lg is-primary"
             style={{ padding: "8px 16px", fontSize: 14 }}
-            onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
+            onClick={onOpenCourses}
             disabled={courseCatalog.length === 0}
           >
             Ver cursos
@@ -1931,7 +2678,7 @@ function LandingScreen({
               <button
                 type="button"
                 className="lc-button-lg is-primary"
-                onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
+                onClick={onOpenCourses}
                 disabled={courseCatalog.length === 0}
               >
                 Explorar cursos
@@ -1957,7 +2704,7 @@ function LandingScreen({
           <section className="lc-landing-section">
             <div className="lc-section-header">
               <h2>Cursos disponibles</h2>
-              <button type="button" className="lc-see-all" onClick={onOpenLogin}>
+              <button type="button" className="lc-see-all" onClick={onOpenCourses}>
                 Ver todos
               </button>
             </div>
@@ -5136,6 +5883,17 @@ export default function LitCafeApp() {
             onClearCart={handleClearCart}
             onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
             onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
+            onOpenCourses={() => setPublicView({ screen: "courses", kind: "", id: "" })}
+          />
+        ) : null}
+
+        {publicView.screen === "courses" ? (
+          <CoursesExploreScreen
+            courseCatalog={courseCatalog}
+            onAddCourseToCart={handleAddCourseToCart}
+            onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
+            onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
+            onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
           />
         ) : null}
 

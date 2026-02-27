@@ -215,6 +215,7 @@ export const initialEvents = [
     seats: 12,
     createdBy: "Admin LitCafe",
     image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=400&fit=crop",
+    imageUrl: "https://picsum.photos/seed/litcafe-evento-borges/1200/700",
     description: "Encuentro presencial para analizar y debatir los cuentos mas emblematicos de Jorge Luis Borges. Lectura guiada, intercambio de interpretaciones y cafe literario incluido.",
   },
   {
@@ -228,6 +229,7 @@ export const initialEvents = [
     seats: 30,
     createdBy: "Admin LitCafe",
     image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=400&fit=crop",
+    imageUrl: "https://picsum.photos/seed/litcafe-evento-poesia/1200/700",
     description: "Mesa de debate sobre el cruce entre poesia y compromiso politico en la literatura latinoamericana. Participan poetas invitados y se abre espacio para preguntas del publico.",
   },
   {
@@ -241,6 +243,7 @@ export const initialEvents = [
     seats: 40,
     createdBy: "Admin LitCafe",
     image: "https://images.unsplash.com/photo-1519682577862-22b62b24e493?w=800&h=400&fit=crop",
+    imageUrl: "https://picsum.photos/seed/litcafe-evento-microrelato/1200/700",
     description: "Taller practico de escritura de microrelatos. Se trabajara con consignas en tiempo real, devolucion grupal y recursos para pulir textos breves.",
   },
 ];
@@ -350,6 +353,7 @@ export const initialSiteNews = [
     author: "Admin LitCafe",
     publishedAt: "2026-02-25",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/litcafe-site-news-1/1200/700",
   },
   {
     id: "site-news-2",
@@ -358,6 +362,7 @@ export const initialSiteNews = [
     author: "Admin LitCafe",
     publishedAt: "2026-02-22",
     url: "#",
+    imageUrl: "https://picsum.photos/seed/litcafe-site-news-2/1200/700",
   },
 ];
 
@@ -372,6 +377,7 @@ export const fallbackLiteratureNews = [
     publishedAt: "2026-02-26",
     url: "#",
     thumbnail: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=250&fit=crop",
+    imageUrl: "https://picsum.photos/seed/lit-news-mock-1/1200/700",
   },
   {
     id: "lit-news-mock-2",
@@ -383,6 +389,7 @@ export const fallbackLiteratureNews = [
     publishedAt: "2026-02-24",
     url: "#",
     thumbnail: "https://images.unsplash.com/photo-1474932430478-367dbb6832c1?w=400&h=250&fit=crop",
+    imageUrl: "https://picsum.photos/seed/lit-news-mock-2/1200/700",
   },
   {
     id: "lit-news-mock-3",
@@ -394,6 +401,7 @@ export const fallbackLiteratureNews = [
     publishedAt: "2026-02-21",
     url: "#",
     thumbnail: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&h=250&fit=crop",
+    imageUrl: "https://picsum.photos/seed/lit-news-mock-3/1200/700",
   },
 ];
 
@@ -407,6 +415,7 @@ export const initialCourseCatalog = [
     price: 42900,
     description: "Aprende a leer, argumentar y moderar debates literarios en espacios colaborativos.",
     image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=400&fit=crop",
+    imageUrl: "https://picsum.photos/seed/lit-course-critica/1200/700",
     longDescription: "Este curso te prepara para liderar conversaciones literarias con herramientas de lectura critica, argumentacion y moderacion. Ideal para quienes participan en clubes de lectura, talleres comunitarios o espacios educativos. A lo largo de 8 semanas trabajaras con textos de distintos generos, desarrollaras criterios de analisis y practicaras dinamicas de debate en grupo.",
     mentor: "Laura Quiroga",
     syllabus: ["Lectura critica y hermeneutica", "Argumentacion literaria", "Tecnicas de moderacion", "Analisis de generos", "Debate y replica", "Proyecto final grupal"],
@@ -420,6 +429,7 @@ export const initialCourseCatalog = [
     price: 31900,
     description: "Recorrido guiado por poeticas contemporaneas con actividades semanales.",
     image: "https://images.unsplash.com/photo-1474932430478-367dbb6832c1?w=800&h=400&fit=crop",
+    imageUrl: "https://picsum.photos/seed/lit-course-poesia/1200/700",
     longDescription: "Un viaje por las voces mas representativas de la poesia latinoamericana contemporanea. Desde Neruda y Pizarnik hasta las nuevas generaciones, exploraras recursos poeticos, ritmo, oralidad y escritura. Cada semana incluye lecturas, foros de discusion y ejercicios creativos con devolucion del mentor.",
     mentor: "Marta Elizondo",
     syllabus: ["Fundamentos de la poesia", "Voces del cono sur", "Oralidad y performance", "Poesia urbana contemporanea", "Escritura poetica", "Lectura final abierta"],
@@ -433,6 +443,7 @@ export const initialCourseCatalog = [
     price: 51900,
     description: "Del plan argumental al borrador final, con revision editorial y mentoria.",
     image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=400&fit=crop",
+    imageUrl: "https://picsum.photos/seed/lit-course-novela/1200/700",
     longDescription: "Un laboratorio intensivo para escritores que quieren llevar su novela corta del boceto al borrador final. Trabajaras estructura narrativa, construccion de personajes, voz y estilo con acompanamiento editorial personalizado. Incluye sesiones presenciales de taller y encuentros virtuales de revision entre pares.",
     mentor: "Rocio Ferrer",
     syllabus: ["Estructura narrativa", "Construccion de personajes", "Voz y punto de vista", "Dialogo y escena", "Revision editorial", "Taller de cierre"],
