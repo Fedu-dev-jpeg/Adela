@@ -158,7 +158,6 @@ function GlobalStyles() {
         padding: 0;
         min-height: 100%;
         overflow-x: hidden;
-        max-width: 100vw;
       }
 
       body {
@@ -713,7 +712,6 @@ function GlobalStyles() {
         min-height: 100vh;
         background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
         overflow-x: hidden;
-        max-width: 100vw;
       }
 
       .lc-landing-topbar {
@@ -1398,6 +1396,261 @@ function GlobalStyles() {
         margin-bottom: 36px;
       }
 
+      /* ── Public catalog (interactive + 3D) ── */
+      .lc-catalog-main {
+        min-height: 100vh;
+        padding: 20px 16px 28px;
+        background:
+          radial-gradient(circle at 14% 10%, rgba(184, 101, 74, 0.12), transparent 34%),
+          radial-gradient(circle at 86% 18%, rgba(196, 151, 59, 0.12), transparent 30%),
+          ${C.bg};
+      }
+
+      .lc-catalog-shell {
+        max-width: 1240px;
+        margin: 0 auto;
+        display: grid;
+        gap: 14px;
+      }
+
+      .lc-catalog-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .lc-catalog-top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .lc-catalog-hero {
+        border: 1px solid ${C.border};
+        background: linear-gradient(132deg, ${C.bgCard} 0%, #f0e8db 100%);
+        border-radius: 14px;
+        padding: 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .lc-catalog-hero h1 {
+        margin: 10px 0 8px;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 38px;
+        line-height: 1.15;
+      }
+
+      .lc-catalog-hero p {
+        margin: 0;
+        max-width: 700px;
+        color: ${C.textSec};
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .lc-catalog-orb {
+        width: 164px;
+        height: 164px;
+        border-radius: 50%;
+        border: 1px solid ${C.border};
+        background:
+          radial-gradient(circle at 28% 28%, #ffffffcc, transparent 45%),
+          linear-gradient(140deg, ${C.accent}44, ${C.ochre}44);
+        box-shadow:
+          0 28px 42px rgba(42, 42, 42, 0.2),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        transform: rotateX(62deg) rotateZ(-20deg);
+        animation: lc-catalog-float 5.8s ease-in-out infinite;
+      }
+
+      @keyframes lc-catalog-float {
+        0%,
+        100% {
+          transform: rotateX(62deg) rotateZ(-20deg) translateY(0);
+        }
+        50% {
+          transform: rotateX(62deg) rotateZ(-16deg) translateY(-7px);
+        }
+      }
+
+      .lc-catalog-controls {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 14px;
+        padding: 16px 18px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .lc-catalog-controls-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 220px;
+        gap: 10px;
+      }
+
+      .lc-control-label {
+        margin: 0 0 5px;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+        color: ${C.textMeta};
+      }
+
+      .lc-catalog-levels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .lc-filter-chip {
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        color: ${C.textSec};
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+      }
+
+      .lc-filter-chip:hover {
+        border-color: ${C.accent};
+        color: ${C.accent};
+        transform: translateY(-1px);
+      }
+
+      .lc-filter-chip.is-active {
+        border-color: ${C.accent};
+        background: ${C.accent}12;
+        color: ${C.accent};
+      }
+
+      .lc-catalog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 14px;
+      }
+
+      .lc-catalog-card {
+        perspective: 1100px;
+      }
+
+      .lc-catalog-card-inner {
+        border: 1px solid ${C.border};
+        background: ${C.bgCard};
+        border-radius: 14px;
+        overflow: hidden;
+        min-height: 100%;
+        display: grid;
+        grid-template-rows: 176px 1fr;
+        transform-style: preserve-3d;
+        transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+        position: relative;
+      }
+
+      .lc-catalog-card:nth-child(odd):hover .lc-catalog-card-inner {
+        transform: rotateX(7deg) rotateY(-7deg) translateY(-8px);
+        box-shadow: 0 20px 34px rgba(42, 42, 42, 0.14);
+        border-color: ${C.accent}66;
+      }
+
+      .lc-catalog-card:nth-child(even):hover .lc-catalog-card-inner {
+        transform: rotateX(7deg) rotateY(7deg) translateY(-8px);
+        box-shadow: 0 20px 34px rgba(42, 42, 42, 0.14);
+        border-color: ${C.ochre}66;
+      }
+
+      .lc-catalog-card-media {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transform: translateZ(26px);
+      }
+
+      .lc-catalog-card-content {
+        padding: 14px 16px 16px;
+        display: grid;
+        gap: 9px;
+        transform: translateZ(24px);
+      }
+
+      .lc-catalog-card-content h3 {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 23px;
+        line-height: 1.2;
+        color: ${C.charcoal};
+      }
+
+      .lc-catalog-card-content p {
+        margin: 0;
+        color: ${C.textSec};
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .lc-catalog-course-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .lc-catalog-course-meta span {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid ${C.border};
+        background: ${C.bg};
+        border-radius: 999px;
+        padding: 4px 10px;
+        color: ${C.textMeta};
+        font-size: 11px;
+      }
+
+      .lc-catalog-card-footer {
+        margin-top: 2px;
+        padding-top: 10px;
+        border-top: 1px solid ${C.border};
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .lc-catalog-price {
+        margin: 0;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 27px;
+        color: ${C.charcoal};
+      }
+
+      .lc-catalog-empty {
+        border: 1px dashed ${C.border};
+        background: ${C.bgCard};
+        border-radius: 12px;
+        padding: 24px;
+        color: ${C.textSec};
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .lc-catalog-orb {
+          animation: none;
+          transform: none;
+        }
+
+        .lc-catalog-card-inner {
+          transition: none;
+          transform: none !important;
+        }
+      }
+
       .lc-social-badge {
         display: inline-flex;
         align-items: center;
@@ -1744,6 +1997,33 @@ function GlobalStyles() {
         .lc-cta-banner h2 {
           font-size: 24px;
         }
+
+        .lc-catalog-main {
+          padding: 14px 12px 24px;
+        }
+
+        .lc-catalog-controls-row {
+          grid-template-columns: 1fr;
+        }
+
+        .lc-catalog-hero {
+          grid-template-columns: 1fr;
+          padding: 20px;
+        }
+
+        .lc-catalog-hero h1 {
+          font-size: 30px;
+        }
+
+        .lc-catalog-orb {
+          width: 118px;
+          height: 118px;
+          justify-self: flex-start;
+        }
+
+        .lc-catalog-grid {
+          grid-template-columns: 1fr;
+        }
       }
     `}</style>
   );
@@ -1806,6 +2086,7 @@ function LandingScreen({
   onRemoveCourseFromCart,
   onClearCart,
   onOpenLogin,
+  onOpenCatalog,
   onOpenDetail,
 }) {
   const allNews = [
@@ -1903,7 +2184,7 @@ function LandingScreen({
             type="button"
             className="lc-button-lg is-primary"
             style={{ padding: "8px 16px", fontSize: 14 }}
-            onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
+            onClick={onOpenCatalog}
             disabled={courseCatalog.length === 0}
           >
             Ver cursos
@@ -1931,7 +2212,7 @@ function LandingScreen({
               <button
                 type="button"
                 className="lc-button-lg is-primary"
-                onClick={() => onOpenDetail("catalog-course", courseCatalog[0]?.id)}
+                onClick={onOpenCatalog}
                 disabled={courseCatalog.length === 0}
               >
                 Explorar cursos
@@ -1957,7 +2238,7 @@ function LandingScreen({
           <section className="lc-landing-section">
             <div className="lc-section-header">
               <h2>Cursos disponibles</h2>
-              <button type="button" className="lc-see-all" onClick={onOpenLogin}>
+              <button type="button" className="lc-see-all" onClick={onOpenCatalog}>
                 Ver todos
               </button>
             </div>
@@ -2243,6 +2524,188 @@ function LandingScreen({
         </div>
       </main>
     </div>
+  );
+}
+
+function PublicCatalogScreen({
+  courseCatalog,
+  cartItems,
+  onOpenDetail,
+  onAddCourseToCart,
+  onOpenLogin,
+  onBack,
+}) {
+  const [query, setQuery] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("Todos");
+  const [sortBy, setSortBy] = useState("featured");
+  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const levelFilters = useMemo(
+    () => ["Todos", ...Array.from(new Set(courseCatalog.map((course) => course.level).filter(Boolean)))],
+    [courseCatalog],
+  );
+
+  const visibleCourses = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    const filtered = courseCatalog.filter((course) => {
+      const matchesLevel = selectedLevel === "Todos" || course.level === selectedLevel;
+      if (!matchesLevel) {
+        return false;
+      }
+
+      if (!normalizedQuery) {
+        return true;
+      }
+
+      const searchable = `${course.title} ${course.description} ${course.mentor || ""} ${course.format} ${course.duration}`.toLowerCase();
+      return searchable.includes(normalizedQuery);
+    });
+
+    const sorted = [...filtered];
+    if (sortBy === "price-asc") {
+      sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sortBy === "price-desc") {
+      sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else if (sortBy === "duration-asc") {
+      sorted.sort((a, b) => {
+        const aDuration = Number.parseInt(String(a.duration || "").match(/\d+/)?.[0] || "0", 10);
+        const bDuration = Number.parseInt(String(b.duration || "").match(/\d+/)?.[0] || "0", 10);
+        return aDuration - bDuration;
+      });
+    }
+
+    return sorted;
+  }, [courseCatalog, query, selectedLevel, sortBy]);
+
+  return (
+    <main className="lc-catalog-main">
+      <div className="lc-catalog-shell">
+        <div className="lc-catalog-top">
+          <button type="button" className="lc-button" onClick={onBack}>
+            &#8592; Volver al inicio
+          </button>
+          <div className="lc-catalog-top-actions">
+            <span className="lc-pill">
+              {visibleCourses.length} resultado{visibleCourses.length === 1 ? "" : "s"}
+            </span>
+            <button type="button" className="lc-button" onClick={() => onOpenDetail("cart", "catalog-cart")}>
+              Carrito ({cartItemsCount})
+            </button>
+            <button type="button" className="lc-button is-primary" onClick={onOpenLogin}>
+              Iniciar sesion
+            </button>
+          </div>
+        </div>
+
+        <section className="lc-catalog-hero">
+          <div>
+            <span className="lc-tag is-accent">Catalogo interactivo</span>
+            <h1>Explora cursos con vista inmersiva</h1>
+            <p>
+              Busca por tema, filtra por nivel y ordena segun tu preferencia. Pasa el cursor por las tarjetas para ver
+              el efecto 3D y abrir el detalle del curso que mas te interese.
+            </p>
+          </div>
+          <div className="lc-catalog-orb" aria-hidden="true" />
+        </section>
+
+        <section className="lc-catalog-controls">
+          <div className="lc-catalog-controls-row">
+            <label>
+              <p className="lc-control-label">Buscar curso</p>
+              <input
+                className="lc-input"
+                type="search"
+                placeholder="Ej: poesia, narrativa, escritura..."
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </label>
+            <label>
+              <p className="lc-control-label">Ordenar por</p>
+              <select className="lc-select" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Precio: menor a mayor</option>
+                <option value="price-desc">Precio: mayor a menor</option>
+                <option value="duration-asc">Duracion mas corta</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="lc-catalog-levels" role="list" aria-label="Filtro por nivel">
+            {levelFilters.map((level) => (
+              <button
+                key={level}
+                type="button"
+                role="listitem"
+                className={`lc-filter-chip ${selectedLevel === level ? "is-active" : ""}`}
+                onClick={() => setSelectedLevel(level)}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="lc-catalog-grid" aria-live="polite">
+          {visibleCourses.length === 0 ? (
+            <div className="lc-catalog-empty">
+              No encontramos cursos con esos filtros. Prueba con otro nivel o limpia la busqueda.
+            </div>
+          ) : (
+            visibleCourses.map((course) => (
+              <article key={course.id} className="lc-catalog-card">
+                <div className="lc-catalog-card-inner">
+                  {course.image ? (
+                    <img className="lc-catalog-card-media" src={course.image} alt={course.title} loading="lazy" />
+                  ) : (
+                    <div className="lc-news-card-img-placeholder" style={{ transform: "translateZ(26px)", height: "100%" }}>
+                      &#128218;
+                    </div>
+                  )}
+
+                  <div className="lc-catalog-card-content">
+                    <span className="lc-tag is-accent">{course.level}</span>
+                    <h3>{course.title}</h3>
+                    <p>{course.description}</p>
+                    <p className="lc-meta">
+                      Mentor: <strong style={{ color: C.charcoal }}>{course.mentor || "Por confirmar"}</strong>
+                    </p>
+
+                    <div className="lc-catalog-course-meta">
+                      <span>{course.duration}</span>
+                      <span>{course.format}</span>
+                    </div>
+
+                    <div className="lc-catalog-card-footer">
+                      <p className="lc-catalog-price">{formatCurrency(course.price)}</p>
+                      <div className="lc-row" style={{ justifyContent: "flex-end", gap: 8 }}>
+                        <button
+                          type="button"
+                          className="lc-button is-primary"
+                          style={{ borderRadius: 8, padding: "8px 14px", fontWeight: 700 }}
+                          onClick={() => onOpenDetail("catalog-course", course.id)}
+                        >
+                          Ver curso
+                        </button>
+                        <button
+                          type="button"
+                          className="lc-button"
+                          style={{ borderRadius: 8, padding: "8px 14px", fontWeight: 700 }}
+                          onClick={() => onAddCourseToCart(course.id)}
+                        >
+                          Agregar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))
+          )}
+        </section>
+      </div>
+    </main>
   );
 }
 
@@ -4698,7 +5161,7 @@ function LoginScreen({ credentials, authError, onChange, onSubmit, onBack }) {
 export default function LitCafeApp() {
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("tablero");
-  const [publicView, setPublicView] = useState({ screen: "landing", kind: "", id: "" });
+  const [publicView, setPublicView] = useState({ screen: "landing", kind: "", id: "", from: "landing" });
   const [courseSelection, setCourseSelection] = useState({ courseId: "", tab: "inicio" });
   const [forumSelectionId, setForumSelectionId] = useState("");
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -4771,7 +5234,7 @@ export default function LitCafeApp() {
     setAuthError("");
     setActiveSection("tablero");
     setCredentials({ email: "", password: "" });
-    setPublicView({ screen: "landing", kind: "", id: "" });
+    setPublicView({ screen: "landing", kind: "", id: "", from: "landing" });
   }
 
   function handleLogout() {
@@ -4781,7 +5244,7 @@ export default function LitCafeApp() {
     setActiveSection("tablero");
     setCourseSelection({ courseId: "", tab: "inicio" });
     setForumSelectionId("");
-    setPublicView({ screen: "landing", kind: "", id: "" });
+    setPublicView({ screen: "landing", kind: "", id: "", from: "landing" });
   }
 
   const activeSectionInfo = appSections.find((section) => section.id === activeSection) || appSections[0];
@@ -5114,6 +5577,30 @@ export default function LitCafeApp() {
     );
   }, []);
 
+  const goToPublicLanding = useCallback(() => {
+    setPublicView({ screen: "landing", kind: "", id: "", from: "landing" });
+  }, []);
+
+  const goToPublicCatalog = useCallback(() => {
+    setPublicView({ screen: "catalog", kind: "", id: "", from: "catalog" });
+  }, []);
+
+  const openPublicDetail = useCallback((kind, id) => {
+    setPublicView((prev) => ({ screen: "detail", kind, id, from: prev.screen || "landing" }));
+  }, []);
+
+  const openPublicLogin = useCallback(() => {
+    setPublicView({ screen: "login", kind: "", id: "", from: "landing" });
+  }, []);
+
+  const backFromPublicDetail = useCallback(() => {
+    setPublicView((prev) =>
+      prev.from === "catalog"
+        ? { screen: "catalog", kind: "", id: "", from: "catalog" }
+        : { screen: "landing", kind: "", id: "", from: "landing" },
+    );
+  }, []);
+
   if (!currentUser) {
     return (
       <>
@@ -5134,8 +5621,20 @@ export default function LitCafeApp() {
             onDecreaseCourseFromCart={handleDecreaseCourseFromCart}
             onRemoveCourseFromCart={handleRemoveCourseFromCart}
             onClearCart={handleClearCart}
-            onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
-            onOpenDetail={(kind, id) => setPublicView({ screen: "detail", kind, id })}
+            onOpenLogin={openPublicLogin}
+            onOpenCatalog={goToPublicCatalog}
+            onOpenDetail={openPublicDetail}
+          />
+        ) : null}
+
+        {publicView.screen === "catalog" ? (
+          <PublicCatalogScreen
+            courseCatalog={courseCatalog}
+            cartItems={cartItemsDetailed}
+            onOpenDetail={openPublicDetail}
+            onAddCourseToCart={handleAddCourseToCart}
+            onOpenLogin={openPublicLogin}
+            onBack={goToPublicLanding}
           />
         ) : null}
 
@@ -5153,8 +5652,8 @@ export default function LitCafeApp() {
             onDecreaseCourseFromCart={handleDecreaseCourseFromCart}
             onRemoveCourseFromCart={handleRemoveCourseFromCart}
             onClearCart={handleClearCart}
-            onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
-            onOpenLogin={() => setPublicView({ screen: "login", kind: "", id: "" })}
+            onBack={backFromPublicDetail}
+            onOpenLogin={openPublicLogin}
             onUpdateCourseCatalog={handleUpdateCourseCatalog}
             onUpdateEvent={handleUpdateEvent}
             isAdmin={false}
@@ -5167,7 +5666,7 @@ export default function LitCafeApp() {
             authError={authError}
             onChange={updateCredentials}
             onSubmit={handleLogin}
-            onBack={() => setPublicView({ screen: "landing", kind: "", id: "" })}
+            onBack={goToPublicLanding}
           />
         ) : null}
       </>
