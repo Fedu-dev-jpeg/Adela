@@ -156,6 +156,7 @@ function GlobalStyles() {
       html, body, #root {
         margin: 0;
         padding: 0;
+        width: 100%;
         min-height: 100%;
         overflow-x: hidden;
       }
@@ -164,9 +165,11 @@ function GlobalStyles() {
         font-family: "DM Sans", sans-serif;
         background: ${C.bg};
         color: ${C.charcoal};
+        overflow-x: clip;
       }
 
       .lc-app {
+        width: 100%;
         min-height: 100vh;
       }
 
@@ -301,6 +304,7 @@ function GlobalStyles() {
       }
 
       .lc-main-shell {
+        width: min(1260px, 100%);
         max-width: 1260px;
         margin: 0 auto;
         display: grid;
@@ -709,12 +713,14 @@ function GlobalStyles() {
       }
 
       .lc-landing-page {
+        width: 100%;
         min-height: 100vh;
         background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
         overflow-x: hidden;
       }
 
       .lc-landing-topbar {
+        width: 100%;
         height: 68px;
         display: flex;
         align-items: center;
@@ -727,8 +733,15 @@ function GlobalStyles() {
         max-width: 100%;
       }
 
+      .lc-landing-topbar .lc-brand-wrap {
+        min-width: 0;
+      }
+
       .lc-landing-main {
+        width: 100%;
         padding: 16px;
+        display: flex;
+        justify-content: center;
         overflow-x: hidden;
       }
 
@@ -774,6 +787,7 @@ function GlobalStyles() {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 16px;
+        min-width: 0;
       }
 
       .lc-marketplace-item {
@@ -1347,18 +1361,21 @@ function GlobalStyles() {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 14px;
+        min-width: 0;
       }
 
       .lc-communities-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 14px;
+        min-width: 0;
       }
 
       .lc-ig-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 14px;
+        min-width: 0;
       }
 
       .lc-ig-post {
@@ -1398,6 +1415,7 @@ function GlobalStyles() {
 
       /* ── Public catalog (interactive + 3D) ── */
       .lc-catalog-main {
+        width: 100%;
         min-height: 100vh;
         padding: 20px 16px 28px;
         background:
@@ -1407,6 +1425,7 @@ function GlobalStyles() {
       }
 
       .lc-catalog-shell {
+        width: min(1240px, 100%);
         max-width: 1240px;
         margin: 0 auto;
         display: grid;
@@ -1947,6 +1966,18 @@ function GlobalStyles() {
           grid-template-columns: 1fr;
         }
 
+        .lc-landing-topbar {
+          height: auto;
+          padding: 10px 12px;
+          align-items: flex-start;
+          overflow: visible;
+        }
+
+        .lc-landing-topbar > div:last-child {
+          width: 100%;
+          justify-content: flex-start !important;
+        }
+
         .lc-landing-kpis {
           grid-template-columns: 1fr;
         }
@@ -2023,6 +2054,11 @@ function GlobalStyles() {
 
         .lc-catalog-grid {
           grid-template-columns: 1fr;
+        }
+
+        .lc-catalog-top-actions {
+          width: 100%;
+          justify-content: flex-start;
         }
       }
     `}</style>
