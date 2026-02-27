@@ -157,6 +157,8 @@ function GlobalStyles() {
         margin: 0;
         padding: 0;
         min-height: 100%;
+        overflow-x: hidden;
+        max-width: 100vw;
       }
 
       body {
@@ -710,6 +712,8 @@ function GlobalStyles() {
       .lc-landing-page {
         min-height: 100vh;
         background: linear-gradient(180deg, #f8f4ec 0%, #f5f1e8 35%, #f5f1e8 100%);
+        overflow-x: hidden;
+        max-width: 100vw;
       }
 
       .lc-landing-topbar {
@@ -721,10 +725,13 @@ function GlobalStyles() {
         padding: 0 18px;
         border-bottom: 1px solid ${C.border};
         background: ${C.bgCard};
+        overflow: hidden;
+        max-width: 100%;
       }
 
       .lc-landing-main {
         padding: 16px;
+        overflow-x: hidden;
       }
 
       .lc-landing-hero {
@@ -940,6 +947,8 @@ function GlobalStyles() {
       .lc-news-carousel-wrap {
         position: relative;
         margin-bottom: 36px;
+        overflow: hidden;
+        padding: 0 4px;
       }
 
       .lc-news-carousel {
@@ -963,14 +972,42 @@ function GlobalStyles() {
         border: 1px solid ${C.border};
         background: ${C.bgCard};
         border-radius: 12px;
-        padding: 20px;
+        overflow: hidden;
         transition: transform 0.18s ease, box-shadow 0.18s ease;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
       }
 
       .lc-news-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+      }
+
+      .lc-news-card-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .lc-news-card-img-placeholder {
+        width: 100%;
+        height: 160px;
+        background: linear-gradient(135deg, #f0ebe1 0%, #e8e2d6 50%, #ddd6c8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${C.textMeta};
+        font-size: 32px;
+      }
+
+      .lc-news-card-content {
+        padding: 16px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 8px;
       }
 
       .lc-news-card .lc-news-tag {
@@ -983,11 +1020,11 @@ function GlobalStyles() {
         background: ${C.ochre}12;
         border-radius: 6px;
         padding: 3px 8px;
-        margin-bottom: 10px;
+        align-self: flex-start;
       }
 
       .lc-news-card h3 {
-        margin: 0 0 8px;
+        margin: 0;
         font-family: "Playfair Display", Georgia, serif;
         font-size: 18px;
         line-height: 1.3;
@@ -1002,7 +1039,7 @@ function GlobalStyles() {
       }
 
       .lc-news-card .lc-news-meta {
-        margin-top: 10px;
+        margin-top: auto;
         font-size: 12px;
         color: ${C.textMeta};
       }
@@ -1032,11 +1069,11 @@ function GlobalStyles() {
       }
 
       .lc-carousel-nav.is-left {
-        left: -12px;
+        left: 4px;
       }
 
       .lc-carousel-nav.is-right {
-        right: -12px;
+        right: 4px;
       }
 
       /* ── Course cards (landing) ── */
@@ -1382,6 +1419,7 @@ function GlobalStyles() {
       .lc-detail-main {
         min-height: 100vh;
         padding: 18px;
+        overflow-x: hidden;
       }
 
       .lc-detail-shell {
@@ -1818,12 +1856,24 @@ function LandingScreen({
                       )
                     }
                   >
-                    <span className="lc-news-tag">{item.kind}</span>
-                    <h3>{item.title}</h3>
-                    <p>{item.summary}</p>
-                    <p className="lc-news-meta">
-                      {item.source || "Lead Cafe"} &middot; {formatDate(item.publishedAt)}
-                    </p>
+                    {item.thumbnail ? (
+                      <img
+                        className="lc-news-card-img"
+                        src={item.thumbnail}
+                        alt={item.title}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="lc-news-card-img-placeholder">&#9997;</div>
+                    )}
+                    <div className="lc-news-card-content">
+                      <span className="lc-news-tag">{item.kind}</span>
+                      <h3>{item.title}</h3>
+                      <p>{item.summary}</p>
+                      <p className="lc-news-meta">
+                        {item.source || "Lead Cafe"} &middot; {formatDate(item.publishedAt)}
+                      </p>
+                    </div>
                   </article>
                 ))}
               </div>
